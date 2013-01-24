@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="wodaResources">resources/woda.ini</file>
+        <file alias="logoTray">images/logoTray.png</file>
+        <file alias="logoBig">images/logoTrayBig25.png</file>
+    </qresource>
+</RCC>
