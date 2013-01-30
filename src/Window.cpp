@@ -214,7 +214,7 @@ void		Window::createMessageGroupBox() {
 
 
 //! \fn void Window::createActions()
-//! \brief create the action to show in the right clic on the icon
+//! \brief create the action with in the right clic on the icon
 void		Window::createActions() {
   //--------------------------------------------------
   // Pour mettre une image dans le TrayIcon
@@ -258,6 +258,9 @@ void		Window::createActions() {
   //--------------------------------------------------
 }
 
+
+//! \fn void Window::createTrayIcon()
+//! \brief create all menu to show in the right clic on the icon
 void		Window::createTrayIcon()
 {
   trayIconMenu = new QMenu(this);
@@ -284,7 +287,8 @@ void		Window::createTrayIcon()
 }
 
 
-// If click on the logo call this method
+//! \fn void Window::clickLogo()
+//! \brief If click on the logo call this method
 void		Window::clickLogo() {
   // a changer bien sur (c'est tj pour delord_k xD)
   //  std::cout << ConfFile::getSingletonPtr()->getValue("global/doubleclick").toString().toStdString() << std::endl;
@@ -292,6 +296,9 @@ void		Window::clickLogo() {
   QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
 }
 
+
+//! \fn void Window::createFsWatcher(void)
+//! \brief create the folder monitoring
 void        Window::createFsWatcher(void) {
     FileSystemWatcher * fsWatcher = FileSystemWatcher::getSingletonPtr();
     QString dir = ConfFile::getSingletonPtr()->getValue(CONFFILE_DIRECTORY).toString();
