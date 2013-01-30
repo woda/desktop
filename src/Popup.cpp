@@ -1,24 +1,27 @@
-/****************************************************************************
-**
-** Copyright (C) 2012 Woda Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Woda Corporation (woda_2014@labeip.epitech.eu)
-**
-****************************************************************************/
+//! \file ConfFile.cpp
+//! \brief	implementation of the interface of Popup for display a popup in the corner
+//! \author Woda Corporation
+//! \version 1.2
+//! \date 2013-01
 
 #include	"Popup.hh"
 #include	"ConfFile.hh"
 #include	<QPainter>
 
 
-#include <iostream>
-
+//! \namespace
+//! \brief Constant
 namespace
 {
   qreal INITIAL_OPACITY = 0.9;
   qreal HOVER_OPACITY = 0.9;
 }
 
+
+//! \fn Popup::Popup(const int width, const int height)
+//! \param[in] width width of the popup
+//! \param[in] height height of the popup
+//! \brief		Constructor, initialize the timer, the interval, and slot
 Popup::Popup(const int width, const int height)
   : _popupWidth(width), _popupHeight(height),
     _textColor("#CC6633"), _backgroundColor("#171722"),
@@ -38,10 +41,18 @@ Popup::Popup(const int width, const int height)
   connect(this->_fadeout, SIGNAL(timeout()), this, SLOT(fadeout()));
 }
 
+
+//! \fn Popup::~Popup(void)
+//! \brief		Destructor
 Popup::~Popup(void)
 {
 }
 
+
+//! \fn void Popup::showUp(const QString& text, const int timeout)
+//! \param[in] text text to display in the popup
+//! \param[in] timeout timeout of the popup
+//! \brief initialize the text and the interval of the popup
 void		Popup::showUp(const QString& text, const int timeout)
 {
   if (isVisible()) stopAnimation();
@@ -57,6 +68,10 @@ void		Popup::showUp(const QString& text, const int timeout)
   showAnimation();
 }
 
+
+//! \fn void Popup::paintEvent(QPaintEvent* event)
+//! \param[in] event event received in the slot
+//! \brief draw the popup if the event is triggered
 void		Popup::paintEvent(QPaintEvent* event)
 {
   Q_UNUSED(event);
@@ -72,12 +87,20 @@ void		Popup::paintEvent(QPaintEvent* event)
     }
 }
 
+
+//! \fn void Popup::mousePressEvent(QMouseEvent* event)
+//! \param[in] event event received in the slot
+//! \brief stop the animation of the popup if the popup is clicked
 void		Popup::mousePressEvent(QMouseEvent* event)
 {
   Q_UNUSED(event);
   stopAnimation();
 }
 
+
+//! \fn void Popup::mouseMoveEvent(QMouseEvent* event)
+//! \param[in] event event received in the slot
+//! \brief change the opacity if the mouse is over the popup
 void		Popup::mouseMoveEvent(QMouseEvent* event)
 {
   if (normalGeometry().contains(mapToGlobal(event->pos()), true))
@@ -90,6 +113,9 @@ void		Popup::mouseMoveEvent(QMouseEvent* event)
     }
 }
 
+
+//! \fn void Popup::fadein(void)
+//! \brief animation fadein
 void		Popup::fadein(void)
 {
     if (isVisible() && this->_opacityAnimation < INITIAL_OPACITY)
@@ -103,6 +129,9 @@ void		Popup::fadein(void)
 	}
 }
 
+
+//! \fn void Popup::fadeout(void)
+//! \brief animation fadeout
 void		Popup::fadeout(void)
 {
     if (isVisible() && this->_opacityAnimation > 0.)
@@ -118,22 +147,34 @@ void		Popup::fadeout(void)
     }
 }
 
+
+//! \fn void Popup::showAnimation(void)
+//! \brief display the window popup
 void		Popup::showAnimation(void)
 {
   show();
 }
 
+
+//! \fn void Popup::stopAnimation(void)
+//! \brief stop the animation and hide the popup
 void		Popup::stopAnimation(void)
 {
   this->_hiddingTrigger->stop();
   hide();
 }
 
+
+//! \fn void Popup::hideAnimation(void)
+//! \brief begin the fadeout on the popup
 void		Popup::hideAnimation(void)
 {
     this->_fadeout->start();
 }
 
+
+//! \fn void Popup::init(void)
+//! \brief initialize the geometric, layout, attribute
 void		Popup::init(void)
 {
   const QRect geo = QApplication::desktop()->screenGeometry(this);
@@ -158,6 +199,9 @@ void		Popup::init(void)
   setAttribute(Qt::WA_TranslucentBackground);
 }
 
+
+//! \fn void Popup::buildCache(void)
+//! \brief construct point by point the popup
 void		Popup::buildCache(void)
 {
   this->_cache = new QPixmap(size());
@@ -201,24 +245,39 @@ void		Popup::buildCache(void)
   update();
 }
 
+
+//! \fn void Popup::setTextColor(const QColor & c)
+//! \param[in] c color choose for the text
+//! \brief change the text color
 void		Popup::setTextColor(const QColor & c)
 {
   this->_textColor = c;
 }
 
+
+//! \fn void Popup::setBackgroundColor(const QColor & c)
+//! \param[in] c color choose for the background
+//! \brief change the background color
 void		Popup::setBackgroundColor(const QColor & c)
 {
   this->_backgroundColor = c;
 }
 
+
+//! \fn void Popup::setFrameColor(const QColor & c)
+//! \param[in] c color choose for the frame
+//! \brief change the frame color
 void		Popup::setFrameColor(const QColor & c)
 {
   this->_frameColor = c;
 }
 
+
+//! \fn void Popup::setCorner(void)
+//! \brief search in wich corner draw the popup
 void		Popup::setCorner(void)
 {
-  int corner = ConfFile::getSingletonPtr()->getValue("global/corner").toInt();
+  int corner = ConfFile::getSingletonPtr()->getValue(CONFFILE_CORNER).toInt();
 
   switch (corner)
     {

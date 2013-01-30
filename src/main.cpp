@@ -1,10 +1,8 @@
-/****************************************************************************
-**
-** Copyright (C) 2012 Woda Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Woda Corporation (woda_2014@labeip.epitech.eu)
-**
-****************************************************************************/
+//! \file FileSystemWatcher.cpp
+//! \brief	implementation of the main,
+//! \author Woda Corporation
+//! \version 1.2
+//! \date 2012-11
 
 #include <QtGui>
 #include <QtPlugin>
@@ -12,6 +10,9 @@
 
 //Q_IMPORT_PLUGIN(qsvg)
 
+//! \fn int main(int argc, char *argv[])
+//! \brief initialize the resources, check if the tray icon is available on the system
+//! \brief do not quit if the last window is closed
 int main(int argc, char *argv[])
 {
   Q_INIT_RESOURCE(woda);

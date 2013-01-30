@@ -1,10 +1,8 @@
-/****************************************************************************
-**
-** Copyright (C) 2012 Woda Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Woda Corporation (woda_2014@labeip.epitech.eu)
-**
-****************************************************************************/
+//! \file ConfFile.cpp
+//! \brief	implementation of the interface of the GUI for settings on a file
+//! \author Woda Corporation
+//! \version 1.2
+//! \date 2013-01
 
 #ifndef FILESHARE_HH
 #define FILESHARE_HH
@@ -20,7 +18,7 @@ class Fileshare : public QDialog
     Q_OBJECT
     
 public:
-    explicit Fileshare(QWidget *parent = 0);
+    explicit Fileshare(QWidget * parent = 0);
     ~Fileshare();
     
 private:

@@ -1,10 +1,8 @@
-/****************************************************************************
-**
-** Copyright (C) 2012 Woda Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Woda Corporation (woda_2014@labeip.epitech.eu)
-**
-****************************************************************************/
+//! \file ConfFile.cpp
+//! \brief	implementation of the interface of Window wich manages the interfaces
+//! \author Woda Corporation
+//! \version 1.2
+//! \date 2013-01
 
 #ifndef		__WINDOW_HH__
 # define	__WINDOW_HH__
@@ -15,8 +13,6 @@
 # include   "FriendsManagement.hh"
 # include   "Preferences.hh"
 # include   "Fileshare.hh"
-
-# define    DIRECTORY       "global/directory"
 
 class		QAction;
 class		QCheckBox;

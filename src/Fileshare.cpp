@@ -1,21 +1,25 @@
-/****************************************************************************
-**
-** Copyright (C) 2012 Woda Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Woda Corporation (woda_2014@labeip.epitech.eu)
-**
-****************************************************************************/
+//! \file ConfFile.cpp
+//! \brief	implementation of the interface of the GUI for settings on a file
+//! \author Woda Corporation
+//! \version 1.2
+//! \date 2013-01
 
 #include "Fileshare.hh"
 #include "ui_Fileshare.h"
 
-Fileshare::Fileshare(QWidget *parent) :
+
+//! \fn Fileshare::Fileshare(QWidget *parent)
+//! \param[in] parent Qobject parent or nothing
+//! \brief		Constructor
+Fileshare::Fileshare(QWidget * parent) :
     QDialog(parent),
     ui(new Ui::Fileshare)
 {
     ui->setupUi(this);
 }
 
+//! \fn Fileshare::~Fileshare()
+//! \brief		Destructor
 Fileshare::~Fileshare()
 {
     delete ui;

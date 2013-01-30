@@ -1,10 +1,8 @@
-/****************************************************************************
-**
-** Copyright (C) 2012 Woda Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Woda Corporation (woda_2014@labeip.epitech.eu)
-**
-****************************************************************************/
+//! \file ConfFile.cpp
+//! \brief	implementation of the interface to save information in a configuration file
+//! \author Woda Corporation
+//! \version 1.2
+//! \date 2013-01
 
 #ifndef             CONFFILE_HH__
 # define            CONFFILE_HH__
@@ -12,6 +10,9 @@
 # include           <QSettings>
 # include           <QString>
 # include           "Singleton.hpp"
+
+# define            CONFFILE_DIRECTORY      "global/directory"
+# define            CONFFILE_CORNER         "global/corner"
 
 class               ConfFile : public Singleton<ConfFile>
 {

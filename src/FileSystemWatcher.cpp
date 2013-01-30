@@ -10,8 +10,8 @@
 
 
 //! \fn FileSystemWatcher::FileSystemWatcher(QObject * parent)
-//! \param[in] parent Qobject parent or 0
-//! \brief		Constructor
+//! \param[in] parent Qobject parent or nothing
+//! \brief Constructor
 FileSystemWatcher::FileSystemWatcher(QObject * parent)
  : QObject(parent), _fsWatcher(new QFileSystemWatcher(parent)), _path(""),
    _listFile(new QList<QString>()), _listChange(new QList<QString>()) {
@@ -25,7 +25,7 @@ FileSystemWatcher::FileSystemWatcher(QObject * parent)
 
 
 //! \fn FileSystemWatcher::~FileSystemWatcher()
-//! \brief		Destructor
+//! \brief Destructor
 FileSystemWatcher::~FileSystemWatcher() {
     delete _fsWatcher;
     delete _listFile;

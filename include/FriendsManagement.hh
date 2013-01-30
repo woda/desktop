@@ -1,10 +1,8 @@
-/****************************************************************************
-**
-** Copyright (C) 2012 Woda Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Woda Corporation (woda_2014@labeip.epitech.eu)
-**
-****************************************************************************/
+//! \file ConfFile.cpp
+//! \brief	implementation of the interface of the GUI for friend list management
+//! \author Woda Corporation
+//! \version 1.2
+//! \date 2013-01
 
 #ifndef FRIENDSMANAGEMENT_H
 #define FRIENDSMANAGEMENT_H
