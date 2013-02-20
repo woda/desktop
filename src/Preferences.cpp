@@ -8,7 +8,8 @@
 #include    "ui_Preferences.h"
 #include    "ConfFile.hh"
 #include    "FileSystemWatcher.hh"
-
+#include    "RequestHttp.hh"
+#include    "Account.hh"
 
 //! \fn Preferences::Preferences(QWidget *parent)
 //! \param[in] parent Qobject parent or nothing
@@ -22,9 +23,17 @@ Preferences::Preferences(QWidget *parent)
     ui->buttonGroupNotification->setId(ui->radioButtonBottomRight,BOTTOM_RIGHT);
     ui->buttonGroupNotification->setId(ui->radioButtonTopLeft,    TOP_LEFT);
     ui->buttonGroupNotification->setId(ui->radioButtonTopRight,   TOP_RIGHT);
+    ui->labelError->hide();
+    ui->buttonDisconnect->hide();
 
     this->initCorner();
     this->initDirectory();
+    this->initAccount();
+
+    _timer = new QTimer(this);
+    _timer->setInterval(1000);
+    connect(_timer, SIGNAL(timeout()), this, SLOT(updateAccount()));
+    _timer->start(1000);
 }
 
 
@@ -34,6 +43,51 @@ Preferences::~Preferences() {
     delete ui;
 }
 
+
+void    Preferences::updateAccount(void) {
+    Account * account = Account::getSingletonPtr();
+    if (account->isConnected()) {
+        ui->lineEditEmail->setText(account->email());
+        QString hello("hello ");
+        hello.append(account->firstName()).append(" ").append(account->lastName());
+        ui->labelHello->setText(hello);
+        this->isConnected();
+        return;
+    } else if (account->isHttpError()) {
+        ui->labelError->setText("Error communicating with the server");
+    } else if (account->isServerError()) {
+        ui->labelError->setText(account->textServerError());
+    }
+    this->isDisconnected();
+}
+
+
+void    Preferences::isDisconnected(void) {
+    ui->labelHello->hide();
+    ui->labelEmail->hide();
+    ui->labelConfirmPassword->hide();
+    ui->labelNewPassword->hide();
+    ui->lineEditConfirmPassword->hide();
+    ui->lineEditNewPassword->hide();
+    ui->lineEditEmail->hide();
+    ui->buttonChange->hide();
+    ui->buttonConnect->show();
+    ui->buttonDisconnect->hide();
+}
+
+
+void    Preferences::isConnected(void) {
+    ui->labelHello->show();
+    ui->labelEmail->show();
+    ui->labelConfirmPassword->show();
+    ui->labelNewPassword->show();
+    ui->lineEditConfirmPassword->show();
+    ui->lineEditNewPassword->show();
+    ui->lineEditEmail->show();
+    ui->buttonChange->show();
+    ui->buttonConnect->hide();
+    ui->buttonDisconnect->show();
+}
 
 //! \fn Preferences::initCorner(void)
 //! \brief initialize the corner where the popup pop
@@ -58,6 +112,14 @@ void    Preferences::initDirectory(void) {
     QString dir = ConfFile::getSingletonPtr()->getValue(DIRECTORY).toString();
     if (dir != QString(""))
         ui->WodaFolder_input->setText(dir);
+}
+
+
+//! \fn Preferences::initAccount(void)
+//! \brief initialize the lineEdit login and password
+void    Preferences::initAccount(void) {
+    ui->lineEditLogin->setText(Account::getSingletonPtr()->login());
+    ui->lineEditPassword->setText(Account::getSingletonPtr()->password());
 }
 
 
@@ -107,3 +169,51 @@ void    Preferences::notificationPositionClick(int id) {
     ConfFile::getSingletonPtr()->setValue(CORNER, QVariant(id));
 }
 
+//! \fn Preferences::buttonConnectAccount()
+//! \brief Button to click to connect to the server with the username and pass
+void    Preferences::buttonConnectAccount() {
+    if (ui->lineEditLogin->text().isEmpty() || ui->lineEditPassword->text().isEmpty()) {
+        ui->labelError->setText("Please enter login / password");
+        ui->labelError->show();
+    }
+    else {
+        ui->labelError->hide();
+        QString login(ui->lineEditLogin->text());
+        QString password(ui->lineEditPassword->text());
+        Account::getSingletonPtr()->setLogin(login);
+        Account::getSingletonPtr()->setPassword(password);
+        RequestHttp::getSingletonPtr()->loginToServer(login, password);
+    }
+}
+
+//! \fn Preferences::buttonDisconnectAccount()
+//! \brief Button to click to connect to the server with the username and pass
+void    Preferences::buttonDisconnectAccount() {
+    RequestHttp::getSingletonPtr()->logoutToServer();
+}
+
+//! \fn Preferences::buttonConnectAccount()
+//! \brief Button to click to connect to the server with the username and pass
+void    Preferences::buttonChangeAccount() {
+    if (ui->lineEditEmail->text().isEmpty()) {
+        ui->labelError->setText(QString("Please Enter an email"));
+    }
+    if (!ui->lineEditNewPassword->text().isEmpty() &&
+        ui->lineEditNewPassword->text() == ui->lineEditConfirmPassword->text()) {
+        QString email(ui->lineEditEmail->text());
+        QString password(ui->lineEditNewPassword->text());
+        RequestHttp::getSingletonPtr()->sendUpdate(email, password);
+    } else {
+        QString email(ui->lineEditEmail->text());
+        QString password(Account::getSingletonPtr()->password());
+        RequestHttp::getSingletonPtr()->sendUpdate(email, password);
+    }
+}
+
+
+void    Preferences::buttonTest() {
+    if (!ui->lineEditLogin->text().isEmpty()) {
+        QString login(ui->lineEditLogin->text());
+        RequestHttp::getSingletonPtr()->sendCreate(login);
+    }
+}

@@ -17,10 +17,11 @@ CONFIG          +=      qt
 
 #DEFINES         +=
 
-INCLUDEPATH     =      include
-DEPENDPATH      =      include
+INCLUDEPATH     =       include
+DEPENDPATH      =       include
 
-QT              +=      svg                             \
+QT              +=      network                         \
+                        svg                             \
                         gui
 
 HEADERS         +=      Window.hh                       \
@@ -32,7 +33,9 @@ HEADERS         +=      Window.hh                       \
                         FriendsManagement.hh            \
                         Preferences.hh                  \
                         Fileshare.hh                    \
-                        FileSystemWatcher.hh
+                        FileSystemWatcher.hh            \
+                        RequestHttp.hh                  \
+                        Account.hh
 
 SRC             =       src
 
@@ -45,7 +48,9 @@ SOURCES         +=      $$SRC/main.cpp                  \
                         $$SRC/FriendsManagement.cpp     \
                         $$SRC/Preferences.cpp           \
                         $$SRC/Fileshare.cpp             \
-                        $$SRC/FileSystemWatcher.cpp
+                        $$SRC/FileSystemWatcher.cpp     \
+                        $$SRC/RequestHttp.cpp           \
+                        $$SRC/Account.cpp
 
 FORMS           +=      resources/FriendsManagement.ui  \
                         resources/Preferences.ui        \
@@ -53,7 +58,12 @@ FORMS           +=      resources/FriendsManagement.ui  \
 
 RESOURCES       +=      woda.qrc
 
-OTHER_FILES     +=      resources/woda.ini
+OTHER_FILES     +=      resources/woda.ini \
+    dll/qjson/src/json_parser.yy
+
+#LIB             =       dll
+
+LIBS            +=      "C:/Users/guiber_y/Documents/Projet/Woda/desktop/dll/qjson/bin/libqjson.dll"
 
 #windows {
 #        HEADERS +=      

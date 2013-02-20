@@ -29,15 +29,25 @@ class       Preferences : public QDialog
  private:
     void    initCorner(void);
     void    initDirectory(void);
+    void    initAccount(void);
+    void    isDisconnected(void);
+    void    isConnected(void);
     
  private slots:
     void    on_checklimitdl_clicked();
     void    on_checklimitup_clicked();
     void    on_browse_button_clicked();
     void    notificationPositionClick(int id);
+    void    buttonConnectAccount();
+    void    buttonDisconnectAccount();
+    void    buttonChangeAccount();
+    void    updateAccount();
+
+    void    buttonTest();
 
  private:
     Ui::Preferences *ui;
+    QTimer * _timer;
 
     enum {
         TOP_LEFT = 1,
