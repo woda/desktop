@@ -58,12 +58,13 @@ FORMS           +=      resources/FriendsManagement.ui  \
 
 RESOURCES       +=      woda.qrc
 
-OTHER_FILES     +=      resources/woda.ini \
-    dll/qjson/src/json_parser.yy
+OTHER_FILES     +=      resources/woda.ini		\
+                        resources/icone.rc
+						
+RC_FILE         +=	resources/icone.rc
 
-#LIB             =       dll
-
-LIBS            +=      "C:/Users/guiber_y/Documents/Projet/Woda/desktop/dll/qjson/bin/libqjson.dll"
+LIBS            +=      -L"dll"                         \
+                        -lqjson
 
 #windows {
 #        HEADERS +=      
