@@ -19,6 +19,7 @@ class               Account : public Singleton<Account>
 
  private:
     Account();
+    Account(bool);
     ~Account();
 
  public:

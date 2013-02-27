@@ -52,6 +52,20 @@ public:
     return mySingleton;
   }
 
+  static T &	getSingleton(bool boolean)
+  {
+    if (mySingleton == NULL)
+      mySingleton = new T(boolean);
+    return *mySingleton;
+  }
+
+  static T *	getSingletonPtr(bool boolean)
+  {
+    if (mySingleton == NULL)
+      mySingleton = new T(boolean);
+    return mySingleton;
+  }
+
   static T *	getSingletonPtr()
   {
     if (mySingleton == NULL)

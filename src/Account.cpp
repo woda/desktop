@@ -18,17 +18,27 @@ Account::Account()
       _email(QString("")), _errorHttp(false), _errorServer(QString("")) {
     _login = ConfFile::getSingletonPtr()->getValue(LOGIN_CONFFILE).toString();
     _password = ConfFile::getSingletonPtr()->getValue(PASSWORD_CONFFILE).toString();
-
     if (!_login.isEmpty() && !_password.isEmpty()) {
         RequestHttp::getSingletonPtr()->loginToServer(_login, _password);
     }
 }
 
+
+//! \fn Account::Account()
+//! \brief Constructor for UnitTest
+Account::Account(bool)
+    : _connected(false), _login(QString("")), _password(QString("")),
+      _firstName(QString("")), _lastName(QString("")),
+      _email(QString("")), _errorHttp(false), _errorServer(QString("")) {
+}
+
+
 //! \fn Account::~Account()
 //! \brief Destructor
 Account::~Account() {
 }
-#include <iostream>
+
+
 void            Account::deserializeJsonAccount(QByteArray & bytes) {
     QJson::Parser parser;
     bool ok;

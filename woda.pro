@@ -10,7 +10,7 @@ TEMPLATE        =       app
 
 TARGET          =       woda
 
-CONFIG          +=      qt
+CONFIG          +=      qt #unittest
                         #debug #release #debug_and_release
                         #windows
                         #unix
@@ -82,4 +82,11 @@ static {
 	CONFIG		+=		static
 	DEFINES		+=		STATIC
 	QTPLUGIN	+=		qsvg
+}
+
+unittest {
+        CONFIG      +=  qtestlib
+        SOURCES     -=  $$SRC/main.cpp
+        TEST        =   UnitTest
+        SOURCES     +=  $$TEST/AccountTest.cpp
 }
