@@ -35,7 +35,8 @@ HEADERS         +=      Window.hh                       \
                         Fileshare.hh                    \
                         FileSystemWatcher.hh            \
                         RequestHttp.hh                  \
-                        Account.hh
+                        Account.hh                      \
+                        Ipc.hh
 
 SRC             =       src
 
@@ -50,7 +51,8 @@ SOURCES         +=      $$SRC/main.cpp                  \
                         $$SRC/Fileshare.cpp             \
                         $$SRC/FileSystemWatcher.cpp     \
                         $$SRC/RequestHttp.cpp           \
-                        $$SRC/Account.cpp
+                        $$SRC/Account.cpp               \
+                        $$SRC/Ipc.cpp
 
 FORMS           +=      resources/FriendsManagement.ui  \
                         resources/Preferences.ui        \
