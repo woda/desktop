@@ -88,7 +88,14 @@ static {
 
 unittest {
         CONFIG      +=  qtestlib
+        INCLUDEPATH +=  UnitTest
+        DEPENDPATH  +=  UnitTest
+        HEADERS     +=  AccountTest.hh                  \
+                        IpcTest.hh
+
         SOURCES     -=  $$SRC/main.cpp
         TEST        =   UnitTest
-        SOURCES     +=  $$TEST/AccountTest.cpp
+        SOURCES     +=  $$TEST/mainTest.cpp             \
+                        $$TEST/AccountTest.cpp          \
+                        $$TEST/IpcTest.cpp
 }

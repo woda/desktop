@@ -1,19 +1,4 @@
-#include    <QtTest/QtTest>
-#include    "Account.hh"
-
-class       AccountTest: public QObject
-{
-    Q_OBJECT
-private slots:
-    void    initTestCase();
-    void    cleanupTestCase();
-    void    verifyDefaultParameter();
-    void    connectedToTheServer();
-    void    disconnectedToTheServer();
-
-private:
-    Account *   _account;
-};
+#include    "AccountTest.hh"
 
 void        AccountTest::initTestCase() {
     _account = Account::getSingletonPtr(true);
@@ -37,7 +22,3 @@ void        AccountTest::disconnectedToTheServer() {
     _account->disconnect();
     QVERIFY(!_account->isConnected());
 }
-
-
-QTEST_MAIN(AccountTest)
-#include "AccountTest.moc"
