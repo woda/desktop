@@ -1,5 +1,5 @@
-//! \file ConfFile.cpp
-//! \brief	implementation of the interface of GUI for preference
+//! \file Preferences.cpp
+//! \brief	implementation of the header Preferences : GUI for preference
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-01
@@ -11,9 +11,10 @@
 #include    "RequestHttp.hh"
 #include    "Account.hh"
 
-//! \fn Preferences::Preferences(QWidget *parent)
+
 //! \param[in] parent Qobject parent or nothing
-//! \brief Constructor, initialize the tray icon
+//! \brief Constructor
+//! initialize the Ui, corner preference, directory, account
 Preferences::Preferences(QWidget *parent)
  : QDialog(parent), ui(new Ui::Preferences) {
     ui->setupUi(this);
@@ -31,19 +32,20 @@ Preferences::Preferences(QWidget *parent)
     this->initAccount();
 
     _timer = new QTimer(this);
-    _timer->setInterval(1000);
+    _timer->setInterval(TIMER_REFRESH);
     connect(_timer, SIGNAL(timeout()), this, SLOT(updateAccount()));
-    _timer->start(1000);
+    _timer->start(TIMER_REFRESH);
 }
 
 
-//! \fn Preferences::~Preferences()
 //! \brief Destructor
+//! delete the Ui
 Preferences::~Preferences() {
     delete ui;
 }
 
 
+//! \brief update account information
 void    Preferences::updateAccount(void) {
     Account * account = Account::getSingletonPtr();
     if (account->isConnected()) {
@@ -62,6 +64,7 @@ void    Preferences::updateAccount(void) {
 }
 
 
+//! \brief hide labels account information if not connected
 void    Preferences::isDisconnected(void) {
     ui->labelHello->hide();
     ui->labelEmail->hide();
@@ -76,6 +79,7 @@ void    Preferences::isDisconnected(void) {
 }
 
 
+//! \brief show labels account information if connected
 void    Preferences::isConnected(void) {
     ui->labelHello->show();
     ui->labelEmail->show();
@@ -89,7 +93,7 @@ void    Preferences::isConnected(void) {
     ui->buttonDisconnect->show();
 }
 
-//! \fn Preferences::initCorner(void)
+
 //! \brief initialize the corner where the popup pop
 void    Preferences::initCorner(void) {
     // check if corner is set in the ini file
@@ -104,7 +108,6 @@ void    Preferences::initCorner(void) {
 }
 
 
-//! \fn Preferences::initDirectory(void)
 //! \brief initialize the directory path for woda
 void    Preferences::initDirectory(void) {
     // check if the directory is set in the ini file
@@ -115,7 +118,6 @@ void    Preferences::initDirectory(void) {
 }
 
 
-//! \fn Preferences::initAccount(void)
 //! \brief initialize the lineEdit login and password
 void    Preferences::initAccount(void) {
     ui->lineEditLogin->setText(Account::getSingletonPtr()->login());
@@ -123,17 +125,16 @@ void    Preferences::initAccount(void) {
 }
 
 
-//! \fn Preferences::on_checklimitdl_clicked(void)
 //! \brief checkbox for limited the download
 void    Preferences::on_checklimitdl_clicked() {
-    if (ui->checklimitdl->isChecked())
+    if (ui->checklimitdl->isChecked()) {
         ui->input_limitdl->setEnabled(true);
-    else
+    } else {
         ui->input_limitdl->setEnabled(false);
+    }
 }
 
 
-//! \fn Preferences::on_checklimitup_clicked(void)
 //! \brief checkbox for limited the upload
 void    Preferences::on_checklimitup_clicked() {
     if (ui->checklimitup->isChecked())
@@ -143,7 +144,6 @@ void    Preferences::on_checklimitup_clicked() {
 }
 
 
-//! \fn Preferences::on_browse_button_clicked(void)
 //! \brief button to select a directory for woda
 void    Preferences::on_browse_button_clicked() {
     QString dir;
@@ -162,14 +162,13 @@ void    Preferences::on_browse_button_clicked() {
 }
 
 
-//! \fn Preferences::notificationPositionClick(int id)
 //! \param[in] id id of the radio button
 //! \brief radio button for the popup corner
 void    Preferences::notificationPositionClick(int id) {
     ConfFile::getSingletonPtr()->setValue(CORNER, QVariant(id));
 }
 
-//! \fn Preferences::buttonConnectAccount()
+
 //! \brief Button to click to connect to the server with the username and pass
 void    Preferences::buttonConnectAccount() {
     if (ui->lineEditLogin->text().isEmpty() || ui->lineEditPassword->text().isEmpty()) {
@@ -186,13 +185,13 @@ void    Preferences::buttonConnectAccount() {
     }
 }
 
-//! \fn Preferences::buttonDisconnectAccount()
+
 //! \brief Button to click to connect to the server with the username and pass
 void    Preferences::buttonDisconnectAccount() {
     RequestHttp::getSingletonPtr()->logoutToServer();
 }
 
-//! \fn Preferences::buttonConnectAccount()
+
 //! \brief Button to click to connect to the server with the username and pass
 void    Preferences::buttonChangeAccount() {
     if (ui->lineEditEmail->text().isEmpty()) {

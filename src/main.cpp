@@ -1,5 +1,5 @@
-//! \file FileSystemWatcher.cpp
-//! \brief	implementation of the main
+//! \file main.cpp
+//! \brief implementation of the main
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2012-11
@@ -10,9 +10,9 @@
 #include    "Account.hh"
 #include    "Ipc.hh"
 
+//! \def ERROR
 #define     ERROR       -1
 
-//Q_IMPORT_PLUGIN(qsvg)
 
 void        initialize(void) {
     Account::getSingletonPtr();

@@ -1,5 +1,5 @@
 //! \file RequestHttp.cpp
-//! \brief	implementation of the interface for send request to the server
+//! \brief	implementation of the header RequestHttp for send request account to the server
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-02
@@ -16,8 +16,10 @@
 
 #include <iostream>
 
-//! \fn RequestHttp::RequestHttp()
-//! \brief		Constructor, initialize QHttp
+
+//! \brief Constructor
+//! initialize QNetworkAccessManager, connect the reply of the server to a slot
+//! initialize cookie
 RequestHttp::RequestHttp(QObject * parent)
     : QObject(parent), _http(new QNetworkAccessManager(this)) {
     connect(_http, SIGNAL(finished(QNetworkReply*)),
@@ -26,18 +28,15 @@ RequestHttp::RequestHttp(QObject * parent)
     _http->setCookieJar(new QNetworkCookieJar(_http));
 }
 
-//! \fn RequestHttp::~RequestHttp()
-//! \brief		Destructor
+
+//! \brief Destructor
+//! delete QNetworkAccessManager
 RequestHttp::~RequestHttp() {
     delete _http;
 }
 
-//! \fn void ConfFile::setValue(const QString & key, const QVariant & value)
-//! \param[in] key key in the ini file for save the information
-//! \param[in] value value to save in the ini file
-//! \brief add or update the value with the key pass in parameter in the ini file
+
 void        RequestHttp::send() {
-    std::cout << "----------------------------------------------" << std::endl;
     QString str(URL);
     str.append("/").append(USER);
     QUrl param(str);
@@ -53,10 +52,9 @@ void        RequestHttp::send() {
     _reply->ignoreSslErrors();
 }
 
-//! \fn void ConfFile::setValue(const QString & key, const QVariant & value)
-//! \param[in] key key in the ini file for save the information
-//! \param[in] value value to save in the ini file
-//! \brief add or update the value with the key pass in parameter in the ini file
+//! \param[in] login to connecct to server
+//! \param[in] password to connect to server
+//! \brief send a request post to login to the server
 void        RequestHttp::loginToServer(QString & login, QString & password) {
     QString str(URL);
     str.append("/").append(USER).append("/");
@@ -78,10 +76,7 @@ void        RequestHttp::loginToServer(QString & login, QString & password) {
 }
 
 
-//! \fn void ConfFile::setValue(const QString & key, const QVariant & value)
-//! \param[in] key key in the ini file for save the information
-//! \param[in] value value to save in the ini file
-//! \brief add or update the value with the key pass in parameter in the ini file
+//! \brief send a request post to logout to the server
 void        RequestHttp::logoutToServer() {
     QString str(URL);
     str.append("/").append(USER).append("/").append(LOGOUT);
@@ -101,10 +96,9 @@ void        RequestHttp::logoutToServer() {
 }
 
 
-//! \fn void ConfFile::setValue(const QString & key, const QVariant & value)
-//! \param[in] key key in the ini file for save the information
-//! \param[in] value value to save in the ini file
-//! \brief add or update the value with the key pass in parameter in the ini file
+//! \param[in] email new email for the account or the same
+//! \param[in] password new password for the account or the same
+//! \brief send a request post for update email information and/or password to the server
 void        RequestHttp::sendUpdate(QString & email, QString & password) {
     QString str(URL);
     str.append("/").append(USER);
@@ -126,10 +120,7 @@ void        RequestHttp::sendUpdate(QString & email, QString & password) {
     _reply->ignoreSslErrors();
 }
 
-//! \fn void ConfFile::setValue(const QString & key, const QVariant & value)
-//! \param[in] key key in the ini file for save the information
-//! \param[in] value value to save in the ini file
-//! \brief add or update the value with the key pass in parameter in the ini file
+
 void        RequestHttp::sendCreate(QString & login) {
     QString str(URL);
     str.append("/").append(USER).append("/");
@@ -149,6 +140,9 @@ void        RequestHttp::sendCreate(QString & login) {
     _reply->ignoreSslErrors();
 }
 
+
+//! \param[in] reply QNetworkReply send by web server
+//! \brief verify if the server send an error, else deserialize the Json into Account class
 void        RequestHttp::finishedSlot(QNetworkReply* reply) {
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray bytes = reply->readAll();

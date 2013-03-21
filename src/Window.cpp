@@ -1,5 +1,5 @@
-//! \file ConfFile.cpp
-//! \brief	implementation of the interface of Window wich manages the interfaces
+//! \file Window.cpp
+//! \brief	implementation of the header Window wich manages the tray icon
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-01
@@ -12,12 +12,11 @@
 #include	"MyCustomActionLabel.hh"
 
 
-//! \fn Window::Window(QWidget * parent)
 //! \param[in] parent Qobject parent or nothing
-//! \brief Constructor, create action, tray icon, signal, popup
+//! \brief Constructor
+//! Create action, tray icon, signal, popup.
 Window::Window(QWidget * parent)
-  : QWidget(parent)
-{
+  : QWidget(parent) {
   createIconGroupBox();
   createMessageGroupBox();
   createActions();
@@ -45,32 +44,26 @@ Window::Window(QWidget * parent)
 }
 
 
-//! \fn Window::~Window()
 //! \brief Destructor
-Window::~Window()
-{
+//! Delete the singleton ConfFile
+Window::~Window() {
   ConfFile::del();
 }
 
 
-//! \fn void Window::setVisible(bool)
 //! \brief set the main window visible or not
-void		Window::setVisible(bool)
-{
-//   // minimizeAction->setEnabled(visible);
-//   // maximizeAction->setEnabled(!isMaximized());
-//   // restoreAction->setEnabled(isMaximized() || !visible);
-//   //  QDialog::setVisible(visible);
+void		Window::setVisible(bool) {
+   // minimizeAction->setEnabled(visible);
+   // maximizeAction->setEnabled(!isMaximized());
+   // restoreAction->setEnabled(isMaximized() || !visible);
+   //  QDialog::setVisible(visible);
 }
 
 
-//! \fn void Window::closeEvent(QCloseEvent * event)
 //! \param[in] event event received in the slot
 //! \brief ignore the event for close the main window
-void		Window::closeEvent(QCloseEvent * event)
-{
-  if (trayIcon->isVisible())
-    {
+void		Window::closeEvent(QCloseEvent * event) {
+  if (trayIcon->isVisible()) {
       //      QMessageBox::information(this, tr("Woda"), tr("Test"));
       this->hide();
       event->ignore();
@@ -78,11 +71,9 @@ void		Window::closeEvent(QCloseEvent * event)
 }
 
 
-//! \fn void Window::setIcon(int index)
 //! \param[in] index of the icon in iconComboBox
 //! \brief set the icon in the icon tray with an image (like in processing, normal)
-void		Window::setIcon(int index)
-{
+void		Window::setIcon(int index) {
   QIcon icon = iconComboBox->itemIcon(index);
 
   trayIcon->setIcon(icon);
@@ -92,21 +83,18 @@ void		Window::setIcon(int index)
 }
 
 
-//! \fn void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 //! \param[in] reason event received in the slot
 //! \brief slot for the click on the icon in the system tray
-void		Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
-{
+void		Window::iconActivated(QSystemTrayIcon::ActivationReason reason) {
 //  switch (reason)
 //    {
 //    case QSystemTrayIcon::Trigger:
 //    case QSystemTrayIcon::DoubleClick:
-//      _popup->showUp("Je ne sais pas si delord_k est le meilleur chef de projet :/", 5000);
+//      _popup->showUp("test", 5000);
 //      ConfFile::getSingletonPtr()->setValue("global/doubleclick", "titi");
 //      break;
 //    case QSystemTrayIcon::MiddleClick:
-//      // c'est pour voir si il va lire la seule classe de code qu'il y a
-//      this->showMessage(QString("Delord_k"), QString("est un pd"), Window::Critical, 10);
+//      this->showMessage(QString("Test"), QString("Critical"), Window::Critical, 10);
 //      break;
 //    default:
 //      {}
@@ -114,60 +102,48 @@ void		Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 }
  
 
-//! \fn void Window::showMessage(QString title, QString message, Window::messageIcon type, int time)
 //! \param[in] title title of the message
-//! \param[in] message text the the message
+//! \param[in] message text of the message
 //! \param[in] type type of the message (warning, information, ...)
-//! \param[in] time time to display the message
+//! \param[in] time time to display the message in second
 //! \brief show an information message in the system tray
 void		Window::showMessage(QString title, QString message,
-                                    Window::messageIcon type, int time)
-{
+                                    Window::messageIcon type, int time) {
   QSystemTrayIcon::MessageIcon icon;
   icon = QSystemTrayIcon::MessageIcon(typeComboBox->itemData(type).toInt());
   trayIcon->showMessage(title, message, icon, time * 1000);
 }
 
 
-//! \fn void Window::messageClicked()
 //! \brief if click on the message in the system tray
-void		Window::messageClicked()
-{
-  // action a faire ici, si il y a un clic sur le message du tray icon
+void		Window::messageClicked() {
 }
 
 
-//! \fn void Window::openFriendManager()
 //! \brief open the friendlist management window
-void        Window::openFriendManager()
-{
-    FriendsManagement *f = new FriendsManagement();
+void        Window::openFriendManager() {
+    FriendsManagement * friendsManagement = new FriendsManagement();
 
-    f->show();
+    friendsManagement->show();
 }
 
 
-//! \fn void Window::openFileshare()
 //! \brief open the fileshare management window
-void        Window::openFileshare()
-{
-    Fileshare *f = new Fileshare();
+void        Window::openFileshare() {
+    Fileshare * fileshare = new Fileshare();
 
-    f->show();
+    fileshare->show();
 }
 
 
-//! \fn void Window::openPreferences()
 //! \brief open the preference management window
-void        Window::openPreferences()
-{
-    Preferences *f = new Preferences();
+void        Window::openPreferences() {
+    Preferences * preferences = new Preferences();
 
-    f->show();
+    preferences->show();
 }
 
 
-//! \fn void Window::openDirectory(void)
 //! \brief open the directory in the explorer
 void        Window::openDirectory(void) {
     // if dir is empty, it does not open the explorer
@@ -176,21 +152,18 @@ void        Window::openDirectory(void) {
 }
 
 
-//! \fn void Window::openBrowserMoreStorage(void)
 //! \brief open the web page for more storage in the browser
 void        Window::openBrowserMoreStorage(void) {
-    QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
+    QDesktopServices::openUrl(QUrl(URL_MORE_STORAGE));
 }
 
 
-//! \fn void Window::openBrowserWoda(void)
 //! \brief open the woda web page in the browser
 void        Window::openBrowserWoda(void) {
-    QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
+    QDesktopServices::openUrl(QUrl(URL_WODA_WEBPAGE));
 }
 
 
-//! \fn void Window::createIconGroupBox()
 //! \brief create the iconcombobox with different logo for the tray icon
 void		Window::createIconGroupBox() {
   iconComboBox = new QComboBox;
@@ -198,7 +171,6 @@ void		Window::createIconGroupBox() {
 }
 
 
-//! \fn void Window::createMessageGroupBox()
 //! \brief create the typeComboBox for the message in the system tray
 void		Window::createMessageGroupBox() {
   typeComboBox = new QComboBox;
@@ -213,7 +185,6 @@ void		Window::createMessageGroupBox() {
 }
 
 
-//! \fn void Window::createActions()
 //! \brief create the action with in the right clic on the icon
 void		Window::createActions() {
   //--------------------------------------------------
@@ -259,10 +230,8 @@ void		Window::createActions() {
 }
 
 
-//! \fn void Window::createTrayIcon()
 //! \brief create all menu to show in the right clic on the icon
-void		Window::createTrayIcon()
-{
+void		Window::createTrayIcon() {
   trayIconMenu = new QMenu(this);
 
   trayIconMenu->addAction(_logoAction);
@@ -287,26 +256,17 @@ void		Window::createTrayIcon()
 }
 
 
-//! \fn void Window::clickLogo()
 //! \brief If click on the logo call this method
 void		Window::clickLogo() {
-  // a changer bien sur (c'est tj pour delord_k xD)
-  //  std::cout << ConfFile::getSingletonPtr()->getValue("global/doubleclick").toString().toStdString() << std::endl;
-  //QDesktopServices::openUrl(QUrl("http://meatspin.com/"));
   QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
 }
 
 
-//! \fn void Window::createFsWatcher(void)
 //! \brief create the folder monitoring
 void        Window::createFsWatcher(void) {
     FileSystemWatcher * fsWatcher = FileSystemWatcher::getSingletonPtr();
     QString dir = ConfFile::getSingletonPtr()->getValue(CONFFILE_DIRECTORY).toString();
     if (dir != QString("")) {
         fsWatcher->addDirectory(dir);
-    }/* else {
-        this->showMessage(QString("Warning"),
-                          QString("folder sync is not defined"),
-                          Window::Warning, 10);
-    }*/
+    }
 }

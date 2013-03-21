@@ -1,19 +1,24 @@
-//! \file ConfFile.cpp
-//! \brief	implementation of the interface to save information in a configuration file
+//! \file ConfFile.hh
+//! \brief	header ConfFile : save information in a configuration file
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-01
 
-#ifndef             CONFFILE_HH__
-# define            CONFFILE_HH__
+#ifndef             INCLUDE_CONFFILE_HH__
+# define            INCLUDE_CONFFILE_HH__
 
 # include           <QSettings>
 # include           <QString>
 # include           "Singleton.hpp"
 
+//! \def CONFFILE_DIRECTORY
 # define            CONFFILE_DIRECTORY      "global/directory"
+//! \def CONFFILE_CORNER
 # define            CONFFILE_CORNER         "global/corner"
 
+//! \class ConfFile ConfFile.hh
+//! \brief class for save information in a configuration file
+//! save information with a pair of key / value.
 class               ConfFile : public Singleton<ConfFile>
 {
     friend class    Singleton<ConfFile>;
@@ -31,4 +36,4 @@ class               ConfFile : public Singleton<ConfFile>
     QSettings *     _settings;
 };
 
-#endif              // !CONFFILE_HH__
+#endif              // !INCLUDE_CONFFILE_HH__

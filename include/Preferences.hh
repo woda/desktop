@@ -1,23 +1,32 @@
-//! \file ConfFile.cpp
-//! \brief	implementation of the interface of GUI for preference
+//! \file Preferences.hh
+//! \brief	header Preferences : GUI for preferences
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-01
 
-#ifndef     PREFERENCES_HH__
-# define    PREFERENCES_HH__
+#ifndef     INCLUDE_PREFERENCES_HH__
+# define    INCLUDE_PREFERENCES_HH__
 
 # include   <QDialog>
 # include   <QFileDialog>
 # include   <QAbstractButton>
 
-# define    CORNER      "global/corner"
-# define    DIRECTORY   "global/directory"
+//! \def CORNER
+# define    CORNER          "global/corner"
+//! \def DIRECTORY
+# define    DIRECTORY       "global/directory"
+//! \def TIMER_REFRESH
+# define    TIMER_REFRESH   1000
 
-namespace Ui {
-    class Preferences;
+
+namespace   Ui {
+    class   Preferences;
 }
 
+//! \class Preferences Preferences.hh
+//! \brief Page who the user can choose his preferences
+//! choose a corner for the popup, select the folder will be synchronized,
+//! connect to an account, and change email, password.
 class       Preferences : public QDialog
 {
     Q_OBJECT
@@ -49,12 +58,13 @@ class       Preferences : public QDialog
     Ui::Preferences *ui;
     QTimer * _timer;
 
-    enum {
-        TOP_LEFT = 1,
-        TOP_RIGHT,
-        BOTTOM_LEFT,
-        BOTTOM_RIGHT
+    //! \enum cornerPopUp
+    enum cornerPopUp {
+        TOP_LEFT = 1,   //!< Corner Top Left
+        TOP_RIGHT,      //!< Corner Top Right
+        BOTTOM_LEFT,    //!< Corner Bottom Left
+        BOTTOM_RIGHT    //!< Corner Bottom Right
     };
 };
 
-#endif      // ! PREFERENCES_HH__
+#endif      // !INCLUDE_PREFERENCES_HH__

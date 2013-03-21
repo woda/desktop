@@ -1,4 +1,4 @@
-//! \file ConfFile.cpp
+//! \file Singleton.hpp
 //! \brief	implementation of the interface of Singleton for call a class whithout instance her
 //! \author Woda Corporation
 //! \version 1.2
@@ -9,6 +9,7 @@
 
 # include	<string>
 
+//! \class Singleton Singleton.hpp
 template	<class T>
 class		Singleton
 {

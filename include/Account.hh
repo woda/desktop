@@ -1,5 +1,5 @@
-//! \file Account.cpp
-//! \brief implementation of the interface for information about account
+//! \file Account.hh
+//! \brief header Account : information about account
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-02
@@ -10,9 +10,14 @@
 # include           <QString>
 # include           "Singleton.hpp"
 
+//! \def LOGIN_CONFFILE
 # define            LOGIN_CONFFILE       "account/login"
+//! \def PASSWORD_CONFFILE
 # define            PASSWORD_CONFFILE    "account/password"
 
+//! \class Account Account.hh
+//! \brief class with information about account
+//! Obtain information as json, deserialize it, fill the account information or an error.
 class               Account : public Singleton<Account>
 {
     friend class    Singleton<Account>;

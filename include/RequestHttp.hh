@@ -1,5 +1,5 @@
 //! \file RequestHttp.cpp
-//! \brief	implementation of the interface for send request to the server
+//! \brief	header RequestHttp : send request to the server
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-02
@@ -12,36 +12,44 @@
 # include           <QNetworkAccessManager>
 # include           "Singleton.hpp"
 
+//! \def WEBAGENTNAME
 # define            WEBAGENTNAME    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17"
+//! \def URL
 # define            URL             "https://ec2-54-242-98-168.compute-1.amazonaws.com:3000"
+//! \def USER
 # define            USER            "users"
+//! \def LOGIN
 # define            LOGIN           "login"
+//! \def LOGOUT
 # define            LOGOUT           "logout"
 
 class               QNetworkReply;
 
+//! \class RequestHttp RequestHttp.hh
+//! \brief class who send and receive request to the server for account management
+//! login and logout to the server, update account.
 class               RequestHttp : public QObject, public Singleton<RequestHttp>
 {
-Q_OBJECT
+ Q_OBJECT
 
     friend class    Singleton<RequestHttp>;
 
-private:
+ private:
     RequestHttp(QObject * parent = 0);
     ~RequestHttp();
 
-public:
+ public:
     void            send();
     void            sendCreate(QString & login);
     void            sendUpdate(QString & email, QString & password);
     void            loginToServer(QString & login, QString & password);
     void            logoutToServer(void);
 
-private slots:
+ private slots:
     void            finishedSlot(QNetworkReply* reply);
 
 
-private:
+ private:
     QNetworkAccessManager * _http;
     QNetworkReply *         _reply;
 };

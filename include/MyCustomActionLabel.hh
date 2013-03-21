@@ -1,16 +1,18 @@
-//! \file ConfFile.cpp
-//! \brief	implementation of the interface of CustomAction for display a label in the tray icon
+//! \file MyCustomActionLabel.hh
+//! \brief	header MyCustonActionLabel : CustomAction for display a label in the tray icon
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-01
 
-#ifndef			MYCUSTOMACTIONLABEL_HH__
-# define		MYCUSTOMACTIONLABEL_HH__
+#ifndef			INCLUDE_MYCUSTOMACTIONLABEL_HH__
+# define		INCLUDE_MYCUSTOMACTIONLABEL_HH__
 
 # include		<QWidgetAction>
 # include		<QLabel>
 # include		<QString>
 
+//! \class MyCustomActionLabel MyCustomActionLabel.hh
+//! \brief class that inherits from QWidgetAction for display a label in the tray icon.
 class			MyCustomActionLabel : public QWidgetAction
 {
     Q_OBJECT
@@ -25,4 +27,4 @@ private:
   QLabel *		_label;
 };
 
-#endif			// !MYCUSTOMACTIONLABEL_HH__
+#endif			// !INCLUDE_MYCUSTOMACTIONLABEL_HH__

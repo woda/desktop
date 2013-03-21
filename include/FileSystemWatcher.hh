@@ -1,11 +1,11 @@
-//! \file FileSystemWatcher.cpp
-//! \brief	implementation of the interface to know the changes in a directory
+//! \file FileSystemWatcher.hh
+//! \brief	header FileSystemWatcher : to know the changes in a directory
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2012-11
 
-#ifndef		FILESYSTEMWATCHER_HH__
-# define	FILESYSTEMWATCHER_HH__
+#ifndef		INCLUDE_FILESYSTEMWATCHER_HH__
+# define	INCLUDE_FILESYSTEMWATCHER_HH__
 
 # include	"Popup.hh"
 # include	"Singleton.hpp"
@@ -14,8 +14,9 @@
 # include   <QList>
 # include	<QFileSystemWatcher>
 
-
-
+//! \class FileSystemWatcher FileSystemWatcher.hh
+//! \brief class who knows the changes in a directory
+//! each file that is added, modified or deleted emit a signal and the event is catch.
 class       FileSystemWatcher : public QObject,
                                 public Singleton<FileSystemWatcher>
 {
@@ -50,4 +51,4 @@ class       FileSystemWatcher : public QObject,
     Popup *	_popup;
 };
 
-#endif		// !FILESYSTEMWATCHER_HH__
+#endif		// !INCLUDE_FILESYSTEMWATCHER_HH__

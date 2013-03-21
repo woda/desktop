@@ -1,39 +1,37 @@
-//! \file ConfFile.cpp
+//! \file FriendsManagement.hh
 //! \brief	implementation of the interface of the GUI for friend list management
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-01
 
-#ifndef FRIENDSMANAGEMENT_H
-#define FRIENDSMANAGEMENT_H
+#ifndef     INCLUDE_FRIENDSMANAGEMENT_HH__
+# define    FRIENDSMANAGEMENT_HH__
 
-#include <QDialog>
-#include <QModelIndex>
-#include <iostream>
-#include <QInputDialog>
-#include <QDir>
+# include   <QDialog>
+# include   <QModelIndex>
+# include   <QInputDialog>
+# include   <QDir>
 
-namespace Ui {
-class FriendsManagement;
+namespace   Ui {
+    class   FriendsManagement;
 }
 
-class FriendsManagement : public QDialog
+//! \class FriendsManagement FriendsManagement.hh
+class       FriendsManagement : public QDialog
 {
-    Q_OBJECT
+ Q_OBJECT
     
-public:
+ public:
     explicit FriendsManagement(QWidget *parent = 0);
     ~FriendsManagement();
     
-private slots:
-    void on_userlist_clicked(const QModelIndex &index);
+ private slots:
+    void    on_userlist_clicked(const QModelIndex &index);
+    void    on_addfriendbutton_clicked();
+    void    on_quitbutton_clicked();
 
-    void on_addfriendbutton_clicked();
-
-    void on_quitbutton_clicked();
-
-private:
+ private:
     Ui::FriendsManagement *ui;
 };
 
-#endif // FRIENDSMANAGEMENT_H
+#endif      // !INCLUDE_FRIENDSMANAGEMENT_HH__

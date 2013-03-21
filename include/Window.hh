@@ -1,5 +1,5 @@
-//! \file ConfFile.cpp
-//! \brief	implementation of the interface of Window wich manages the interfaces
+//! \file Window.hh
+//! \brief	header Window : Window wich manages the interfaces
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-01
@@ -14,6 +14,12 @@
 # include   "Preferences.hh"
 # include   "Fileshare.hh"
 
+//! \def URL_MORE_STORAGE
+# define    URL_MORE_STORAGE    "http://webapp.woda-server.com/app_dev.php"
+//! \def URL_WODA_WEBPAGE
+# define    URL_WODA_WEBPAGE    "http://webapp.woda-server.com/app_dev.php"
+
+
 class		QAction;
 class		QCheckBox;
 class		QComboBox;
@@ -25,6 +31,8 @@ class		QPushButton;
 class		QSpinBox;
 class		QTextEdit;
 
+//! \class Window Window.hh
+//! \brief main Window who manage the tray icon
 class		Window : public QWidget
 {
   Q_OBJECT
@@ -82,20 +90,23 @@ private:
   Popup *	_popup;
 
   // faudra faire une classe a part pour gerer ca
+  //! \enum imageIcon
   enum imageIcon
   {
-    Normal,
-    Synchronization,
-    Synchronized
+    Normal,             //!< default image
+    Synchronization,    //!< image synchronization in progress
+    Synchronized        //!< image up to date
   };
 
   // faudra faire une classe a part pour gerer ca
+  //! \enum messageIcon
+  //! \brief message in tray
   enum messageIcon
   {
-    NoIcon,
-    Information,
-    Warning,
-    Critical
+    NoIcon,         //!< without icon
+    Information,    //!< with information icon
+    Warning,        //!< with warning icon
+    Critical        //!< with critical icon
   };
 
 

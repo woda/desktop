@@ -1,5 +1,5 @@
 //! \file FileSystemWatcher.cpp
-//! \brief	implementation of the interface to know the changes in a directory
+//! \brief	implementation of the header FileSystemWatcher to know the changes in a directory
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2012-11
@@ -9,9 +9,9 @@
 #include    <QFileInfo>
 
 
-//! \fn FileSystemWatcher::FileSystemWatcher(QObject * parent)
 //! \param[in] parent Qobject parent or nothing
 //! \brief Constructor
+//! initialize QFileSystemWatcher, listFile and connect signal fileChanged and directoryChanged to slots
 FileSystemWatcher::FileSystemWatcher(QObject * parent)
  : QObject(parent), _fsWatcher(new QFileSystemWatcher(parent)), _path(""),
    _listFile(new QList<QString>()), _listChange(new QList<QString>()) {
@@ -24,8 +24,8 @@ FileSystemWatcher::FileSystemWatcher(QObject * parent)
 }
 
 
-//! \fn FileSystemWatcher::~FileSystemWatcher()
 //! \brief Destructor
+//! delete QFileSystemWatcher, listFile and listChange
 FileSystemWatcher::~FileSystemWatcher() {
     delete _fsWatcher;
     delete _listFile;
@@ -33,7 +33,6 @@ FileSystemWatcher::~FileSystemWatcher() {
 }
 
 
-//! \fn void FileSystemWatcher::addDirectory(QString & dir)
 //! \param[in] dir main folder path
 //! \brief add the main folder path to check
 void        FileSystemWatcher::addDirectory(QString & dir) {
@@ -56,7 +55,6 @@ void        FileSystemWatcher::addDirectory(QString & dir) {
 }
 
 
-//! \fn void FileSystemWatcher::deleteDirectory(void)
 //! \brief delete the main folder path
 void        FileSystemWatcher::deleteDirectory(void) {
     if (_path != QString("")) {
@@ -72,9 +70,9 @@ void        FileSystemWatcher::deleteDirectory(void) {
 }
 
 
-//! \fn void FileSystemWatcher::eventFile(const QString & path)
 //! \param[in] path file path
 //! \brief private slot for event on a file
+//! if a file is create, update or delete
 void        FileSystemWatcher::eventFile(const QString & path) {
     this->fillListChange();
 
@@ -95,9 +93,9 @@ void        FileSystemWatcher::eventFile(const QString & path) {
 }
 
 
-//! \fn void FileSystemWatcher::eventFolder(const QString & path)
 //! \param[in] path folder path
 //! \brief private slot for event on a folder
+//! if a folder is create, update or delete
 void        FileSystemWatcher::eventFolder(const QString & path) {
     this->fillListChange();
 
@@ -118,7 +116,6 @@ void        FileSystemWatcher::eventFolder(const QString & path) {
 }
 
 
-//! \fn void FileSystemWatcher::fillListChange(void)
 //! \brief push into a list all directories and files contents in the main folder
 void        FileSystemWatcher::fillListChange(void) {
     delete _listChange;
@@ -143,7 +140,6 @@ void        FileSystemWatcher::fillListChange(void) {
 }
 
 
-//! \fn void FileSystemWatcher::checkFileIntoFolder(QString dir)
 //! \param[in] dir folder path
 //! \brief recursive function, for list all subfolders ans files
 void        FileSystemWatcher::checkFileIntoFolder(QString dir) {

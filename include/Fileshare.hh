@@ -1,28 +1,29 @@
-//! \file ConfFile.cpp
+//! \file Fileshare.hh
 //! \brief	implementation of the interface of the GUI for settings on a file
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-01
 
-#ifndef FILESHARE_HH
-#define FILESHARE_HH
+#ifndef     INCLUDE_FILESHARE_HH__
+# define    INCLUDE_FILESHARE_HH__
 
-#include <QDialog>
+# include   <QDialog>
 
-namespace Ui {
-class Fileshare;
+namespace   Ui {
+    class   Fileshare;
 }
 
-class Fileshare : public QDialog
+//! \class Fileshare Fileshare.hh
+class       Fileshare : public QDialog
 {
-    Q_OBJECT
+ Q_OBJECT
     
-public:
+ public:
     explicit Fileshare(QWidget * parent = 0);
     ~Fileshare();
     
-private:
+ private:
     Ui::Fileshare *ui;
 };
 
-#endif // FILESHARE_HH
+#endif      // !INCLUDE_FILESHARE_HH
