@@ -28,6 +28,7 @@ class       UserFolderManagement : public QObject,
     UserFolderManagement(QObject * parent = 0);
     ~UserFolderManagement();
 
+    void            deserializeJsonAccount(QByteArray & bytes);
     void            createDirectory(QString & folderPath);
     void            changeDirectory(QString & folderPath);
     void            deleteDirectory(void);
@@ -38,6 +39,9 @@ class       UserFolderManagement : public QObject,
     void            deleteFileSystemWatcher(void);
     bool            removeAllContentAndFolder(const QString & folderPath);
     bool            checkDirectoryExist(const QString & folderPath);
+    bool            checkFileExist(const QString & filePath);
+    void            createSimpleFolder(QString & folderPath);
+    void            createSimpleFile(QString & filePath);
 
  private:
     QString         _folderPath;

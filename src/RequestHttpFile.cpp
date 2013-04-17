@@ -6,6 +6,7 @@
 
 #include	"RequestHttpFile.hh"
 #include    "RequestHttp.hpp"
+#include    "UserFolderManagement.hh"
 #include    <QUrl>
 #include    <QNetworkRequest>
 #include    <QNetworkReply>
@@ -86,6 +87,12 @@ void        RequestHttpFile::finishedSlot(QNetworkReply* reply) {
         QByteArray bytes = reply->readAll();
         QString str(bytes);
         std::cout << "no error : " << str.toStdString() << std::endl;
+
+        // FOR TEST ONLY
+        QByteArray test("[\n{\n\"name\": \"Folder1\",\n\"full_path\": \".\",\n\"modification_time\": \"01/01/2013 23:42:42\",\n\"files\": [ \n{\n\"name\": \"File1.txt\",\n\"modification_time\": \"01/01/2013 23:42:42\" \n},\n{\n\"name\": \"File2.txt\",\n\"modification_time\": \"01/01/2013 23:42:42\" \n}\n]\n}, \n{\n\"name\": \"Folder2\",\n\"full_path\" : \"./Folder1\",\n\"modification_time\" : \"01/01/2013 23:42:42\",\n\"files\": [ \n{\n\"name\": \"File3.txt\",\n\"modification_time\": \"01/01/2013 23:42:42\" \n}\n]\n}\n]\n");
+        //std::cout << test.toStdString() << std::endl;
+        UserFolderManagement::getSingletonPtr()->deserializeJsonAccount(test);
+
         //Account::getSingletonPtr()->deserializeJsonAccount(bytes);
     } else {
         //Account::getSingletonPtr()->httpError();

@@ -11,6 +11,9 @@
 #include    <QFile>
 #include    <QFileInfo>
 #include    <QDir>
+#include    "dll/qjson/src/parser.h"
+
+#include    <iostream>
 
 //! \param[in] parent QObject parent or nothing
 //! \brief Constructor
@@ -25,6 +28,34 @@ UserFolderManagement::UserFolderManagement(QObject * parent)
 //! \brief Destructor
 UserFolderManagement::~UserFolderManagement() {
     WodaSemaphore::deleteOneInstance(_instanceSemaphore);
+}
+
+
+//! \param[in] bytes string json serialize
+//! \brief Deserialize the json send by the server
+void            UserFolderManagement::deserializeJsonAccount(QByteArray & bytes) {
+    QJson::Parser parser;
+    bool ok;
+    QVariantList result = parser.parse(bytes, &ok).toList();
+
+    foreach(QVariant record, result) {
+        QVariantMap map = record.toMap();
+        QString newFolder(_folderPath);
+        if (map["full_path"].toString().indexOf(".") == 0) {
+            newFolder.append(map["full_path"].toString().right(map["full_path"].toString().size() - 1));
+            newFolder.append("/").append(map["name"].toString());
+            std::cout << newFolder.toStdString() << std::endl;
+            this->createSimpleFolder(newFolder);
+        }
+        QVariantList filelist = map["files"].toList();
+        foreach(QVariant file, filelist) {
+            QVariantMap mapFile = file.toMap();
+            QString newFile(newFolder);
+            newFile.append("/").append(mapFile["name"].toString());
+            this->createSimpleFile(newFile);
+            std::cout << newFile.toStdString() << std::endl;
+        }
+    }
 }
 
 
@@ -128,6 +159,29 @@ bool        UserFolderManagement::checkDirectoryExist(const QString & folderPath
     return directory.exists(folderPath);
 }
 
+bool        UserFolderManagement::checkFileExist(const QString & filePath) {
+    QFile file(filePath);
+    return file.exists(filePath);
+}
+
 const QString & UserFolderManagement::getCurrentDirectory(void) const {
     return _folderPath;
+}
+
+
+void        UserFolderManagement::createSimpleFolder(QString & folderPath) {
+    if (this->checkDirectoryExist(folderPath)) {
+        return;
+    }
+    QDir directory(folderPath);
+    directory.mkdir(folderPath);
+}
+
+void        UserFolderManagement::createSimpleFile(QString & filePath) {
+    if (this->checkFileExist(filePath)) {
+        return;
+    }
+    QFile file(filePath);
+    file.open(QIODevice::ReadWrite);
+    file.close();
 }
