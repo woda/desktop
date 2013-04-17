@@ -8,15 +8,16 @@
 #include    "ui_Preferences.h"
 #include    "ConfFile.hh"
 #include    "FileSystemWatcher.hh"
-#include    "RequestHttp.hh"
+#include    "RequestHttpAccount.hh"
 #include    "Account.hh"
+#include    "UserFolderManagement.hh"
 
 
 //! \param[in] parent Qobject parent or nothing
 //! \brief Constructor
 //! initialize the Ui, corner preference, directory, account
 Preferences::Preferences(QWidget *parent)
- : QDialog(parent), ui(new Ui::Preferences) {
+    : QDialog(parent), ui(new Ui::Preferences), _connected(false) {
     ui->setupUi(this);
     QObject::connect(ui->buttonGroupNotification, SIGNAL(buttonClicked(int)),
                      this, SLOT(notificationPositionClick(int)));
@@ -33,7 +34,7 @@ Preferences::Preferences(QWidget *parent)
 
     _timer = new QTimer(this);
     _timer->setInterval(TIMER_REFRESH);
-    connect(_timer, SIGNAL(timeout()), this, SLOT(updateAccount()));
+    connect(_timer, SIGNAL(timeout()), this, SLOT(update()));
     _timer->start(TIMER_REFRESH);
 }
 
@@ -45,9 +46,25 @@ Preferences::~Preferences() {
 }
 
 
+//! \brief update Preference
+void    Preferences::update(void) {
+    this->updateAccount();
+    this->updateGeneral();
+}
+
+
+//! \brief update account information
+void    Preferences::updateGeneral(void) {
+    ui->WodaFolder_input->setText(UserFolderManagement::getSingletonPtr()->getCurrentDirectory());
+}
+
+
 //! \brief update account information
 void    Preferences::updateAccount(void) {
     Account * account = Account::getSingletonPtr();
+    if (_connected && account->isConnected()) {
+        return;
+    }
     if (account->isConnected()) {
         ui->lineEditEmail->setText(account->email());
         QString hello("hello ");
@@ -76,6 +93,7 @@ void    Preferences::isDisconnected(void) {
     ui->buttonChange->hide();
     ui->buttonConnect->show();
     ui->buttonDisconnect->hide();
+    _connected = false;
 }
 
 
@@ -91,6 +109,7 @@ void    Preferences::isConnected(void) {
     ui->buttonChange->show();
     ui->buttonConnect->hide();
     ui->buttonDisconnect->show();
+    _connected = true;
 }
 
 
@@ -152,13 +171,7 @@ void    Preferences::on_browse_button_clicked() {
                                             QFileDialog::ShowDirsOnly |
                                             QFileDialog::DontResolveSymlinks);
     ui->WodaFolder_input->setText(dir);
-    ConfFile::getSingletonPtr()->setValue(DIRECTORY, QVariant(dir));
-    FileSystemWatcher * fsWatcher = FileSystemWatcher::getSingletonPtr();
-    if (dir != QString("")) {
-        QString tmp("");
-        fsWatcher->addDirectory(tmp);
-        fsWatcher->addDirectory(dir);
-    }
+    UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
 }
 
 
@@ -181,14 +194,15 @@ void    Preferences::buttonConnectAccount() {
         QString password(ui->lineEditPassword->text());
         Account::getSingletonPtr()->setLogin(login);
         Account::getSingletonPtr()->setPassword(password);
-        RequestHttp::getSingletonPtr()->loginToServer(login, password);
+        RequestHttpAccount::getSingletonPtr()->loginToServer(login, password);
     }
 }
 
 
-//! \brief Button to click to connect to the server with the username and pass
+//! \brief Button to click to disconnect to the server
 void    Preferences::buttonDisconnectAccount() {
-    RequestHttp::getSingletonPtr()->logoutToServer();
+    UserFolderManagement::getSingletonPtr()->deleteDirectory();
+    RequestHttpAccount::getSingletonPtr()->logoutToServer();
 }
 
 
@@ -201,11 +215,11 @@ void    Preferences::buttonChangeAccount() {
         ui->lineEditNewPassword->text() == ui->lineEditConfirmPassword->text()) {
         QString email(ui->lineEditEmail->text());
         QString password(ui->lineEditNewPassword->text());
-        RequestHttp::getSingletonPtr()->sendUpdate(email, password);
+        RequestHttpAccount::getSingletonPtr()->sendUpdate(email, password);
     } else {
         QString email(ui->lineEditEmail->text());
         QString password(Account::getSingletonPtr()->password());
-        RequestHttp::getSingletonPtr()->sendUpdate(email, password);
+        RequestHttpAccount::getSingletonPtr()->sendUpdate(email, password);
     }
 }
 
@@ -213,6 +227,6 @@ void    Preferences::buttonChangeAccount() {
 void    Preferences::buttonTest() {
     if (!ui->lineEditLogin->text().isEmpty()) {
         QString login(ui->lineEditLogin->text());
-        RequestHttp::getSingletonPtr()->sendCreate(login);
+        RequestHttpAccount::getSingletonPtr()->sendCreate(login);
     }
 }

@@ -6,7 +6,7 @@
 
 #include	"Account.hh"
 #include    "ConfFile.hh"
-#include    "RequestHttp.hh"
+#include    "RequestHttpAccount.hh"
 #include    "dll/qjson/src/parser.h"
 
 #include <iostream>
@@ -20,7 +20,7 @@ Account::Account()
     _login = ConfFile::getSingletonPtr()->getValue(LOGIN_CONFFILE).toString();
     _password = ConfFile::getSingletonPtr()->getValue(PASSWORD_CONFFILE).toString();
     if (!_login.isEmpty() && !_password.isEmpty()) {
-        RequestHttp::getSingletonPtr()->loginToServer(_login, _password);
+        RequestHttpAccount::getSingletonPtr()->loginToServer(_login, _password);
     }
 }
 

@@ -7,9 +7,9 @@
 #include	<QtGui>
 #include	"Window.hh"
 #include	"ConfFile.hh"
-#include    "FileSystemWatcher.hh"
 #include	"MyCustomActionPixmap.hh"
 #include	"MyCustomActionLabel.hh"
+#include    "UserFolderManagement.hh"
 
 
 //! \param[in] parent Qobject parent or nothing
@@ -40,7 +40,7 @@ Window::Window(QWidget * parent)
 
   _popup = new Popup(220, 150);
   ConfFile::getSingletonPtr();
-  this->createFsWatcher();
+  this->checkUserFolder();
 }
 
 
@@ -263,10 +263,9 @@ void		Window::clickLogo() {
 
 
 //! \brief create the folder monitoring
-void        Window::createFsWatcher(void) {
-    FileSystemWatcher * fsWatcher = FileSystemWatcher::getSingletonPtr();
+void        Window::checkUserFolder(void) {
     QString dir = ConfFile::getSingletonPtr()->getValue(CONFFILE_DIRECTORY).toString();
     if (dir != QString("")) {
-        fsWatcher->addDirectory(dir);
+        UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
     }
 }

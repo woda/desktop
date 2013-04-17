@@ -27,6 +27,7 @@ FileSystemWatcher::FileSystemWatcher(QObject * parent)
 //! \brief Destructor
 //! delete QFileSystemWatcher, listFile and listChange
 FileSystemWatcher::~FileSystemWatcher() {
+    this->deleteDirectory();
     delete _fsWatcher;
     delete _listFile;
     delete _listChange;
@@ -67,6 +68,8 @@ void        FileSystemWatcher::deleteDirectory(void) {
     _path = "";
     delete _listFile;
     _listFile = new QList<QString>();
+    delete _listChange;
+    _listChange = new QList<QString>();
 }
 
 

@@ -10,6 +10,7 @@
 # include	<string>
 
 //! \class Singleton Singleton.hpp
+//! \brief restricts the instantiation of a class to one object
 template	<class T>
 class		Singleton
 {

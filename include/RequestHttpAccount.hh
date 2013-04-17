@@ -1,11 +1,11 @@
-//! \file RequestHttp.cpp
-//! \brief	header RequestHttp : send request to the server
+//! \file RequestHttpAccount.cpp
+//! \brief	header RequestHttpAccount : send request to the server
 //! \author Woda Corporation
 //! \version 1.2
 //! \date 2013-02
 
-#ifndef             INCLUDE_REQUESTHTTP_HH__
-# define            INCLUDE_REQUESTHTTP_HH__
+#ifndef             INCLUDE_REQUESTHTTPACCOUNT_HH__
+# define            INCLUDE_REQUESTHTTPACCOUNT_HH__
 
 # include           <QObject>
 # include           <QString>
@@ -25,18 +25,19 @@
 
 class               QNetworkReply;
 
-//! \class RequestHttp RequestHttp.hh
+//! \class RequestHttpAccount RequestHttpAccount.hh
 //! \brief class who send and receive request to the server for account management
-//! login and logout to the server, update account.
-class               RequestHttp : public QObject, public Singleton<RequestHttp>
+//! \brief login and logout to the server, update account.
+class               RequestHttpAccount : public QObject,
+                                         public Singleton<RequestHttpAccount>
 {
  Q_OBJECT
 
-    friend class    Singleton<RequestHttp>;
+    friend class    Singleton<RequestHttpAccount>;
 
  private:
-    RequestHttp(QObject * parent = 0);
-    ~RequestHttp();
+    RequestHttpAccount(QObject * parent = 0);
+    ~RequestHttpAccount();
 
  public:
     void            send();
@@ -54,4 +55,4 @@ class               RequestHttp : public QObject, public Singleton<RequestHttp>
     QNetworkReply *         _reply;
 };
 
-#endif              // !INCLUDE_REQUESTHTTP_HH__
+#endif              // !INCLUDE_REQUESTHTTPACCOUNT_HH__

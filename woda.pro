@@ -34,9 +34,12 @@ HEADERS         +=      Window.hh                       \
                         Preferences.hh                  \
                         Fileshare.hh                    \
                         FileSystemWatcher.hh            \
-                        RequestHttp.hh                  \
+                        RequestHttpAccount.hh           \
                         Account.hh                      \
-                        Ipc.hh
+                        Ipc.hh                          \
+                        UserFolderManagement.hh         \
+                        WodaSemaphore.hh                \
+                        RequestHttpFile.hh
 
 SRC             =       src
 
@@ -50,9 +53,12 @@ SOURCES         +=      $$SRC/main.cpp                  \
                         $$SRC/Preferences.cpp           \
                         $$SRC/Fileshare.cpp             \
                         $$SRC/FileSystemWatcher.cpp     \
-                        $$SRC/RequestHttp.cpp           \
+                        $$SRC/RequestHttpAccount.cpp    \
                         $$SRC/Account.cpp               \
-                        $$SRC/Ipc.cpp
+                        $$SRC/Ipc.cpp                   \
+                        $$SRC/UserFolderManagement.cpp  \
+                        $$SRC/WodaSemaphore.cpp         \
+                        $$SRC/RequestHttpFile.cpp
 
 FORMS           +=      resources/FriendsManagement.ui  \
                         resources/Preferences.ui        \

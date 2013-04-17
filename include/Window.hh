@@ -15,9 +15,9 @@
 # include   "Fileshare.hh"
 
 //! \def URL_MORE_STORAGE
-# define    URL_MORE_STORAGE    "http://webapp.woda-server.com/app_dev.php"
+# define    URL_MORE_STORAGE    "http://current.webapp.woda-server.com/app_dev.php"
 //! \def URL_WODA_WEBPAGE
-# define    URL_WODA_WEBPAGE    "http://webapp.woda-server.com/app_dev.php"
+# define    URL_WODA_WEBPAGE    "http://current.webapp.woda-server.com/app_dev.php"
 
 
 class		QAction;
@@ -63,7 +63,7 @@ private:
   void		createMessageGroupBox();
   void		createActions();
   void		createTrayIcon();
-  void      createFsWatcher();
+  void      checkUserFolder();
 
 
   QComboBox *	iconComboBox;

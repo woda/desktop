@@ -13,8 +13,6 @@
 
 //! \def CORNER
 # define    CORNER          "global/corner"
-//! \def DIRECTORY
-# define    DIRECTORY       "global/directory"
 //! \def TIMER_REFRESH
 # define    TIMER_REFRESH   1000
 
@@ -41,6 +39,8 @@ class       Preferences : public QDialog
     void    initAccount(void);
     void    isDisconnected(void);
     void    isConnected(void);
+    void    updateAccount();
+    void    updateGeneral();
     
  private slots:
     void    on_checklimitdl_clicked();
@@ -50,13 +50,15 @@ class       Preferences : public QDialog
     void    buttonConnectAccount();
     void    buttonDisconnectAccount();
     void    buttonChangeAccount();
-    void    updateAccount();
+    void    update();
 
     void    buttonTest();
 
  private:
     Ui::Preferences *ui;
     QTimer * _timer;
+    bool     _connected;
+
 
     //! \enum cornerPopUp
     enum cornerPopUp {
