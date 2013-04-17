@@ -12,7 +12,6 @@
 #include    <QFileInfo>
 #include    <QDir>
 
-
 //! \param[in] parent QObject parent or nothing
 //! \brief Constructor
 UserFolderManagement::UserFolderManagement(QObject * parent)
@@ -26,6 +25,18 @@ UserFolderManagement::UserFolderManagement(QObject * parent)
 //! \brief Destructor
 UserFolderManagement::~UserFolderManagement() {
     WodaSemaphore::deleteOneInstance(_instanceSemaphore);
+}
+
+
+//! \param[in] folderPath QString of the path of the folder
+//! \brief create the folder pass as parameter
+void        UserFolderManagement::createDirectory(QString & folderPath) {
+    if (this->checkDirectoryExist(folderPath)) {
+        this->removeAllContentAndFolder(folderPath);
+        return;
+    }
+    QDir directory(folderPath);
+    directory.mkdir(folderPath);
 }
 
 

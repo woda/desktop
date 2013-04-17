@@ -1,4 +1,4 @@
-//! \file RequestHttpFile.cpp
+//! \file RequestHttpFile.hh
 //! \brief	header RequestHttpFile : send request to the server
 //! \author Woda Corporation
 //! \version 1.2
@@ -10,6 +10,7 @@
 # include           <QObject>
 # include           <QString>
 # include           <QNetworkAccessManager>
+# include           <QTimer>
 # include           "Singleton.hpp"
 
 //! \def WEBAGENTNAME
@@ -18,10 +19,10 @@
 # define            URL             "https://ec2-54-242-98-168.compute-1.amazonaws.com:3000"
 //! \def USER
 # define            USER            "users"
-//! \def LOGIN
-# define            LOGIN           "login"
-//! \def LOGOUT
-# define            LOGOUT           "logout"
+//! \def FILES
+# define            FILES           "files"
+//! \def TIMER_REFRESH
+# define    TIMER_REFRESH   1000
 
 class               QNetworkReply;
 
@@ -38,17 +39,17 @@ class               RequestHttpFile : public QObject,
  private:
     RequestHttpFile(QObject * parent = 0);
     ~RequestHttpFile();
-
- public:
-    void            loginToServer(QString & login, QString & password);
+    void            recoverFilesList(void);
 
  private slots:
+    void            update();
     void            finishedSlot(QNetworkReply* reply);
-
 
  private:
     QNetworkAccessManager * _http;
     QNetworkReply *         _reply;
+    QTimer *                _timer;
+    bool                    _recoverTree;
 };
 
 #endif              // !INCLUDE_REQUESTHTTPFILE_HH__

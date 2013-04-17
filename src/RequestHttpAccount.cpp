@@ -5,6 +5,7 @@
 //! \date 2013-02
 
 #include	"RequestHttpAccount.hh"
+#include    "RequestHttp.hpp"
 #include    "Account.hh"
 #include    <QUrl>
 #include    <QNetworkRequest>
@@ -165,6 +166,9 @@ void        RequestHttpAccount::finishedSlot(QNetworkReply* reply) {
         QByteArray bytes2 = reply->readAll();
         QString str(bytes2);
         std::cout << str.toStdString() << std::endl;
+    }
+    if (Account::getSingletonPtr()->isConnected()) {
+        RequestHttp::getSingletonPtr()->setCookie(_http->cookieJar());
     }
     reply->deleteLater();
 }

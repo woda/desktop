@@ -21,7 +21,7 @@ INCLUDEPATH     =       include
 DEPENDPATH      =       include
 
 QT              +=      network                         \
-                        svg                             \
+                        sql                             \
                         gui
 
 HEADERS         +=      Window.hh                       \
@@ -39,7 +39,11 @@ HEADERS         +=      Window.hh                       \
                         Ipc.hh                          \
                         UserFolderManagement.hh         \
                         WodaSemaphore.hh                \
-                        RequestHttpFile.hh
+                        RequestHttpFile.hh              \
+                        RequestHttp.hpp                 \
+                        DataBase.hh                     \
+                        AccountDB.hh                    \
+                        FolderDB.hh
 
 SRC             =       src
 
@@ -58,7 +62,10 @@ SOURCES         +=      $$SRC/main.cpp                  \
                         $$SRC/Ipc.cpp                   \
                         $$SRC/UserFolderManagement.cpp  \
                         $$SRC/WodaSemaphore.cpp         \
-                        $$SRC/RequestHttpFile.cpp
+                        $$SRC/RequestHttpFile.cpp       \
+                        $$SRC/DataBase.cpp              \
+                        $$SRC/AccountDB.cpp             \
+                        $$SRC/FolderDB.cpp
 
 FORMS           +=      resources/FriendsManagement.ui  \
                         resources/Preferences.ui        \

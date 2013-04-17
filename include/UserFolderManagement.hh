@@ -28,6 +28,7 @@ class       UserFolderManagement : public QObject,
     UserFolderManagement(QObject * parent = 0);
     ~UserFolderManagement();
 
+    void            createDirectory(QString & folderPath);
     void            changeDirectory(QString & folderPath);
     void            deleteDirectory(void);
     const QString & getCurrentDirectory(void) const;

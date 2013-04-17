@@ -1,4 +1,4 @@
-//! \file RequestHttpAccount.cpp
+//! \file RequestHttpAccount.hh
 //! \brief	header RequestHttpAccount : send request to the server
 //! \author Woda Corporation
 //! \version 1.2

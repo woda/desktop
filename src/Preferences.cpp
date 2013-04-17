@@ -167,9 +167,12 @@ void    Preferences::on_checklimitup_clicked() {
 void    Preferences::on_browse_button_clicked() {
     QString dir;
     dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                            "/home",
+                                            UserFolderManagement::getSingletonPtr()->getCurrentDirectory(),
                                             QFileDialog::ShowDirsOnly |
                                             QFileDialog::DontResolveSymlinks);
+    if (dir.isEmpty()) {
+        return;
+    }
     ui->WodaFolder_input->setText(dir);
     UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
 }

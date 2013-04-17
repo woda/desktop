@@ -8,14 +8,19 @@
 #include    <QtPlugin>
 #include    "Window.hh"
 #include    "Account.hh"
+#include    "DataBase.hh"
 #include    "Ipc.hh"
+
+#include    "RequestHttpFile.hh"
 
 //! \def ERROR
 #define     ERROR       -1
 
 
 void        initialize(void) {
+    DataBase::getSingletonPtr();
     Account::getSingletonPtr();
+    RequestHttpFile::getSingletonPtr();
 }
 
 //! \fn int main(int argc, char *argv[])

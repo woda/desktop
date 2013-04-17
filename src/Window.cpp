@@ -265,7 +265,10 @@ void		Window::clickLogo() {
 //! \brief create the folder monitoring
 void        Window::checkUserFolder(void) {
     QString dir = ConfFile::getSingletonPtr()->getValue(CONFFILE_DIRECTORY).toString();
-    if (dir != QString("")) {
-        UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
+    if (dir == QString("")) {
+        dir = QDir::homePath();
+        dir.append("/Woda");
+        UserFolderManagement::getSingletonPtr()->createDirectory(dir);
     }
+    UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
 }
