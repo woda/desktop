@@ -75,7 +75,7 @@ void        UserFolderManagement::createDirectory(QString & folderPath) {
 //! \brief change the current directory of the user
 void        UserFolderManagement::changeDirectory(QString & folderPath) {
     if (!this->checkDirectoryExist(folderPath)) {
-        return;
+        this->createDirectory(folderPath);
     }
     if (!_folderPath.isEmpty() && folderPath != _folderPath)
         this->moveDirectory(folderPath);
