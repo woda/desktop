@@ -65,12 +65,11 @@ SOURCES         +=      $$SRC/main.cpp                  \
                         $$SRC/AccountDB.cpp             \
                         $$SRC/FolderDB.cpp
 
-FORMS           +=      resources/Preferences.ui
+FORMS           +=      resources/Forms/Preferences.ui
 
-RESOURCES       +=      woda.qrc
+RESOURCES       +=      resources/woda.qrc
 
-OTHER_FILES     +=      resources/woda.ini		\
-                        resources/icone.rc
+OTHER_FILES     +=      resources/icone.rc
 						
 RC_FILE         +=	resources/icone.rc
 
