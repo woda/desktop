@@ -1,50 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Preferences</class>
- <widget class="QDialog" name="Preferences">
+ <widget class="QWidget" name="Preferences">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>480</width>
-    <height>640</height>
+    <height>381</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>600</y>
-     <width>461</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="locale">
-    <locale language="English" country="UnitedStates"/>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
   <widget class="QTabWidget" name="tab">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>90</y>
+     <y>60</y>
      <width>441</width>
-     <height>461</height>
+     <height>301</height>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>2</number>
    </property>
-   <widget class="QWidget" name="General">
+   <widget class="QWidget" name="GeneralTab">
     <attribute name="title">
      <string>General</string>
     </attribute>
@@ -144,7 +125,7 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QWidget" name="Account">
+   <widget class="QWidget" name="AccountTab">
     <attribute name="title">
      <string>Account</string>
     </attribute>
@@ -361,7 +342,7 @@ qproperty-alignment: AlignCenter;</string>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="Connexion">
+   <widget class="QWidget" name="ConnexionTab">
     <attribute name="title">
      <string>Connexion</string>
     </attribute>
@@ -511,9 +492,9 @@ qproperty-alignment: AlignCenter;</string>
   <widget class="QLabel" name="title">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>20</y>
-     <width>221</width>
+     <x>10</x>
+     <y>10</y>
+     <width>461</width>
      <height>41</height>
     </rect>
    </property>
@@ -526,44 +507,12 @@ qproperty-alignment: AlignCenter;</string>
     <number>1</number>
    </property>
    <property name="text">
-    <string>Preferences</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Preferences&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>Preferences</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>Preferences</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>buttonConnect</sender>
    <signal>clicked()</signal>

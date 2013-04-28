@@ -17,7 +17,7 @@
 
 //! \class Account Account.hh
 //! \brief class with information about account
-//! Obtain information as json, deserialize it, fill the account information or an error.
+//! \brief Obtain information as json, deserialize it, fill the account information or an error.
 class               Account : public Singleton<Account>
 {
     friend class    Singleton<Account>;

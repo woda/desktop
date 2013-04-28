@@ -1,15 +1,13 @@
 //! \file Preferences.hh
 //! \brief	header Preferences : GUI for preferences
 //! \author Woda Corporation
-//! \version 1.2
+//! \version 1.3
 //! \date 2013-01
 
 #ifndef     INCLUDE_PREFERENCES_HH__
 # define    INCLUDE_PREFERENCES_HH__
 
-# include   <QDialog>
-# include   <QFileDialog>
-# include   <QAbstractButton>
+# include   <QWidget>
 
 //! \def CORNER
 # define    CORNER          "global/corner"
@@ -17,20 +15,17 @@
 # define    TIMER_REFRESH   1000
 
 
-namespace   Ui {
-    class   Preferences;
-}
+# include			"ui_Preferences.h"
 
 //! \class Preferences Preferences.hh
 //! \brief Page who the user can choose his preferences
 //! \brief choose a corner for the popup, select the folder will be synchronized,
 //! \brief connect to an account, and change email, password.
-class       Preferences : public QDialog
-{
-    Q_OBJECT
+class       Preferences : public QWidget, private Ui::Preferences {
+ Q_OBJECT
     
  public:
-    explicit Preferences(QWidget *parent = 0);
+    Preferences(QWidget *parent = 0);
     ~Preferences();
 
  private:
@@ -55,7 +50,6 @@ class       Preferences : public QDialog
     void    buttonTest();
 
  private:
-    Ui::Preferences *ui;
     QTimer * _timer;
     bool     _connected;
 

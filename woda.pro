@@ -53,10 +53,10 @@ SOURCES         +=      $$SRC/main.cpp                  \
                         $$SRC/MyCustomActionLabel.cpp   \
                         $$SRC/Popup.cpp                 \
                         $$SRC/ConfFile.cpp              \
+                        $$SRC/Account.cpp               \
                         $$SRC/Preferences.cpp           \
                         $$SRC/FileSystemWatcher.cpp     \
                         $$SRC/RequestHttpAccount.cpp    \
-                        $$SRC/Account.cpp               \
                         $$SRC/Ipc.cpp                   \
                         $$SRC/UserFolderManagement.cpp  \
                         $$SRC/WodaSemaphore.cpp         \
