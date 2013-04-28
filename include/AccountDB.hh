@@ -9,13 +9,18 @@
 
 # include           <vector>
 
+//! \def ACCOUNT_LOGIN
 # define            ACCOUNT_LOGIN       "login"
+//! \def ACCOUNT_PASSWORD
 # define            ACCOUNT_PASSWORD    "password"
+//! \def ACCOUNT_DIRECTORY
 # define            ACCOUNT_DIRECTORY   "directory"
 
 
 class               QString;
 
+//! \class AccountDB AccountDB.hh
+//! \brief content for create table with account content
 class               AccountDB {
  public:
     AccountDB();

@@ -17,13 +17,14 @@
 #define     ERROR       -1
 
 
+//! \brief initialize singleton class, database, account, requestHttp
 void        initialize(void) {
     DataBase::getSingletonPtr();
     Account::getSingletonPtr();
     RequestHttpFile::getSingletonPtr();
 }
 
-//! \fn int main(int argc, char *argv[])
+
 //! \brief initialize the resources, check if the tray icon is available on the system
 //! \brief do not quit if the last window is closed
 int         main(int argc, char *argv[]) {

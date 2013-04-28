@@ -17,12 +17,17 @@
 #include    "AccountDB.hh"
 #include    "FolderDB.hh"
 
+
+//! \brief Constructor
+//! \brief create map with function pointer for create all tables in database
+//! \brief create map Primary Key
+//! \brief Create and Open the Sql Database
 DataBase::DataBase()
     :   _connect(0),
         _create(0),
         _vQuery(new std::vector<QString>()),
         _empty(true) {
-    //
+
     // Add static createTable method for create the table
     _mapCreate = new std::vector<func>();
     _mapCreate->push_back(&AccountDB::createTable);
@@ -30,7 +35,7 @@ DataBase::DataBase()
 
 
     _mapPrimaryKey = new std::map<QString, func>();
-    // if change TourneeDB::tourneeTable(), also change in checkDataBase()
+    // if change AccountDB::accountTable(), also change in checkDataBase()
     _mapPrimaryKey->insert(std::pair<QString, func>(AccountDB::accountTable(),
                                                     &AccountDB::accountPrimaryKey));
     _mapPrimaryKey->insert(std::pair<QString, func>(FolderDB::folderTable(),
@@ -49,10 +54,13 @@ DataBase::DataBase()
     this->close();
 
     // Check if db is empty or not
-//    _empty = this->checkDataBase();
+    _empty = this->checkDataBase();
 //    std::cout << "empty = " << _empty << std::endl;
 }
 
+
+//! \brief Destructor
+//! \brief Close the Database and remove the database into the Qt Module
 DataBase::~DataBase() {
     QString str = _db->connectionName();
     this->close();
@@ -63,6 +71,8 @@ DataBase::~DataBase() {
     QSqlDatabase::removeDatabase(str);
 }
 
+
+//! \brief open the database, if the database is not create call create method
 void        DataBase::open() {
     bool    beforeOpen = _connect;
     _db->open();
@@ -82,18 +92,25 @@ void        DataBase::open() {
     }
 }
 
+
+//! \brief close the database
 inline void DataBase::close() {
     _db->close();
 }
 
-inline void DataBase::execute(QString & str) {
+
+//! \brief execute the query
+//! \param[in] strQuery QString query
+inline void DataBase::execute(QString & strQuery) {
     QSqlQuery query;
-    if (str == NULL)
+    if (strQuery == NULL)
         return;
-    if (!query.exec(str))
+    if (!query.exec(strQuery))
         qDebug() << query.lastError();
 }
 
+
+//! \brief create all table, call all function pointer for create tables
 void        DataBase::create() {
     this->open();
     for (std::vector<func>::iterator it = _mapCreate->begin();
@@ -112,9 +129,15 @@ void        DataBase::create() {
     this->close();
 }
 
+
+//! \brief If the table have no Primary Key
+//! \brief check if the table have already the elements in database
+//! \brief for not to have 2 rows with the same values
+//! \param[in] table QString
+//! \param[in] mapInsert QString map with columns and values
+//! \return false if all element are already in database, otherwise true
 bool        DataBase::checkInsertWithoutPrimary(QString & table,
                                         std::map<QString, QString> &mapInsert) {
-    // si la table n'a pas de PK, regarde si tous les elements sont identique
     QString str("SELECT ");
     bool    begin = false;
     for (std::map<QString, QString>::iterator it = mapInsert.begin();
@@ -140,9 +163,14 @@ bool        DataBase::checkInsertWithoutPrimary(QString & table,
     return true;
 }
 
+
+//! \brief If the table have Primary Key
+//! \brief check if the table have already the element with the primary key in database
+//! \param[in] table QString
+//! \param[in] mapInsert QString map with columns and values
+//! \return false if the primary key is already in database, otherwise true
 bool        DataBase::checkInsert(QString & table,
                                   std::map<QString, QString> & mapInsert) {
-    // verifie que la ligne n'existe pas (cle primaire), sinon return false
     bool    begin = false;
     std::vector<QString> vstr = (*_mapPrimaryKey)[table]();
     if (vstr.size() == 0)
@@ -171,6 +199,11 @@ bool        DataBase::checkInsert(QString & table,
     return true;
 }
 
+
+//! \brief change the map for insert elements to a vector for update elements
+//! \param[in] table QString
+//! \param[in] mapInsert map with column name for key and value for the value
+//! \return a vector of QString for update the element
 std::vector<QString> DataBase::insertToUpdate(QString & table,
                                         std::map<QString, QString> & mapInsert){
     std::vector<QString> vWhere;
@@ -184,20 +217,22 @@ std::vector<QString> DataBase::insertToUpdate(QString & table,
     return vWhere;
 }
 
-void        DataBase::insert(QString & from,
+
+//! \brief insert the element contained in the map into the database
+//! \param[in] table QString
+//! \param[in] mapInsert map with column name for key and value for the value
+void        DataBase::insert(QString & table,
                              std::map<QString, QString> & mapInsert) {
-    // effectue un insert a partir d'un nom table
-    // et d'une map avec pour cle le nom de la colonne et pour valeur, ben la valeur :p
     bool begin = false;
-    if (!this->checkInsert(from, mapInsert)) {
-        if ((*_mapPrimaryKey)[from]().size() == 0)
+    if (!this->checkInsert(table, mapInsert)) {
+        if ((*_mapPrimaryKey)[table]().size() == 0)
             return;
-        std::vector<QString> vWhere = this->insertToUpdate(from, mapInsert);
-        this->update(from, mapInsert, vWhere);
+        std::vector<QString> vWhere = this->insertToUpdate(table, mapInsert);
+        this->update(table, mapInsert, vWhere);
         return;
     }
     QString str("INSERT INTO ");
-    str.append(from).append(" (");
+    str.append(table).append(" (");
     for (std::map<QString, QString>::iterator it = mapInsert.begin();
          it != mapInsert.end(); ++it) {
         if (begin)
@@ -223,9 +258,13 @@ void        DataBase::insert(QString & from,
     this->close();
 }
 
+
+//! \brief check if the table have already the element in database
+//! \param[in] table QString
+//! \param[in] mapUpdate map with column name for key and value for the value
+//! \return true if the elements are already in database, otherwise false
 bool        DataBase::checkUpdate(QString & table,
                                   std::map<QString, QString> & mapUpdate) {
-    // verifie que la ligne existe bien, sinon return false
     bool    begin = false;
     std::vector<QString> vstr = (*_mapPrimaryKey)[table]();
     if (vstr.size() == 0)
@@ -254,11 +293,15 @@ bool        DataBase::checkUpdate(QString & table,
     return false;
 }
 
+
+//! \brief update the database with a map for know the values
+//! \brief and a where clause for update just 1 or more rows
+//! \param[in] table QString
+//! \param[in] mapUpdate map with column name for key and value for the value
+//! \param[in] vWhere vector of QString for where clause
 void        DataBase::update(QString & table,
                              std::map<QString, QString> & mapUpdate,
                              std::vector<QString> & vWhere) {
-    // effectue un update a partir d'un nom table, d'une liste pour where
-    // et d'une map avec pour cle le nom de la colonne et pour valeur, ben la valeur :p
     bool begin = false;
     if (!this->checkUpdate(table, mapUpdate)) {
         this->insert(table, mapUpdate);
@@ -290,9 +333,12 @@ void        DataBase::update(QString & table,
     this->close();
 }
 
+
+//! \brief delete line(s) in the table with a where clause
+//! \param[in] table QString
+//! \param[in] vWhere vector of QString for where clause
 void        DataBase::deleteLine(QString & table,
                                  std::vector<QString> & vWhere) {
-    // effectue un delete a partir d'un nom table et d'une liste pour where
     bool begin = false;
     this->open();
     QString str("DELETE FROM ");
@@ -311,9 +357,13 @@ void        DataBase::deleteLine(QString & table,
     this->close();
 }
 
-std::map<QString, std::vector<QString> *> * DataBase::select(QString & from,
+
+//! \brief select the element(s) thanks to the column name in the the vSelect
+//! \param[in] table QString
+//! \param[in] vSelect vector of QString with name of the column for the select
+//! \return a map with QString of the column name and a vector of string with all informations line by line
+std::map<QString, std::vector<QString> *> * DataBase::select(QString & table,
                                                              std::vector<QString> & vSelect) {
-    // effectue un SELECT a l'aide d'une table et de list select, sans where
     bool    begin = false;
     QString str("SELECT ");
     for (std::vector<QString>::iterator it = vSelect.begin();
@@ -324,14 +374,19 @@ std::map<QString, std::vector<QString> *> * DataBase::select(QString & from,
         str.append(*it);
     }
     str.append(" FROM ");
-    str.append(from);
+    str.append(table);
     return this->select(str);
 }
 
+
+//! \brief select the element(s) thanks to the column name in the the vSelect and a where clause
+//! \param[in] table QString
+//! \param[in] vSelect vector of QString with name of the column for the select
+//! \param[in] vWhere vector of QString for where clause
+//! \return a map with QString of the column name and a vector of string with all informations line by line
 std::map<QString, std::vector<QString> *> * DataBase::select(QString & from,
                                                              std::vector<QString> & vSelect,
                                                              std::vector<QString> & vWhere) {
-    // effectue un SELECT a l'aide d'une table et de list select et where
     bool    begin = false;
     QString str("SELECT ");
     for (std::vector<QString>::iterator it = vSelect.begin();
@@ -354,8 +409,11 @@ std::map<QString, std::vector<QString> *> * DataBase::select(QString & from,
     return this->select(str);
 }
 
+
+//! \brief select the element(s) with a complete query
+//! \param[in] strQuery QString
+//! \return a map with QString of the column name and a vector of string with all informations line by line
 std::map<QString, std::vector<QString> *> * DataBase::select(QString & strQuery) {
-    // effectue un SELECT a l'aide d'une requete complete en string
     std::map<QString, std::vector<QString> *> * mapResult;
     mapResult = new std::map<QString, std::vector<QString> *>();
     this->open();
@@ -384,34 +442,48 @@ std::map<QString, std::vector<QString> *> * DataBase::select(QString & strQuery)
 }
 
 
+//! \brief check if the database contains element(s)
+//! \return false if the database contains elements, otherwise true
 bool        DataBase::checkDataBase(void) {
-    // regarde si la db contient des elements
     QString table = AccountDB::accountTable();
-    QString str("SELECT * FROM");
+    QString str("SELECT * FROM ");
     str.append(table);
 
     std::map<QString, std::vector<QString> *> * mapResult = this->select(str);
-
-    if (((*mapResult)[QString("login")])->size() > 0)
+    if (((*mapResult)[QString("login")])->size() > 0) {
         return false;
+    }
     return true;
 }
 
+
+//! \return false if the database contains elements, otherwise true
 bool        DataBase::getEmpty(void) const {
     return _empty;
 }
 
+
+
 //////////////////////////
 // QUERY IF NO CONNECTION
 //////////////////////////
-inline void DataBase::addQuery(QString & str) {
-    _vQuery->push_back(str);
+
+//! \brief add the query in a vector for execute the query
+//! \brief once the database is available
+//! \param[in] query QString
+inline void DataBase::addQuery(QString & query) {
+    _vQuery->push_back(query);
 }
 
+
+//! \brief delete all query  contained in the vector for query if the database is offline
 inline void DataBase::deleteQuery(void) {
     _vQuery->clear();
 }
 
+
+//! \brief execute the querys contained into the vector
+//! \brief when the database will be available
 void        DataBase::executeQuery(void) {
     for (std::vector<QString>::iterator it = _vQuery->begin();
          it != _vQuery->end(); ++it) {

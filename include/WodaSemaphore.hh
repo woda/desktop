@@ -1,4 +1,4 @@
-//! \file WodaSemaphore.hpp
+//! \file WodaSemaphore.hh
 //! \brief	implementation of the interface of Semaphore
 //! \author Woda Corporation
 //! \version 1.2
@@ -11,9 +11,11 @@
 # include       <QString>
 # include       <QSemaphore>
 
+//! \def DEFAULTNAMEINSTANCE
 # define        DEFAULTNAMEINSTANCE     "-42"
 
 //! \class WodaSemaphore WodaSemaphore.hh
+//! \brief map of semaphore
 class           WodaSemaphore : public QSemaphore {
     WodaSemaphore(int n = 1);
     ~WodaSemaphore();

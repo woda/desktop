@@ -17,6 +17,8 @@
 # define    DIRECTORY       "global/directory"
 
 //! \class UserFolderManagement UserFolderManagement.hh
+//! \brief manage the user directory, create, change, delete
+//! \brief manage the file system watcher
 class       UserFolderManagement : public QObject,
                                    public Singleton<UserFolderManagement>
 {

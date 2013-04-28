@@ -12,11 +12,15 @@
 # include           <map>
 # include           "Singleton.hpp"
 
+//! \def DB_TYPE
 # define            DB_TYPE         "QSQLITE"
+//! \def DB_NAME
 # define            DB_NAME         "Woda.db"
 
 class               QString;
 
+//! \class DataBase DataBase.hh
+//! \brief class for the interactions with the database, insert, update, delete
 class               DataBase : public Singleton<DataBase> {
     friend class    Singleton<DataBase>;
 

@@ -23,8 +23,8 @@ namespace   Ui {
 
 //! \class Preferences Preferences.hh
 //! \brief Page who the user can choose his preferences
-//! choose a corner for the popup, select the folder will be synchronized,
-//! connect to an account, and change email, password.
+//! \brief choose a corner for the popup, select the folder will be synchronized,
+//! \brief connect to an account, and change email, password.
 class       Preferences : public QDialog
 {
     Q_OBJECT

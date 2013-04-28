@@ -1,4 +1,4 @@
-//! \file WodaSemaphore.hpp
+//! \file WodaSemaphore.cpp
 //! \brief	implementation of the interface of Semaphore
 //! \author Woda Corporation
 //! \version 1.2

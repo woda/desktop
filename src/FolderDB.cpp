@@ -10,12 +10,19 @@
 #include    "FolderDB.hh"
 #include    "DataBase.hh"
 
+
+//! \brief Constructor
 FolderDB::FolderDB() {
 }
 
+
+//! \brief Destructor
 FolderDB::~FolderDB() {
 }
 
+
+//! \brief create the querry for create the folder table and the file table
+//! \return a vector fill with querry for create account tables
 std::vector<QString>    FolderDB::createTable(void) {
     std::vector<QString> vstr(0);
     vstr.push_back(QString("CREATE TABLE folder (path text)"));
@@ -24,12 +31,16 @@ std::vector<QString>    FolderDB::createTable(void) {
     return vstr;
 }
 
+
+//! \return a vector fill with the primary keys for the foler table
 std::vector<QString>    FolderDB::folderPrimaryKey(void) {
     std::vector<QString> vstr(0);
     vstr.push_back(QString("path"));
     return vstr;
 }
 
+
+//! \return a vector fill with the primary keys for the file table
 std::vector<QString>    FolderDB::filePrimaryKey(void) {
     std::vector<QString> vstr(0);
     vstr.push_back(QString("name"));
@@ -37,19 +48,30 @@ std::vector<QString>    FolderDB::filePrimaryKey(void) {
     return vstr;
 }
 
+
+//! \return a string with the name of the folder table
 QString                 FolderDB::folderTable(void) {
     return QString("folder");
 }
 
+
+//! \return a string with the name of the file table
 QString                 FolderDB::fileTable(void) {
-    return QString("folder");
+    return QString("file");
 }
 
+
+//! \brief add quote between the string pass as parameter
+//! \param[in] str string
+//! \return a string with quotes
 QString                 FolderDB::addQuotes(QString str) {
     return QString("\"").append(str).append("\"");
 }
 
 
+//! \brief insert the path of a folder who is in the user directory
+//! \brief in the folder table in database
+//! \param[in] folderPath QString
 void                    FolderDB::insertFolder(QString & folderPath) {
     QString table = this->folderTable();
     std::map<QString, QString> map;
@@ -58,6 +80,10 @@ void                    FolderDB::insertFolder(QString & folderPath) {
     DataBase::getSingletonPtr()->insert(table, map);
 }
 
+
+//! \brief insert the path of a file who is in the user directory
+//! \brief in the file table in database
+//! \param[in] filePath QString
 void                    FolderDB::insertFile(QString & filePath) {
     QString table = this->fileTable();
     std::map<QString, QString> map;
@@ -77,13 +103,17 @@ void                    FolderDB::insertFile(QString & filePath) {
 }
 
 
-
+//! \brief select all info in folder table
+//! \return a map with QString of the column name and a vector of string with all informations line by line
 std::map<QString, std::vector<QString> *> * FolderDB::selectAllFolder(void) {
     QString str("SELECT * FROM ");
     str.append(FolderDB::folderTable());
     return DataBase::getSingletonPtr()->select(str);
 }
 
+
+//! \brief select all info in file table
+//! \return a map with QString of the column name and a vector of string with all informations line by line
 std::map<QString, std::vector<QString> *> * FolderDB::selectAllFile(void) {
     QString str("SELECT * FROM ");
     str.append(FolderDB::fileTable());
@@ -91,10 +121,8 @@ std::map<QString, std::vector<QString> *> * FolderDB::selectAllFile(void) {
 }
 
 
-
-void                    FolderDB::deleteLine(void) {
-}
-
+//! \brief delete informations of the directory in folder table
+//! \param[in] folderPath QString
 void                    FolderDB::deleteLineFolder(QString & folderPath) {
     this->deleteLineAllFilesInFolder(folderPath);
     // appel delete avec les PK insere dans la clause where
@@ -106,6 +134,9 @@ void                    FolderDB::deleteLineFolder(QString & folderPath) {
     DataBase::getSingletonPtr()->deleteLine(table, where);
 }
 
+
+//! \brief delete all file in file table with the folderPath as paramater
+//! \param[in] folderPath QString
 void                    FolderDB::deleteLineAllFilesInFolder(QString & folderPath) {
     // appel delete avec les PK insere dans la clause where
     QString table = this->fileTable();
@@ -116,6 +147,9 @@ void                    FolderDB::deleteLineAllFilesInFolder(QString & folderPat
     DataBase::getSingletonPtr()->deleteLine(table, where);
 }
 
+
+//! \brief delete informations of the file in file table
+//! \param[in] filePath QString
 void                    FolderDB::deleteLineFile(QString & filePath) {
     // appel delete avec les PK insere dans la clause where
     QString table = this->fileTable();

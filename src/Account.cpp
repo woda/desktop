@@ -12,8 +12,8 @@
 #include <iostream>
 
 //! \brief Constructor
-//! retrieves the login and password in the Class ConfFile
-//! if the login and pass exist, connect to the server
+//! \brief retrieves the login and password in the Class ConfFile
+//! \brief if the login and pass exist, connect to the server
 Account::Account()
     : _connected(false), _firstName(QString("")), _lastName(QString("")),
       _email(QString("")), _errorHttp(false), _errorServer(QString("")) {

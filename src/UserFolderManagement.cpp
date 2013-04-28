@@ -154,21 +154,33 @@ bool        UserFolderManagement::removeAllContentAndFolder(const QString & fold
     return result;
 }
 
+
+//! \brief check if the directory pass as parameter exist
+//! \param[in] folderPath QString of the path
+//! \return true if exist, otherwise false
 bool        UserFolderManagement::checkDirectoryExist(const QString & folderPath) {
     QDir directory(folderPath);
     return directory.exists(folderPath);
 }
 
+
+//! \brief check if the file pass as parameter exist
+//! \param[in] filePath QString of the path
+//! \return true if exist, otherwise false
 bool        UserFolderManagement::checkFileExist(const QString & filePath) {
     QFile file(filePath);
     return file.exists(filePath);
 }
 
+
+//! \return the path of the user directory
 const QString & UserFolderManagement::getCurrentDirectory(void) const {
     return _folderPath;
 }
 
 
+//! \brief create a directory with the path pass as parameter
+//! \param[in] folderPath QString of the directory
 void        UserFolderManagement::createSimpleFolder(QString & folderPath) {
     if (this->checkDirectoryExist(folderPath)) {
         return;
@@ -177,6 +189,9 @@ void        UserFolderManagement::createSimpleFolder(QString & folderPath) {
     directory.mkdir(folderPath);
 }
 
+
+//! \brief create a file with the path pass as parameter
+//! \param[in] filePath QString of the file
 void        UserFolderManagement::createSimpleFile(QString & filePath) {
     if (this->checkFileExist(filePath)) {
         return;

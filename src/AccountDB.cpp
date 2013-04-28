@@ -10,12 +10,19 @@
 #include    "AccountDB.hh"
 #include    "DataBase.hh"
 
+
+//! \brief Constructor
 AccountDB::AccountDB() {
 }
 
+
+//! \brief Destructor
 AccountDB::~AccountDB() {
 }
 
+
+//! \brief create the querry for create the account table
+//! \return a vector fill with querry for create account tables
 std::vector<QString>    AccountDB::createTable(void) {
     std::vector<QString> vstr(0);
     vstr.push_back(QString("CREATE TABLE account (login text, "
@@ -23,20 +30,31 @@ std::vector<QString>    AccountDB::createTable(void) {
     return vstr;
 }
 
+
+//! \return a vector fill with the primary keys for the account table
 std::vector<QString>    AccountDB::accountPrimaryKey(void) {
     std::vector<QString> vstr(0);
     return vstr;
 }
 
+
+//! \return a string with the name of the account table
 QString                 AccountDB::accountTable(void) {
     return QString("account");
 }
 
+
+//! \brief add quote between the string pass as parameter
+//! \param[in] str string
+//! \return a string with quotes
 QString                 AccountDB::addQuotes(QString str) {
     return QString("\"").append(str).append("\"");
 }
 
 
+//! \brief insert the login and the password in the account table in database
+//! \param[in] login QString
+//! \param[in] password QString
 void                    AccountDB::insertAccountLoginPassword(QString & login,
                                                               QString & password) {
     QString table = this->accountTable();
@@ -47,6 +65,9 @@ void                    AccountDB::insertAccountLoginPassword(QString & login,
     DataBase::getSingletonPtr()->insert(table, map);
 }
 
+
+//! \brief insert the path of the user directory in the account table in database
+//! \param[in] folderPath QString
 void                    AccountDB::insertAccountDirectory(QString & folderPath) {
     QString table = this->accountTable();
     std::map<QString, QString> map;
@@ -56,15 +77,18 @@ void                    AccountDB::insertAccountDirectory(QString & folderPath) 
 }
 
 
-
+//! \brief select all info in account table
+//! \return a map with QString of the column name and a vector of string with all informations line by line
 std::map<QString, std::vector<QString> *> * AccountDB::selectAllAccount(void) {
+    // TO DO
     QString str("SELECT * FROM ");
     str.append(AccountDB::accountTable());
     return DataBase::getSingletonPtr()->select(str);
 }
 
 
-
+//! \brief delete all informations of the user in database
+//! \param[in] login QString
 void                    AccountDB::deleteLineAccount(QString & login) {
     // appel delete avec les PK insere dans la clause where
     QString table = this->accountTable();
@@ -75,6 +99,9 @@ void                    AccountDB::deleteLineAccount(QString & login) {
     DataBase::getSingletonPtr()->deleteLine(table, where);
 }
 
+
+//! \brief delete the path of the user directory in database
+//! \param[in] folderPath QString
 void                    AccountDB::deleteLineDirectory(QString & folderPath) {
     // appel delete avec les PK insere dans la clause where
     QString table = this->accountTable();

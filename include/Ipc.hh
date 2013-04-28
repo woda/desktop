@@ -17,7 +17,7 @@
 
 //! \class Ipc Ipc.hh
 //! \brief class for Inter Processus Communication
-//! if a second program is launched, it will automatically be closed.
+//! \brief if a second program is launched, it will automatically be closed.
 class               Ipc : public QWidget {
  Q_OBJECT
 

@@ -10,14 +10,20 @@
 
 # include           <vector>
 
+//! \def FOLDER_PATH
 # define            FOLDER_PATH             "path"
 
+//! \def FILE_NAME
 # define            FILE_NAME               "name"
+//! \def FILE_ID_FOLDER
 # define            FILE_ID_FOLDER          "idFolder"
+//! \def FILE_HASH
 # define            FILE_HASH               "hash"
 
 class               QString;
 
+//! \class FolderDB FolderDB.hh
+//! \brief content for create table with folder content
 class               FolderDB {
  public:
     FolderDB();
