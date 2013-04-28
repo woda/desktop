@@ -25,14 +25,13 @@ QT              +=      network                         \
                         gui
 
 HEADERS         +=      Window.hh                       \
+                        TrayIcon.hh                     \
                         MyCustomActionPixmap.hh         \
                         MyCustomActionLabel.hh          \
                         Popup.hh                        \
                         ConfFile.hh                     \
                         Singleton.hpp                   \
-                        FriendsManagement.hh            \
                         Preferences.hh                  \
-                        Fileshare.hh                    \
                         FileSystemWatcher.hh            \
                         RequestHttpAccount.hh           \
                         Account.hh                      \
@@ -49,13 +48,12 @@ SRC             =       src
 
 SOURCES         +=      $$SRC/main.cpp                  \
                         $$SRC/Window.cpp                \
+                        $$SRC/TrayIcon.cpp              \
                         $$SRC/MyCustomActionPixmap.cpp  \
                         $$SRC/MyCustomActionLabel.cpp   \
                         $$SRC/Popup.cpp                 \
                         $$SRC/ConfFile.cpp              \
-                        $$SRC/FriendsManagement.cpp     \
                         $$SRC/Preferences.cpp           \
-                        $$SRC/Fileshare.cpp             \
                         $$SRC/FileSystemWatcher.cpp     \
                         $$SRC/RequestHttpAccount.cpp    \
                         $$SRC/Account.cpp               \
@@ -67,9 +65,7 @@ SOURCES         +=      $$SRC/main.cpp                  \
                         $$SRC/AccountDB.cpp             \
                         $$SRC/FolderDB.cpp
 
-FORMS           +=      resources/FriendsManagement.ui  \
-                        resources/Preferences.ui        \
-                        resources/Fileshare.ui
+FORMS           +=      resources/Preferences.ui
 
 RESOURCES       +=      woda.qrc
 
