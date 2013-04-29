@@ -13,6 +13,7 @@
 #include    "RequestHttpFile.hh"
 #include    "ConfFile.hh"
 
+
 //! \def ERROR
 #define     ERROR       -1
 
@@ -42,9 +43,12 @@ int         main(int argc, char *argv[]) {
     QApplication::setQuitOnLastWindowClosed(false);
     if (firstInstance->isFirstInstance()) {
         initialize();
+
         Window window;
-        window.show();
+        //window.show();
+        // it's for ignore a closeEvent
         window.closeEvent(new QCloseEvent());
+
         return app.exec();
     }
     delete firstInstance;

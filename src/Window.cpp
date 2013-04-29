@@ -14,8 +14,9 @@
 //! Create action, tray icon, signal, popup.
 Window::Window(QWidget * parent)
   : QWidget(parent) {
-  setWindowTitle(tr("Woda"));
-  _trayIcon = new TrayIcon();
+    this->setVisible(false);
+    setWindowTitle(tr("Woda"));
+    _trayIcon = new TrayIcon();
 }
 
 
@@ -29,10 +30,6 @@ Window::~Window() {
 //! \brief ignore the event for close the main window
 //! \brief if the tray icon is visible
 void		Window::closeEvent(QCloseEvent * event) {
-  if (_trayIcon->trayIconIsVisible()) {
-      this->hide();
-      event->ignore();
-  } else {
-    this->show();
-  }
+    this->hide();
+    event->ignore();
 }

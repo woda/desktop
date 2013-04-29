@@ -22,7 +22,7 @@ TrayIcon::TrayIcon(QWidget * parent)
   createActions();
   createTrayIcon();
 
-  this->setVisible(false);
+  //this->setVisible(false);
 
   connect(iconComboBox, SIGNAL(currentIndexChanged(int)),
           this, SLOT(setIcon(int)));
@@ -52,10 +52,7 @@ TrayIcon::~TrayIcon() {
 
 //! \brief set the main window visible or not
 void		TrayIcon::setVisible(bool) {
-   // minimizeAction->setEnabled(visible);
-   // maximizeAction->setEnabled(!isMaximized());
-   // restoreAction->setEnabled(isMaximized() || !visible);
-   //  QDialog::setVisible(visible);
+
 }
 
 
@@ -63,7 +60,6 @@ void		TrayIcon::setVisible(bool) {
 //! \brief ignore the event for close the main window
 void		TrayIcon::closeEvent(QCloseEvent * event) {
   if (trayIcon->isVisible()) {
-      //      QMessageBox::information(this, tr("Woda"), tr("Test"));
       this->hide();
       event->ignore();
     }
@@ -265,10 +261,4 @@ void        TrayIcon::checkUserFolder(void) {
         UserFolderManagement::getSingletonPtr()->createDirectory(dir);
     }
     UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
-}
-
-
-//! \return true if the tray icon is visible, otherwise false
-bool        TrayIcon::trayIconIsVisible(void) {
-    return trayIcon->isVisible();
 }

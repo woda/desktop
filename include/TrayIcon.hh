@@ -40,7 +40,6 @@ public:
   ~TrayIcon();
 
   void		setVisible(bool visible);
-  bool      trayIconIsVisible(void);
 
 public slots:
   void		clickLogo();
