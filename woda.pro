@@ -17,8 +17,21 @@ CONFIG          +=      qt #unittest
 
 #DEFINES         +=
 
-INCLUDEPATH     =       include
-DEPENDPATH      =       include
+INCLUDEPATH     +=      Sources/Communication           \
+                        Sources/Core                    \
+                        Sources/Database                \
+                        Sources/GUI                     \
+                        Sources/Utils                   \
+                        Sources/Modules/Account         \
+                        Sources/Modules/Folder
+
+DEPENDPATH      +=      Sources/Communication           \
+                        Sources/Core                    \
+                        Sources/Database                \
+                        Sources/GUI                     \
+                        Sources/Utils                   \
+                        Sources/Modules/Account         \
+                        Sources/Modules/Folder
 
 QT              +=      network                         \
                         sql                             \
@@ -44,26 +57,33 @@ HEADERS         +=      Window.hh                       \
                         AccountDB.hh                    \
                         FolderDB.hh
 
-SRC             =       src
+SRC             =       Sources
+COMMUNICATION   =       $$SRC/Communication
+CORE            =       $$SRC/Core
+DATABASE        =       $$SRC/Database
+GUI             =       $$SRC/GUI
+UTILS           =       $$SRC/Utils
+FOLDER          =       $$SRC/Modules/Folder
+ACCOUNT         =       $$SRC/Modules/Account
 
-SOURCES         +=      $$SRC/main.cpp                  \
-                        $$SRC/Window.cpp                \
-                        $$SRC/TrayIcon.cpp              \
-                        $$SRC/MyCustomActionPixmap.cpp  \
-                        $$SRC/MyCustomActionLabel.cpp   \
-                        $$SRC/Popup.cpp                 \
-                        $$SRC/ConfFile.cpp              \
-                        $$SRC/Account.cpp               \
-                        $$SRC/Preferences.cpp           \
-                        $$SRC/FileSystemWatcher.cpp     \
-                        $$SRC/RequestHttpAccount.cpp    \
-                        $$SRC/Ipc.cpp                   \
-                        $$SRC/UserFolderManagement.cpp  \
-                        $$SRC/WodaSemaphore.cpp         \
-                        $$SRC/RequestHttpFile.cpp       \
-                        $$SRC/DataBase.cpp              \
-                        $$SRC/AccountDB.cpp             \
-                        $$SRC/FolderDB.cpp
+SOURCES         +=      $$CORE/main.cpp                         \
+                        $$CORE/Window.cpp                       \
+                        $$GUI/TrayIcon.cpp                      \
+                        $$GUI/MyCustomActionPixmap.cpp          \
+                        $$GUI/MyCustomActionLabel.cpp           \
+                        $$GUI/Popup.cpp                         \
+                        $$GUI/Preferences.cpp                   \
+                        $$FOLDER/FileSystemWatcher.cpp          \
+                        $$FOLDER/UserFolderManagement.cpp       \
+                        $$ACCOUNT/Account.cpp                   \
+                        $$COMMUNICATION/RequestHttpAccount.cpp  \
+                        $$COMMUNICATION/RequestHttpFile.cpp     \
+                        $$DATABASE/DataBase.cpp                 \
+                        $$DATABASE/AccountDB.cpp                \
+                        $$DATABASE/FolderDB.cpp                 \
+                        $$UTILS/Ipc.cpp                         \
+                        $$UTILS/ConfFile.cpp                    \
+                        $$UTILS/WodaSemaphore.cpp
 
 FORMS           +=      resources/Forms/Preferences.ui
 
