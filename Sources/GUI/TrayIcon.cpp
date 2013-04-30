@@ -6,23 +6,21 @@
 
 #include	<QtGui>
 #include	"TrayIcon.hh"
-#include	"ConfFile.hh"
 #include	"MyCustomActionPixmap.hh"
 #include	"MyCustomActionLabel.hh"
-#include    "UserFolderManagement.hh"
+
+#include	"ConfFile.hh"
 
 
 //! \param[in] parent Qobject parent or nothing
 //! \brief Constructor
-//! Create action, tray icon, signal, popup.
+//! \brief Create action, tray icon, signal, popup.
 TrayIcon::TrayIcon(QWidget * parent)
   : QWidget(parent) {
   createIconGroupBox();
   createMessageGroupBox();
   createActions();
   createTrayIcon();
-
-  //this->setVisible(false);
 
   connect(iconComboBox, SIGNAL(currentIndexChanged(int)),
           this, SLOT(setIcon(int)));
@@ -36,17 +34,12 @@ TrayIcon::TrayIcon(QWidget * parent)
   iconComboBox->setCurrentIndex(TrayIcon::Normal);
   trayIcon->show();
 
-  setWindowTitle(tr("Woda"));
-
   _popup = new Popup(220, 150);
-  this->checkUserFolder();
 }
 
 
 //! \brief Destructor
-//! Delete the singleton ConfFile
 TrayIcon::~TrayIcon() {
-  ConfFile::del();
 }
 
 
@@ -249,16 +242,4 @@ void		TrayIcon::createTrayIcon() {
 //! \brief If click on the logo call this method
 void		TrayIcon::clickLogo() {
   QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
-}
-
-
-//! \brief create the folder monitoring
-void        TrayIcon::checkUserFolder(void) {
-    QString dir = ConfFile::getSingletonPtr()->getValue(CONFFILE_DIRECTORY).toString();
-    if (dir == QString("")) {
-        dir = QDir::homePath();
-        dir.append("/Woda");
-        UserFolderManagement::getSingletonPtr()->createDirectory(dir);
-    }
-    UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
 }

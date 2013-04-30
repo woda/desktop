@@ -7,6 +7,8 @@
 #include	<QtGui>
 #include	"Window.hh"
 #include    "TrayIcon.hh"
+#include	"ConfFile.hh"
+#include    "UserFolderManagement.hh"
 
 
 //! \param[in] parent Qobject parent or nothing
@@ -17,12 +19,15 @@ Window::Window(QWidget * parent)
     this->setVisible(false);
     setWindowTitle(tr("Woda"));
     _trayIcon = new TrayIcon();
+    this->checkUserFolder();
 }
 
 
 //! \brief Destructor
+//! \brief Delete the singleton ConfFile
 Window::~Window() {
     delete _trayIcon;
+    ConfFile::del();
 }
 
 
@@ -32,4 +37,16 @@ Window::~Window() {
 void		Window::closeEvent(QCloseEvent * event) {
     this->hide();
     event->ignore();
+}
+
+//! \brief create the folder monitoring
+void        Window::checkUserFolder(void) {
+    // TO DO : with Database
+    QString dir = ConfFile::getSingletonPtr()->getValue(CONFFILE_DIRECTORY).toString();
+    if (dir == QString("")) {
+        dir = QDir::homePath();
+        dir.append("/Woda");
+        UserFolderManagement::getSingletonPtr()->createDirectory(dir);
+    }
+    UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
 }

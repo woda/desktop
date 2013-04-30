@@ -25,6 +25,9 @@ public slots:
   void		closeEvent(QCloseEvent * event);
 
 private:
+  void      checkUserFolder();
+
+private:
   TrayIcon * _trayIcon;
 };
 

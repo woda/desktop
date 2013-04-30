@@ -38,12 +38,33 @@ class		TrayIcon : public QWidget
 public:
   TrayIcon(QWidget * parent = 0);
   ~TrayIcon();
-
   void		setVisible(bool visible);
 
 public slots:
   void		clickLogo();
   void		closeEvent(QCloseEvent * event);
+
+
+private:
+  //! \enum imageIcon
+  enum imageIcon
+  {
+    Normal,             //!< default image
+    Synchronization,    //!< image synchronization in progress
+    Synchronized        //!< image up to date
+  };
+
+
+  //! \enum messageIcon
+  //! \brief message in tray
+  enum messageIcon
+  {
+    NoIcon,         //!< without icon
+    Information,    //!< with information icon
+    Warning,        //!< with warning icon
+    Critical        //!< with critical icon
+  };
+
 
 private slots:
   void		setIcon(int index);
@@ -57,11 +78,12 @@ private slots:
   void      openBrowserWoda();
 
 private:
+  void		showMessage(QString title, QString message,
+                        TrayIcon::messageIcon type, int time);
   void		createIconGroupBox();
   void		createMessageGroupBox();
   void		createActions();
   void		createTrayIcon();
-  void      checkUserFolder();
 
 
   QComboBox *	iconComboBox;
@@ -82,35 +104,6 @@ private:
   QMenu *	    trayIconMenu;
 
   Popup *	_popup;
-
-  // TO DO
-  // faudra faire une classe a part pour gerer ca
-  //! \enum imageIcon
-  enum imageIcon
-  {
-    Normal,             //!< default image
-    Synchronization,    //!< image synchronization in progress
-    Synchronized        //!< image up to date
-  };
-
-  // TO DO
-  // faudra faire une classe a part pour gerer ca
-  //! \enum messageIcon
-  //! \brief message in tray
-  enum messageIcon
-  {
-    NoIcon,         //!< without icon
-    Information,    //!< with information icon
-    Warning,        //!< with warning icon
-    Critical        //!< with critical icon
-  };
-
-
-  // TO DO
-  // a voir pour le mettre ailleur
- private :
-  void		showMessage(QString title, QString message,
-                        TrayIcon::messageIcon type, int time);
 };
 
 #endif		// !INCLUDE_TRAYICON_HH__
