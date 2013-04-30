@@ -11,7 +11,7 @@
 #include    <QFile>
 #include    <QFileInfo>
 #include    <QDir>
-#include    "dll/qjson/src/parser.h"
+#include    "parser.h"
 
 #include    <iostream>
 

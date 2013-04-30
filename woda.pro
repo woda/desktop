@@ -10,7 +10,8 @@ TEMPLATE        =       app
 
 TARGET          =       woda
 
-CONFIG          +=      qt #unittest
+CONFIG          +=      qt                              \
+                        qjson #unittest
                         #debug #release #debug_and_release
                         #windows
                         #unix
@@ -93,8 +94,8 @@ OTHER_FILES     +=      resources/icone.rc
 						
 RC_FILE         +=	resources/icone.rc
 
-LIBS            +=      -L"dll"                         \
-                        -lqjson
+#LIBS            +=      -L"dll"                         \
+#                        -lqjson
 
 #windows {
 #        HEADERS +=      
@@ -109,21 +110,49 @@ LIBS            +=      -L"dll"                         \
 #}
 
 static {
-	CONFIG		+=		static
-	DEFINES		+=		STATIC
-	QTPLUGIN	+=		qsvg
+        CONFIG      +=  static
+        DEFINES     +=  STATIC
 }
 
 unittest {
         CONFIG      +=  qtestlib
-        INCLUDEPATH +=  UnitTest
-        DEPENDPATH  +=  UnitTest
+        TEST        =   UnitTest
+        INCLUDEPATH +=  TEST
+        DEPENDPATH  +=  TEST
         HEADERS     +=  AccountTest.hh                  \
                         IpcTest.hh
 
         SOURCES     -=  $$SRC/main.cpp
-        TEST        =   UnitTest
+
         SOURCES     +=  $$TEST/mainTest.cpp             \
                         $$TEST/AccountTest.cpp          \
                         $$TEST/IpcTest.cpp
+}
+
+
+qjson {
+        QJSON       =   Sources/Utils/QJson
+        INCLUDEPATH +=  $$QJSON
+        HEADERS     +=  $$QJSON/json_parser.hh          \
+                        $$QJSON/json_scanner.h          \
+                        $$QJSON/location.hh             \
+                        $$QJSON/parser.h                \
+                        $$QJSON/parser_p.h              \
+                        $$QJSON/parserrunnable.h        \
+                        $$QJSON/position.hh             \
+                        $$QJSON/qjson_debug.h           \
+                        $$QJSON/qobjecthelper.h         \
+                        $$QJSON/serializer.h            \
+                        $$QJSON/serializerrunnable.h    \
+                        $$QJSON/stack.hh
+
+        SOURCES     +=  $$QJSON/json_parser.cc          \
+                        $$QJSON/json_scanner.cpp        \
+                        $$QJSON/parser.cpp              \
+                        $$QJSON/parserrunnable.cpp      \
+                        $$QJSON/qobjecthelper.cpp       \
+                        $$QJSON/serializer.cpp          \
+                        $$QJSON/serializerrunnable.cpp
+
+        OTHER_FILES +=  $$QJSON/json_parser.yy
 }

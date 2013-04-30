@@ -21,13 +21,11 @@
 #ifndef QJSON_SERIALIZER_H
 #define QJSON_SERIALIZER_H
 
-#include "qjson_export.h"
+#include <QByteArray>
 
-QT_BEGIN_NAMESPACE
 class QIODevice;
 class QString;
 class QVariant;
-QT_END_NAMESPACE
 
 namespace QJson {
   /**
@@ -109,7 +107,7 @@ namespace QJson {
   *
   * It's possible to tune the indentation level of the resulting string. \sa setIndentMode
   */
-  class QJSON_EXPORT Serializer {
+  class Serializer {
   public:
     Serializer();
     ~Serializer();
