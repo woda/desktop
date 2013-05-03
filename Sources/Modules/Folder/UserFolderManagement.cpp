@@ -89,21 +89,12 @@ void        UserFolderManagement::changeDirectory(QString & folderPath) {
 
 //! \brief delete the current directory of the user
 void        UserFolderManagement::deleteDirectory(void) {
-    // TO DO
-    // voir si enlever semaphore
-    // mettre un semaphore
-    WodaSemaphore::getInstance(_instanceSemaphore)->acquire(1);
     this->deleteFileSystemWatcher();
-    // relacher le semaphore
-    WodaSemaphore::getInstance(_instanceSemaphore)->release(1);
     if (!_folderPath.isEmpty()) {
-        // mettre un semaphore
-        WodaSemaphore::getInstance(_instanceSemaphore)->acquire(1);
         this->removeAllContentAndFolder(_folderPath);
-        // relacher le semaphore
-        WodaSemaphore::getInstance(_instanceSemaphore)->release(1);
 
         _folderPath.clear();
+        // TO DO : database
         ConfFile::getSingletonPtr()->setValue(DIRECTORY, QVariant(""));
     }
 }
@@ -199,4 +190,13 @@ void        UserFolderManagement::createSimpleFile(QString & filePath) {
     QFile file(filePath);
     file.open(QIODevice::ReadWrite);
     file.close();
+}
+
+
+
+// FOR TEST ONLY
+
+//! \brief Constructor for Unit Test Only
+UserFolderManagement::UserFolderManagement(QString folderPath, QObject * parent)
+    : QObject(parent), _folderPath(folderPath) {
 }

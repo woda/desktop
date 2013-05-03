@@ -35,19 +35,23 @@ class       UserFolderManagement : public QObject,
     void            changeDirectory(QString & folderPath);
     void            deleteDirectory(void);
     const QString & getCurrentDirectory(void) const;
+    bool            checkDirectoryExist(const QString & folderPath);
+    bool            checkFileExist(const QString & filePath);
 
  private:
     void            moveDirectory(QString & folderPath);
     void            deleteFileSystemWatcher(void);
     bool            removeAllContentAndFolder(const QString & folderPath);
-    bool            checkDirectoryExist(const QString & folderPath);
-    bool            checkFileExist(const QString & filePath);
     void            createSimpleFolder(QString & folderPath);
     void            createSimpleFile(QString & filePath);
 
  private:
     QString         _folderPath;
     QString         _instanceSemaphore;
+
+ public:
+    // for Test only
+    UserFolderManagement(QString folderPath, QObject * parent = 0);
 };
 
 #endif      // !INCLUDE_USERFOLDERMANAGEMENT_HH
