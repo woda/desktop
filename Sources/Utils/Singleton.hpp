@@ -8,6 +8,7 @@
 # define	__SINGLETON_HPP__
 
 # include	<string>
+# include   <QString>
 
 //! \class Singleton Singleton.hpp
 //! \brief restricts the instantiation of a class to one object
@@ -19,18 +20,11 @@ protected:
   ~Singleton() {}
 
 public:
-  static T &	getSingleton()
+  static T *	getSingletonPtr()
   {
     if (mySingleton == NULL)
       mySingleton = new T;
-    return *mySingleton;
-  }
-
-  static T &	getSingleton(const std::string &str)
-  {
-    if (mySingleton == NULL)
-      mySingleton = new T(str);
-    return *mySingleton;
+    return mySingleton;
   }
 
   static T *	getSingletonPtr(const std::string &str)
@@ -40,38 +34,17 @@ public:
     return mySingleton;
   }
 
-  static T &	getSingleton(std::string &str1, std::string &str2)
+  static T *	getSingletonPtr(const QString &str)
   {
     if (mySingleton == NULL)
-      mySingleton = new T(str1, str2);
-    return *mySingleton;
-  }
-
-  static T *	getSingletonPtr(std::string &str1, std::string &str2)
-  {
-    if (mySingleton == NULL)
-      mySingleton = new T(str1, str2);
+      mySingleton = new T(str);
     return mySingleton;
-  }
-
-  static T &	getSingleton(bool boolean)
-  {
-    if (mySingleton == NULL)
-      mySingleton = new T(boolean);
-    return *mySingleton;
   }
 
   static T *	getSingletonPtr(bool boolean)
   {
     if (mySingleton == NULL)
       mySingleton = new T(boolean);
-    return mySingleton;
-  }
-
-  static T *	getSingletonPtr()
-  {
-    if (mySingleton == NULL)
-      mySingleton = new T;
     return mySingleton;
   }
 
@@ -84,7 +57,8 @@ public:
 
   static void	del()
   {
-    delete mySingleton;
+    if (mySingleton)
+        delete mySingleton;
     mySingleton = NULL;
   }
 

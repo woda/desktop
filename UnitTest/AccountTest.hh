@@ -13,6 +13,7 @@ private slots:
     void    verifyDefaultParameter();
     void    connectedToTheServer();
     void    disconnectedToTheServer();
+    void    deserializeJson();
 
 private:
     Account *   _account;

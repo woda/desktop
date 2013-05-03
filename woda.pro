@@ -109,27 +109,6 @@ RC_FILE         +=	resources/icone.rc
 #        SOURCE  +=      
 #}
 
-static {
-        CONFIG      +=  static
-        DEFINES     +=  STATIC
-}
-
-unittest {
-        CONFIG      +=  qtestlib
-        TEST        =   UnitTest
-        INCLUDEPATH +=  TEST
-        DEPENDPATH  +=  TEST
-        HEADERS     +=  AccountTest.hh                  \
-                        IpcTest.hh
-
-        SOURCES     -=  $$SRC/main.cpp
-
-        SOURCES     +=  $$TEST/mainTest.cpp             \
-                        $$TEST/AccountTest.cpp          \
-                        $$TEST/IpcTest.cpp
-}
-
-
 qjson {
         QJSON       =   Sources/Utils/QJson
         INCLUDEPATH +=  $$QJSON
@@ -155,4 +134,26 @@ qjson {
                         $$QJSON/serializerrunnable.cpp
 
         OTHER_FILES +=  $$QJSON/json_parser.yy
+}
+
+unittest {
+        CONFIG      +=  qtestlib
+        TEST        =   UnitTest
+        INCLUDEPATH +=  UnitTest
+        DEPENDPATH  +=  UnitTest
+        HEADERS     +=  AccountTest.hh                      \
+                        IpcTest.hh                          \
+                        UserFolderManagementTest.hh
+
+        SOURCES     -=  $$CORE/main.cpp
+
+        SOURCES     +=  $$TEST/mainTest.cpp                 \
+                        $$TEST/AccountTest.cpp              \
+                        $$TEST/IpcTest.cpp                  \
+                        $$TEST/UserFolderManagementTest.cpp
+}
+
+static {
+        CONFIG      +=  static
+        DEFINES     +=  STATIC
 }
