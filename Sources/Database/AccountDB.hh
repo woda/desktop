@@ -15,6 +15,8 @@
 # define            ACCOUNT_PASSWORD    "password"
 //! \def ACCOUNT_DIRECTORY
 # define            ACCOUNT_DIRECTORY   "directory"
+//! \def ACCOUNT_CORNER
+# define            ACCOUNT_CORNER      "corner"
 
 
 class               QString;
@@ -31,16 +33,20 @@ class               AccountDB {
     static QString              accountTable(void);
     static std::map<QString, std::vector<QString> *> * selectAllAccount(void);
 
-    void                insertAccountLoginPassword(QString & login, QString & password);
-    void                insertAccountDirectory(QString & folderPath, const QString & login);
-    void                deleteLineAccount(QString & login);
-    void                deleteLineDirectory(QString & folderPath);
+    void            insertAccountLoginPassword(QString & login,
+                                               QString & password);
+    void            insertAccountDirectory(QString & folderPath,
+                                           const QString & login);
+    void            insertAccountCorner(int corner, const QString & login);
+    void            deleteLineAccount(QString & login);
+    void            deleteLineDirectory(QString & folderPath);
 
-    QString &           selectAccountLogin(void);
-    QString &           selectAccountPassword(void);
-    QString &           selectAccountDirectory(void);
+    QString         selectAccountLogin(void);
+    QString         selectAccountPassword(void);
+    QString         selectAccountDirectory(void);
+    int             selectAccountCorner(void);
  private:
-    QString             addQuotes(QString str);
+    QString         addQuotes(QString str);
 };
 
 #endif              // !INCLUDE_ACCOUNTDB_HH__

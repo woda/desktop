@@ -33,6 +33,7 @@ class       UserFolderManagement : public QObject,
     void            deserializeJsonAccount(QByteArray & bytes);
     void            createDirectory(QString & folderPath);
     void            changeDirectory(QString & folderPath);
+    void            insertDirectoryIntoDatabase(void);
     void            deleteDirectory(void);
     const QString & getCurrentDirectory(void) const;
     bool            checkDirectoryExist(const QString & folderPath);

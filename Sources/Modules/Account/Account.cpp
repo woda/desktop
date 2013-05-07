@@ -9,6 +9,7 @@
 #include    "RequestHttpAccount.hh"
 #include    "parser.h"
 #include    "AccountDB.hh"
+#include    "UserFolderManagement.hh"
 
 #include <iostream>
 
@@ -17,14 +18,17 @@
 //! \brief if the login and pass exist, connect to the server
 Account::Account()
     : _connected(false), _firstName(QString("")), _lastName(QString("")),
-      _email(QString("")), _errorHttp(false), _errorServer(QString("")) {
+      _email(QString("")), _corner(0), _errorHttp(false),
+      _errorServer(QString("")) {
 #if CONFFILE
     _login = ConfFile::getSingletonPtr()->getValue(LOGIN_CONFFILE).toString();
     _password = ConfFile::getSingletonPtr()->getValue(PASSWORD_CONFFILE).toString();
+    _corner = ConfFile::getSingletonPtr()->getValue(CONFFILE_CORNER).toInt();
 #else
     AccountDB db;
     _login = db.selectAccountLogin();
     _password = db.selectAccountPassword();
+    _corner = db.selectAccountCorner();
 #endif
 
     if (!_login.isEmpty() && !_password.isEmpty()) {
@@ -114,6 +118,10 @@ void            Account::connect(void) {
     _errorHttp = false;
     _errorServer = QString("");
     _connected = true;
+    // reset corner in db
+    this->setCorner(_corner);
+    // reset user folder in db
+    UserFolderManagement::getSingletonPtr()->insertDirectoryIntoDatabase();
 }
 
 
@@ -172,6 +180,20 @@ void            Account::setEmail(QString & email) {
 }
 
 
+//! \param[in] corner int
+//! \brief set the id of the corner into the class
+void            Account::setCorner(int id) {
+    _corner = id;
+
+#if CONFFILE
+    ConfFile::getSingletonPtr()->setValue(CORNER, QVariant(id));
+#else
+    AccountDB db;
+    db.insertAccountCorner(id, _login);
+#endif
+}
+
+
 //! \return string of the login
 //! \brief return the string of the login stored in the class
 const QString & Account::login(void) const {
@@ -204,4 +226,10 @@ const QString & Account::lastName(void) const {
 //! \brief return the string of the email stored in the class
 const QString & Account::email(void) const {
     return _email;
+}
+
+//! \return id of the corner
+//! \brief return the id of the corner stored in the class
+int             Account::corner(void) const {
+    return _corner;
 }

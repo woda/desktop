@@ -78,11 +78,19 @@ void        UserFolderManagement::createDirectory(QString & folderPath) {
 void        UserFolderManagement::changeDirectory(QString & folderPath) {
     if (!this->checkDirectoryExist(folderPath)) {
         this->createDirectory(folderPath);
-    }
-    if (!_folderPath.isEmpty() && folderPath != _folderPath)
+    } else if (!_folderPath.isEmpty() && folderPath != _folderPath) {
         this->moveDirectory(folderPath);
+    }
     _folderPath = folderPath;
 
+    this->insertDirectoryIntoDatabase();
+
+    FileSystemWatcher * fsWatcher = FileSystemWatcher::getSingletonPtr();
+    fsWatcher->addDirectory(_folderPath);
+}
+
+
+void        UserFolderManagement::insertDirectoryIntoDatabase(void) {
 #if  CONFFILE
     ConfFile::getSingletonPtr()->setValue(DIRECTORY, QVariant(_folderPath));
 #else
@@ -90,8 +98,6 @@ void        UserFolderManagement::changeDirectory(QString & folderPath) {
     db.insertAccountDirectory(_folderPath, Account::getSingletonPtr()->login());
 #endif
 
-    FileSystemWatcher * fsWatcher = FileSystemWatcher::getSingletonPtr();
-    fsWatcher->addDirectory(_folderPath);
 }
 
 

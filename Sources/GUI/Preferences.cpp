@@ -7,6 +7,7 @@
 #include    "Preferences.hh"
 #include    "Account.hh"
 #include    "ConfFile.hh"
+#include    "AccountDB.hh"
 #include    "FileSystemWatcher.hh"
 #include    "RequestHttpAccount.hh"
 #include    "UserFolderManagement.hh"
@@ -117,11 +118,10 @@ void    Preferences::isConnected(void) {
 //! \brief initialize the corner where the popup pop
 void    Preferences::initCorner(void) {
     // check if corner is set in the ini file
-    // if present set the radio button to the value in the ini file
-    int corner = ConfFile::getSingletonPtr()->getValue(CORNER).toInt();
+    // if present set the radio button to the value in the ini file or database
+    int corner = Account::getSingletonPtr()->corner();
     if (!corner) {
         radioButtonBottomRight->setChecked(true);
-        ConfFile::getSingletonPtr()->setValue(CORNER, QVariant(corner));
     } else {
         buttonGroupNotification->button(corner)->setChecked(true);
     }
@@ -132,6 +132,7 @@ void    Preferences::initCorner(void) {
 void    Preferences::initDirectory(void) {
     // check if the directory is set in the ini file
     // if present set the QLineEdit to the value in the ini file
+    // TO DO
     QString dir = ConfFile::getSingletonPtr()->getValue(DIRECTORY).toString();
     if (dir != QString(""))
         WodaFolder_input->setText(dir);
@@ -183,7 +184,7 @@ void    Preferences::on_browse_button_clicked() {
 //! \param[in] id id of the radio button
 //! \brief radio button for the popup corner
 void    Preferences::notificationPositionClick(int id) {
-    ConfFile::getSingletonPtr()->setValue(CORNER, QVariant(id));
+    Account::getSingletonPtr()->setCorner(id);
 }
 
 

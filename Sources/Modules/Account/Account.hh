@@ -39,12 +39,14 @@ class               Account : public Singleton<Account>
     void            setFirstName(QString & firstName);
     void            setLastName(QString & lastName);
     void            setEmail(QString & email);
+    void            setCorner(int id);
 
     const QString & login(void) const;
     const QString & password(void) const;
     const QString & firstName(void) const;
     const QString & lastName(void) const;
     const QString & email(void) const;
+    int             corner(void) const;
 
     void            httpError(void);
     bool            isHttpError(void) const;
@@ -59,6 +61,7 @@ class               Account : public Singleton<Account>
     QString         _firstName;
     QString         _lastName;
     QString         _email;
+    int             _corner;
     bool            _errorHttp;
     QString         _errorServer;
 };
