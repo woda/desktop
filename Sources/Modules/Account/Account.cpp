@@ -8,6 +8,7 @@
 #include    "ConfFile.hh"
 #include    "RequestHttpAccount.hh"
 #include    "parser.h"
+#include    "AccountDB.hh"
 
 #include <iostream>
 
@@ -17,8 +18,15 @@
 Account::Account()
     : _connected(false), _firstName(QString("")), _lastName(QString("")),
       _email(QString("")), _errorHttp(false), _errorServer(QString("")) {
+#if CONFFILE
     _login = ConfFile::getSingletonPtr()->getValue(LOGIN_CONFFILE).toString();
     _password = ConfFile::getSingletonPtr()->getValue(PASSWORD_CONFFILE).toString();
+#else
+    AccountDB db;
+    _login = db.selectAccountLogin();
+    _password = db.selectAccountPassword();
+#endif
+
     if (!_login.isEmpty() && !_password.isEmpty()) {
         RequestHttpAccount::getSingletonPtr()->loginToServer(_login, _password);
     }
@@ -119,7 +127,13 @@ void            Account::disconnect(void) {
 //! \brief set the login into the class and ConfFile class
 void            Account::setLogin(QString & login) {
     _login = login;
+
+#if CONFFILE
     ConfFile::getSingletonPtr()->setValue(LOGIN_CONFFILE, QVariant(login));
+#else
+    AccountDB db;
+    db.insertAccountLoginPassword(_login, _password);
+#endif
 }
 
 
@@ -127,7 +141,13 @@ void            Account::setLogin(QString & login) {
 //! \brief set the password into the class and ConfFile class
 void            Account::setPassword(QString & password) {
     _password = password;
+
+#if CONFFILE
     ConfFile::getSingletonPtr()->setValue(PASSWORD_CONFFILE, QVariant(password));
+#else
+    AccountDB db;
+    db.insertAccountLoginPassword(_login, _password);
+#endif
 }
 
 

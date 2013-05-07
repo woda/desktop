@@ -32,10 +32,13 @@ class               AccountDB {
     static std::map<QString, std::vector<QString> *> * selectAllAccount(void);
 
     void                insertAccountLoginPassword(QString & login, QString & password);
-    void                insertAccountDirectory(QString & folderPath);
+    void                insertAccountDirectory(QString & folderPath, const QString & login);
     void                deleteLineAccount(QString & login);
     void                deleteLineDirectory(QString & folderPath);
 
+    QString &           selectAccountLogin(void);
+    QString &           selectAccountPassword(void);
+    QString &           selectAccountDirectory(void);
  private:
     QString             addQuotes(QString str);
 };

@@ -12,6 +12,7 @@
 # include           <map>
 # include           "Singleton.hpp"
 
+
 //! \def DB_TYPE
 # define            DB_TYPE         "QSQLITE"
 //! \def DB_NAME

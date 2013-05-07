@@ -8,6 +8,8 @@
 #include    "FileSystemWatcher.hh"
 #include    "WodaSemaphore.hh"
 #include    "ConfFile.hh"
+#include    "Account.hh"
+#include    "AccountDB.hh"
 #include    <QFile>
 #include    <QFileInfo>
 #include    <QDir>
@@ -80,7 +82,13 @@ void        UserFolderManagement::changeDirectory(QString & folderPath) {
     if (!_folderPath.isEmpty() && folderPath != _folderPath)
         this->moveDirectory(folderPath);
     _folderPath = folderPath;
+
+#if  CONFFILE
     ConfFile::getSingletonPtr()->setValue(DIRECTORY, QVariant(_folderPath));
+#else
+    AccountDB db;
+    db.insertAccountDirectory(_folderPath, Account::getSingletonPtr()->login());
+#endif
 
     FileSystemWatcher * fsWatcher = FileSystemWatcher::getSingletonPtr();
     fsWatcher->addDirectory(_folderPath);
@@ -94,8 +102,14 @@ void        UserFolderManagement::deleteDirectory(void) {
         this->removeAllContentAndFolder(_folderPath);
 
         _folderPath.clear();
-        // TO DO : database
+
+    #if  CONFFILE
         ConfFile::getSingletonPtr()->setValue(DIRECTORY, QVariant(""));
+    #else
+        AccountDB db;
+        QString empty("");
+        db.insertAccountDirectory(empty, Account::getSingletonPtr()->login());
+    #endif
     }
 }
 
@@ -191,6 +205,8 @@ void        UserFolderManagement::createSimpleFile(QString & filePath) {
     file.open(QIODevice::ReadWrite);
     file.close();
 }
+
+
 
 
 

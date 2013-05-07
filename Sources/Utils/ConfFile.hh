@@ -11,6 +11,10 @@
 # include           <QString>
 # include           "Singleton.hpp"
 
+//! \def CONFILE
+//! \brief store info in ini file if 1 otherwise in database
+# define            CONFFILE        0
+
 //! \def CONFFILE_DIRECTORY
 # define            CONFFILE_DIRECTORY      "global/directory"
 //! \def CONFFILE_CORNER
