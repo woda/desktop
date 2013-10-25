@@ -1,16 +1,17 @@
-//! \file RequestHttpFile.hh
-//! \brief	header RequestHttpFile : send request to the server
+//! \file RequestHttpDownloadFile.hh
+//! \brief	header RequestHttpDownloadFile : send request download to the server
 //! \author Woda Corporation
 //! \version 1.2
-//! \date 2013-02
+//! \date 2013-10
 
-#ifndef             INCLUDE_REQUESTHTTPFILE_HH__
-# define            INCLUDE_REQUESTHTTPFILE_HH__
+#ifndef             INCLUDE_REQUESTHTTPDOWNLOADFILE_HH__
+# define            INCLUDE_REQUESTHTTPDOWNLOADFILE_HH__
 
 # include           <QObject>
 # include           <QString>
 # include           <QNetworkAccessManager>
 # include           <QTimer>
+# include           <QVector>
 # include           "Singleton.hpp"
 
 //! \def WEBAGENTNAME
@@ -30,30 +31,27 @@
 //! \def SYNC
 # define            SUCCES_SYNC     "successsync"
 //! \def TIMER_REFRESH
-# define            TIMER_REFRESH_FILE   5000
+# define            TIMER_REFRESH_DOWNLOAD   3000
+//! \def PART_SIZE
+# define            PART_SIZE       5242880
 
 class               QNetworkReply;
 
-//! \class RequestHttpFile RequestHttpFile.hh
-//! \brief class who send and receive request to the server for file management
-//! \brief send and receive files, files tree.
-class               RequestHttpFile : public QObject,
-                                      public Singleton<RequestHttpFile>
+//! \class RequestHttpDownloadFile RequestHttpDownloadFile.hh
+//! \brief class who send and receive request to the server for file download
+class               RequestHttpDownloadFile : public QObject,
+                                              public Singleton<RequestHttpDownloadFile>
 {
  Q_OBJECT
 
-    friend class    Singleton<RequestHttpFile>;
+    friend class    Singleton<RequestHttpDownloadFile>;
 
  private:
-    RequestHttpFile(QObject * parent = 0);
-    ~RequestHttpFile();
+    RequestHttpDownloadFile(QObject * parent = 0);
+    ~RequestHttpDownloadFile();
 
  public:
-    void            AddingAFile(const QString & filename);
-    void            UploadingAFile(const QString & filename, int size);
-    void            ConfirmingUpload(QString & filename);
-    void            recoverFilesList(void);
-//    void            recoverFile(QString & name, QString & idFolder);
+    void            recoverFile(QString & name, QString & idFolder, QString & size);
 
  private slots:
     void            update();
@@ -65,6 +63,7 @@ class               RequestHttpFile : public QObject,
     QTimer *                _timer;
     bool                    _recoverTree;
     QString                 _filePath;
+    QVector<QVector<QString> > * _listDownload;
 };
 
-#endif              // !INCLUDE_REQUESTHTTPFILE_HH__
+#endif              // !INCLUDE_REQUESTHTTPDOWNLOADFILE_HH__

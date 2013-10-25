@@ -13,6 +13,11 @@
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QTabBar::tab {
+  margin: 0px;
+ }</string>
+  </property>
   <widget class="QTabWidget" name="tab">
    <property name="geometry">
     <rect>
@@ -27,7 +32,7 @@
    </property>
    <widget class="QWidget" name="GeneralTab">
     <attribute name="title">
-     <string>General</string>
+     <string/>
     </attribute>
     <widget class="QLabel" name="WodaFolder_label">
      <property name="geometry">
@@ -127,7 +132,7 @@
    </widget>
    <widget class="QWidget" name="AccountTab">
     <attribute name="title">
-     <string>Account</string>
+     <string/>
     </attribute>
     <widget class="QLabel" name="labelUsername">
      <property name="geometry">
@@ -344,7 +349,7 @@ qproperty-alignment: AlignCenter;</string>
    </widget>
    <widget class="QWidget" name="ConnexionTab">
     <attribute name="title">
-     <string>Connexion</string>
+     <string/>
     </attribute>
     <widget class="QCheckBox" name="checklimitdl">
      <property name="geometry">

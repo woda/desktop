@@ -2,5 +2,16 @@
     <qresource prefix="/">
         <file alias="logoTray">images/logoTray.png</file>
         <file alias="logoBig">images/logoTrayBig25.png</file>
+        <file alias="tabAccountOff">images/tab_account_OFF.png</file>
+        <file alias="tabAccountOn">images/tab_account_ON.png</file>
+        <file alias="tabGeneralOff">images/tab_general_OFF.png</file>
+        <file alias="tabGeneralOn">images/tab_general_ON.png</file>
+        <file alias="tabSyncOff">images/tab_sync_OFF.png</file>
+        <file alias="tabSyncOn">images/tab_sync_ON.png</file>
+        <file alias="fond">images/fond.png</file>
+        <file alias="close">images/close_window.png</file>
+        <file alias="spacer">images/spacer.png</file>
+        <file alias="webapp">images/webapp_button.png</file>
+        <file alias="logo">images/logo.png</file>
     </qresource>
 </RCC>

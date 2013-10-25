@@ -38,7 +38,7 @@ class               AccountDB {
     void            insertAccountDirectory(QString & folderPath,
                                            const QString & login);
     void            insertAccountCorner(int corner, const QString & login);
-    void            deleteLineAccount(QString & login);
+    void            deleteLineAccount(void);
     void            deleteLineDirectory(QString & folderPath);
 
     QString         selectAccountLogin(void);

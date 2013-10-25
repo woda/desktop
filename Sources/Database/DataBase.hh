@@ -16,7 +16,7 @@
 //! \def DB_TYPE
 # define            DB_TYPE         "QSQLITE"
 //! \def DB_NAME
-# define            DB_NAME         "Woda.db"
+# define            DB_NAME         "./Woda.db"
 
 class               QString;
 
@@ -44,6 +44,7 @@ class               DataBase : public Singleton<DataBase> {
                            std::vector<QString> & vWhere);
     void            deleteLine(QString & table,
                                std::vector<QString> & vWhere);
+    void            deleteAllLine(QString & table);
     bool            getEmpty(void) const;
 
  private:

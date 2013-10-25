@@ -12,18 +12,26 @@
 #include    "Ipc.hh"
 #include    "RequestHttpFile.hh"
 #include    "ConfFile.hh"
+#include    <QtCrypto>
 
 
 //! \def ERROR
-#define     ERROR       -1
+#define     ERROR_MAIN       -1
 
 
 //! \brief initialize singleton class, database, account, requestHttp
 void        initialize(void) {
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 1"));
     DataBase::getSingletonPtr();
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 2"));
     Account::getSingletonPtr();
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 3"));
     RequestHttpFile::getSingletonPtr();
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 4"));
     ConfFile::getSingletonPtr();
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 5"));
+    QCA::init();
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 6"));
 }
 
 
@@ -38,11 +46,12 @@ int         main(int argc, char *argv[]) {
         QMessageBox::critical(0, QObject::tr("Systray"),
                               QObject::tr("I couldn't detect any system tray "
                                           "on this system."));
-        return ERROR;
+        return ERROR_MAIN;
     }
     QApplication::setQuitOnLastWindowClosed(false);
     if (firstInstance->isFirstInstance()) {
         initialize();
+        QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 7"));
 
         Window window;
         //window.show();
@@ -52,5 +61,5 @@ int         main(int argc, char *argv[]) {
         return app.exec();
     }
     delete firstInstance;
-    return ERROR;
+    return ERROR_MAIN;
 }

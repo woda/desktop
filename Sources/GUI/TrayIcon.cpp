@@ -8,6 +8,7 @@
 #include	"TrayIcon.hh"
 #include	"MyCustomActionPixmap.hh"
 #include	"MyCustomActionLabel.hh"
+#include    "Page.hh"
 
 #include	"ConfFile.hh"
 
@@ -121,7 +122,10 @@ void        TrayIcon::openFileshare() {
 //! \brief open the preference management window
 void        TrayIcon::openPreferences() {
     // TO DO : if the preference window is already create, show this window and not another
-    Preferences * preferences = new Preferences();
+//    Preferences * preferences = new Preferences();
+//    preferences->show();
+
+    Page * preferences = new Page();
     preferences->show();
 }
 
@@ -188,7 +192,7 @@ void		TrayIcon::createActions() {
   openFolderAction = new QAction(tr("&Open Woda folder"), this);
   connect(openFolderAction, SIGNAL(triggered()),
           this, SLOT(openDirectory()));
-  goWebsiteAction = new QAction(tr("&Visit Woda on the web"), this);
+  goWebsiteAction = new QAction(tr("&Open Woda-server.com"), this);
   connect(goWebsiteAction, SIGNAL(triggered()),
           this, SLOT(openBrowserWoda()));
   //recentFilesAction = new QAction(tr("&Recent files"), this);
@@ -200,13 +204,13 @@ void		TrayIcon::createActions() {
   getMoreAction = new QAction(tr("&Get more storage"), this);
   connect(getMoreAction, SIGNAL(triggered()),
           this, SLOT(openBrowserMoreStorage()));
-  preferencesAction = new QAction(tr("&Preferences.."), this);
+  preferencesAction = new QAction(tr("&Preferences"), this);
   connect(preferencesAction, SIGNAL(triggered()),
           this, SLOT(openPreferences()));
   helpAction = new QAction(tr("&Help"), this);
   connect(helpAction, SIGNAL(triggered()),
           this, SLOT(openFileshare()));
-  quitAction = new QAction(tr("&Quit"), this);
+  quitAction = new QAction(tr("&Quit Woda"), this);
   connect(quitAction, SIGNAL(triggered()),
           qApp, SLOT(quit()));
   //--------------------------------------------------
@@ -217,20 +221,20 @@ void		TrayIcon::createActions() {
 void		TrayIcon::createTrayIcon() {
   trayIconMenu = new QMenu(this);
 
-  trayIconMenu->addAction(_logoAction);
+  //trayIconMenu->addAction(_logoAction);
 //  trayIconMenu->addAction(_testAction);
 
   trayIconMenu->addSeparator();
   trayIconMenu->addAction(openFolderAction);
   trayIconMenu->addAction(goWebsiteAction);
   //trayIconMenu->addAction(recentFilesAction);
+//  trayIconMenu->addSeparator();
+//  trayIconMenu->addAction(spaceAction);
+//  trayIconMenu->addAction(getMoreAction);
   trayIconMenu->addSeparator();
-  trayIconMenu->addAction(spaceAction);
-  trayIconMenu->addAction(getMoreAction);
-  trayIconMenu->addSeparator();
-  trayIconMenu->addAction(helpAction);
   trayIconMenu->addAction(preferencesAction);
-  trayIconMenu->addAction(friendsAction);
+  trayIconMenu->addAction(helpAction);
+//  trayIconMenu->addAction(friendsAction);
   trayIconMenu->addSeparator();
   trayIconMenu->addAction(quitAction);
 

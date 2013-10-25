@@ -26,8 +26,10 @@ FolderDB::~FolderDB() {
 std::vector<QString>    FolderDB::createTable(void) {
     std::vector<QString> vstr(0);
     vstr.push_back(QString("CREATE TABLE folder (path text)"));
-    vstr.push_back(QString("CREATE TABLE file (name text, "
-                           "idFolder text, hash text)"));
+    vstr.push_back(QString("CREATE TABLE file (id integer, name text, "
+                           "id_folder text, favorite integer, "
+                           "publicness integer, size text, part_size text, "
+                           "synchronized id, hash text)"));
     return vstr;
 }
 
@@ -44,7 +46,7 @@ std::vector<QString>    FolderDB::folderPrimaryKey(void) {
 std::vector<QString>    FolderDB::filePrimaryKey(void) {
     std::vector<QString> vstr(0);
     vstr.push_back(QString("name"));
-    vstr.push_back(QString("idFolder"));
+    vstr.push_back(QString("id_folder"));
     return vstr;
 }
 
@@ -80,26 +82,94 @@ void                    FolderDB::insertFolder(QString & folderPath) {
     DataBase::getSingletonPtr()->insert(table, map);
 }
 
-
+#include <iostream>
 //! \brief insert the path of a file who is in the user directory
 //! \brief in the file table in database
 //! \param[in] filePath QString
-void                    FolderDB::insertFile(QString & filePath) {
+void                    FolderDB::insertFile(const QString & filePath, const QByteArray hashContent) {
     QString table = this->fileTable();
     std::map<QString, QString> map;
 
     QString fileName(filePath);
-    fileName = fileName.right(fileName.lastIndexOf("/"));
+    fileName = fileName.right(filePath.length() - filePath.lastIndexOf("/") - 1);
     map[QString(FILE_NAME)] = this->addQuotes(fileName);
 
     QString folderPath(filePath);
-    folderPath = folderPath.left(fileName.lastIndexOf("/"));
+    folderPath = folderPath.left(filePath.lastIndexOf("/"));
     map[QString(FILE_ID_FOLDER)] = this->addQuotes(folderPath);
 
-    QString hash("hash");
+    QString hash(hashContent);
+    map[QString(FILE_HASH)] = this->addQuotes(hash);
+    map[QString(FILE_SYNCHRONIZED)] = QString().setNum(0);
+
+    DataBase::getSingletonPtr()->insert(table, map);
+}
+
+//! \brief insert the properties of a file who is in the user directory
+//! \brief in the file table in database
+//! \param[in] id int
+//! \param[in] name QString &
+//! \param[in] idFolder QString &
+//! \param[in] favorite bool
+//! \param[in] publicness bool
+//! \param[in] size QString &
+//! \param[in] partSize QString &
+void                    FolderDB::insertFile(QString & name, QString & idFolder,
+                                             QString & hash) {
+    QString table = this->fileTable();
+    std::map<QString, QString> map;
+
+    map[QString(FILE_NAME)] = this->addQuotes(name);
+    map[QString(FILE_ID_FOLDER)] = this->addQuotes(idFolder);
     map[QString(FILE_HASH)] = this->addQuotes(hash);
 
     DataBase::getSingletonPtr()->insert(table, map);
+}
+
+//! \brief insert the properties of a file who is in the user directory
+//! \brief in the file table in database
+//! \param[in] id int
+//! \param[in] name QString &
+//! \param[in] idFolder QString &
+//! \param[in] favorite bool
+//! \param[in] publicness bool
+//! \param[in] size QString &
+//! \param[in] partSize QString &
+void                    FolderDB::insertFile(int id, QString & name,
+                                             QString & idFolder, bool favorite,
+                                             bool publicness, QString & size,
+                                             QString & partSize) {
+    QString table = this->fileTable();
+    std::map<QString, QString> map;
+
+    map[QString(FILE_ID)] = QString().setNum(id);
+    map[QString(FILE_NAME)] = this->addQuotes(name);
+    map[QString(FILE_ID_FOLDER)] = this->addQuotes(idFolder);
+    map[QString(FILE_FAVORITE)] = QString().setNum(favorite);
+    map[QString(FILE_PUBLICNESS)] = QString().setNum(publicness);
+    map[QString(FILE_SIZE)] = this->addQuotes(size);
+    map[QString(FILE_PART_SIZE)] = this->addQuotes(partSize);
+
+    DataBase::getSingletonPtr()->insert(table, map);
+}
+
+
+//! \brief check if the file is in the database
+//! \param[in] id int
+//! \return true if exist, otherwise false
+bool                    FolderDB::checkFile(int id) {
+    QString str("SELECT ");
+    str.append(FILE_ID).append(" FROM ");
+    str.append(FolderDB::fileTable());
+    str.append(" WHERE ").append(FILE_ID).append("=");
+    str.append(QString().setNum(id));
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString("id")])).size() > 0) {
+        return true;
+    }
+    return false;
 }
 
 
@@ -150,7 +220,7 @@ void                    FolderDB::deleteLineAllFilesInFolder(QString & folderPat
 
 //! \brief delete informations of the file in file table
 //! \param[in] filePath QString
-void                    FolderDB::deleteLineFile(QString & filePath) {
+void                    FolderDB::deleteLineFile(const QString & filePath) {
     // appel delete avec les PK insere dans la clause where
     QString table = this->fileTable();
     std::vector<QString> where;

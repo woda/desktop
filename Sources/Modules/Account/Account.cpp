@@ -7,6 +7,7 @@
 #include	"Account.hh"
 #include    "ConfFile.hh"
 #include    "RequestHttpAccount.hh"
+#include    "RequestHttpFile.hh"
 #include    "parser.h"
 #include    "AccountDB.hh"
 #include    "UserFolderManagement.hh"
@@ -30,6 +31,7 @@ Account::Account()
     _password = db.selectAccountPassword();
     _corner = db.selectAccountCorner();
 #endif
+    _corner = ConfFile::getSingletonPtr()->getValue(CONFFILE_CORNER).toInt();
 
     if (!_login.isEmpty() && !_password.isEmpty()) {
         RequestHttpAccount::getSingletonPtr()->loginToServer(_login, _password);
@@ -122,12 +124,22 @@ void            Account::connect(void) {
     this->setCorner(_corner);
     // reset user folder in db
     UserFolderManagement::getSingletonPtr()->insertDirectoryIntoDatabase();
+    RequestHttpFile::getSingletonPtr()->recoverFilesList();
 }
 
 
 //! \brief set disconnect to the server
 void            Account::disconnect(void) {
     _connected = false;
+
+#if CONFFILE
+    QString empty("");
+    this->setLogin(empty);
+    this->setPassword(empty);
+#else
+    AccountDB db;
+    db.deleteLineAccount();
+#endif
 }
 
 
@@ -185,12 +197,12 @@ void            Account::setEmail(QString & email) {
 void            Account::setCorner(int id) {
     _corner = id;
 
-#if CONFFILE
-    ConfFile::getSingletonPtr()->setValue(CORNER, QVariant(id));
-#else
-    AccountDB db;
-    db.insertAccountCorner(id, _login);
-#endif
+//#if CONFFILE
+    ConfFile::getSingletonPtr()->setValue(CONFFILE_CORNER, QVariant(id));
+//#else
+//    AccountDB db;
+//    db.insertAccountCorner(id, _login);
+//#endif
 }
 
 

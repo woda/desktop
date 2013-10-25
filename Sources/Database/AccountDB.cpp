@@ -175,14 +175,9 @@ int                     AccountDB::selectAccountCorner(void) {
 
 //! \brief delete all informations of the user in database
 //! \param[in] login QString
-void                    AccountDB::deleteLineAccount(QString & login) {
-    // appel delete avec les PK insere dans la clause where
+void                    AccountDB::deleteLineAccount(void) {
     QString table = this->accountTable();
-    std::vector<QString> where;
-    QString key(ACCOUNT_LOGIN);
-    key.append(" = ").append(login);
-    where.push_back(key);
-    DataBase::getSingletonPtr()->deleteLine(table, where);
+    DataBase::getSingletonPtr()->deleteAllLine(table);
 }
 
 

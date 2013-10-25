@@ -199,6 +199,15 @@ void    Preferences::buttonConnectAccount() {
         QString password(lineEditPassword->text());
         Account::getSingletonPtr()->setLogin(login);
         Account::getSingletonPtr()->setPassword(password);
+
+        QString dir = ConfFile::getSingletonPtr()->getValue(CONFFILE_DIRECTORY).toString();
+        if (dir == QString("")) {
+            dir = QDir::homePath();
+            dir.append("/Woda");
+            UserFolderManagement::getSingletonPtr()->createDirectory(dir);
+        }
+        UserFolderManagement::getSingletonPtr()->changeDirectory(dir);
+
         RequestHttpAccount::getSingletonPtr()->loginToServer(login, password);
     }
 }

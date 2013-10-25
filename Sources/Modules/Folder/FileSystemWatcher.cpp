@@ -5,6 +5,10 @@
 //! \date 2012-11
 
 #include	"FileSystemWatcher.hh"
+#include    "RequestHttpFile.hh"
+#include    "FolderDB.hh"
+#include    "Hash.hh"
+
 #include    <QDir>
 #include    <QFileInfo>
 
@@ -46,6 +50,9 @@ void        FileSystemWatcher::addDirectory(QString & dir) {
         }
         _path = dir;
         _fsWatcher->addPath(_path);
+
+
+        // TO DO
         if (begin) {
             // if _path before addDirectory is empty
             // call checkFileIntoFolder for add all files
@@ -90,6 +97,7 @@ void        FileSystemWatcher::eventFile(const QString & path) {
     } else {
         str.append(" updated");
         _popup->showUp(str, 5000);
+        //RequestHttpFile::getSingletonPtr()->AddingAFile(path);
     }
 
     _prevCountFile = _listChange->count();
@@ -135,11 +143,11 @@ void        FileSystemWatcher::fillListChange(void) {
         _listChange->push_back(file);
 
     // if new elem, call checkFileIntoFolder
-    if (_listChange->count() >= _listFile->count()) {
+    //if (_listChange->count() != _listFile->count()) {
         this->checkFileIntoFolder(_path);
-    } else {
-        _listFile = _listChange;
-    }
+    //} else {
+        //_listFile = _listChange;
+    //}
 }
 
 
@@ -149,17 +157,24 @@ void        FileSystemWatcher::checkFileIntoFolder(QString dir) {
     QDir folder(dir);
     folder.setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
     folder.setNameFilters(QStringList() << "*");
+    FolderDB db;
 
     // browse all documents in the folder
     foreach (QFileInfo fileInfo, folder.entryInfoList()) {
         // check if already exists
-        if (!_listFile->contains(fileInfo.absoluteFilePath())) {
-            _fsWatcher->addPath(fileInfo.absoluteFilePath());
-            _listFile->push_back(fileInfo.absoluteFilePath());
-        }
+        QString file(fileInfo.absoluteFilePath());
+        if (!_listFile->contains(file) && !fileInfo.isDir()) {
+            _fsWatcher->addPath(file);
+            _listFile->push_back(file);
+            db.insertFile(file, Hash::getHash(file));
+            RequestHttpFile::getSingletonPtr()->AddingAFile(file);
+        }// else if (!_listChange->contains(fileInfo.absoluteFilePath())) {
+//            db.deleteLineFile(fileInfo.absoluteFilePath());
+////            RequestHttpFile::getSingletonPtr()->deleteAFile(fileInfo.absoluteFilePath());
+//        }
         // recursive
         if (fileInfo.isDir()) {
-            this->checkFileIntoFolder(fileInfo.absoluteFilePath());
+            this->checkFileIntoFolder(file);
         }
     }
 }

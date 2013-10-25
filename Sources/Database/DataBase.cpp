@@ -17,6 +17,8 @@
 #include    "AccountDB.hh"
 #include    "FolderDB.hh"
 
+#include    <QMessageBox>
+
 
 //! \brief Constructor
 //! \brief create map with function pointer for create all tables in database
@@ -33,6 +35,8 @@ DataBase::DataBase()
     _mapCreate->push_back(&AccountDB::createTable);
     _mapCreate->push_back(&FolderDB::createTable);
 
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 11"));
+
 
     _mapPrimaryKey = new std::map<QString, func>();
     // if change AccountDB::accountTable(), also change in checkDataBase()
@@ -43,19 +47,39 @@ DataBase::DataBase()
     _mapPrimaryKey->insert(std::pair<QString, func>(FolderDB::fileTable(),
                                                     &FolderDB::filePrimaryKey));
 
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 12"));
 
     // Open Database
     _db = new QSqlDatabase();
     *_db = QSqlDatabase::addDatabase(DB_TYPE);
     _db->setDatabaseName(DB_NAME);
 
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 13"));
+
+
+    QStringList test = _db->drivers();
+    QStringList::const_iterator constIterator;
+    for (constIterator = test.constBegin(); constIterator != test.constEnd();
+                ++constIterator)
+        QMessageBox::critical(0, QObject::tr("Systray"), QString((*constIterator).toLocal8Bit()));
+
+
+    if (_db->isValid())
+        QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 141"));
+    else
+        QMessageBox::critical(0, QObject::tr("Systray"), _db->lastError().text());
+
+
     // Check if software can connect to the database
     this->open();
     this->close();
 
+
     // Check if db is empty or not
     _empty = this->checkDataBase();
 //    std::cout << "empty = " << _empty << std::endl;
+
+    QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("TEST 15"));
 }
 
 
@@ -350,6 +374,20 @@ void        DataBase::deleteLine(QString & table,
         begin = true;
         str.append(*it);
     }
+    if (_connect)
+        this->execute(str);
+    else
+        this->addQuery(str);
+    this->close();
+}
+
+
+//! \brief delete all line(s) in the table
+//! \param[in] table QString
+void        DataBase::deleteAllLine(QString & table) {
+    this->open();
+    QString str("DELETE FROM ");
+    str.append(table);
     if (_connect)
         this->execute(str);
     else
