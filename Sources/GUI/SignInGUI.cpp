@@ -61,6 +61,7 @@ void    SignInGUI::btnSignIn() {
     Account::getSingletonPtr()->setLogin(login);
     Account::getSingletonPtr()->setPassword(password);
     RequestHttpAccount::getSingletonPtr()->loginToServer(login, password);
+//    RequestHttpAccount::getSingletonPtr()->sendCreate(login);
 }
 
 void    SignInGUI::setUserFolder(void) {

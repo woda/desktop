@@ -9,6 +9,7 @@
 #include    "UserFolderManagement.hh"
 #include    "Hash.hh"
 #include    "Account.hh"
+#include    "FileManagement.hh"
 #include    <QUrl>
 #include    <QNetworkRequest>
 #include    <QNetworkReply>
@@ -61,7 +62,7 @@ void        RequestHttpFile::update() {
 //! \brief send a request post for adding a file to the server
 void        RequestHttpFile::AddingAFile(const QString & filename) {
     QString str(URL);
-    str.append("/").append(SYNC).append(filename.mid(UserFolderManagement::getSingletonPtr()->getCurrentDirectory().length()));
+    str.append("/").append(SYNC);
     QUrl param(str);
 
     _filePath = filename;
@@ -75,10 +76,17 @@ void        RequestHttpFile::AddingAFile(const QString & filename) {
     request.setRawHeader("User-Agent", WEBAGENTNAME);
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
 
-    QByteArray body = "content_hash=";
+    QByteArray body = "filename=";
+    body.append(filename.mid(UserFolderManagement::getSingletonPtr()->getCurrentDirectory().length() + 1));
+    body.append("&");
+    body.append("content_hash=");
     body.append(Hash::getHash(filename));
     body.append("&");
     body.append("size=").append(Hash::getLength(filename));
+
+    QString test(body);
+    std::cout << test.toStdString() << std::endl;
+
     if (Hash::getLength(filename) != QString("0")) {
         _reply = _http->put(request, body);
         _reply->ignoreSslErrors();
@@ -87,9 +95,9 @@ void        RequestHttpFile::AddingAFile(const QString & filename) {
 
 
 //! \brief send a request post to uploading a file into the server
-void        RequestHttpFile::UploadingAFile(const QString & filename, int size) {
+void        RequestHttpFile::UploadingAFile(int id) {
     QString str(URL);
-    str.append("/").append(PART_SYNC).append("/0").append(filename.mid(UserFolderManagement::getSingletonPtr()->getCurrentDirectory().length()));
+    str.append("/").append(SYNC).append("/").append(QString().setNum(id)).append("/0");
     QUrl param(str);
 
     std::cout << "url uploading file : " << str.toStdString() << std::endl;
@@ -97,16 +105,28 @@ void        RequestHttpFile::UploadingAFile(const QString & filename, int size) 
     QNetworkRequest request;
     request.setUrl(param);
     request.setHeader(QNetworkRequest::ContentTypeHeader,
-                      "application/x-www-form-urlencoded");
+                      "application/octet-stream");
     request.setRawHeader("Connection", "keep-alive");
     request.setRawHeader("User-Agent", WEBAGENTNAME);
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
 
-    QByteArray body = "";
-    body.append(Hash::getContent(filename, size));
+    QString filePath = FileManagement::getSingletonPtr()->getFilePath(id);
+    int part_size = FileManagement::getSingletonPtr()->getFilePartSize(id);
 
-    std::cout << "size = " << size << std::endl;
-    std::cout << QString(body).toStdString() << std::endl;
+//    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+//    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QByteArray body = "";
+    body.append(Hash::getContent(filePath, part_size));
+
+//    QString test(body);
+
+
+//    std::string testbody(body.constData(), body.length());
+//    QByteArray test2(body.constData(), body.length());
+//    std::cout << testbody << std::endl;
+//    std::cout << "----" << std::endl;
+//    std::cout << test2.constData() << std::endl;
+
 
     _reply = _http->put(request, body);
     _reply->ignoreSslErrors();
@@ -186,7 +206,7 @@ void        RequestHttpFile::ConfirmingUpload(QString & filename) {
 //! \brief send a request get to recover the file list
 void        RequestHttpFile::recoverFilesList(void) {
     QString str(URL_LIST);
-    str.append("/").append(USER).append("/").append(FILES).append("/");
+    str.append("/").append(FILES);
     QUrl param(str);
 
     std::cout << "url file list : " << str.toStdString() << std::endl;
@@ -221,10 +241,10 @@ void        RequestHttpFile::finishedSlot(QNetworkReply* reply) {
 //        // FOR TEST ONLY
 //        QByteArray test("[\n{\n\"name\": \"Folder1\",\n\"full_path\": \".\",\n\"modification_time\": \"01/01/2013 23:42:42\",\n\"files\": [ \n{\n\"name\": \"File1.txt\",\n\"modification_time\": \"01/01/2013 23:42:42\" \n},\n{\n\"name\": \"File2.txt\",\n\"modification_time\": \"01/01/2013 23:42:42\" \n}\n]\n}, \n{\n\"name\": \"Folder2\",\n\"full_path\" : \"./Folder1\",\n\"modification_time\" : \"01/01/2013 23:42:42\",\n\"files\": [ \n{\n\"name\": \"File3.txt\",\n\"modification_time\": \"01/01/2013 23:42:42\" \n}\n]\n}\n]\n");
 //        //std::cout << test.toStdString() << std::endl;
-        if (int size = UserFolderManagement::getSingletonPtr()->deserializeJsonAccount(bytes)) {
+        if (int id = UserFolderManagement::getSingletonPtr()->deserializeJsonAccount(bytes)) {
 //            UserFolderManagement::getSingletonPtr()->copyAFileToTempFolder(_filePath);
-            std::cout << "||||||| size of content = " << size << std::endl;
-            this->UploadingAFile(_filePath, size);
+            std::cout << "||||||| id of the file = " << id << std::endl;
+            this->UploadingAFile(id);
 //            this->ConfirmingUpload(_filePath);
         }
 //        UserFolderManagement::getSingletonPtr()->copyAFileToTempFolder(_filePath);

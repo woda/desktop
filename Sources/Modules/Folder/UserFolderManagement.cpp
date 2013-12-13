@@ -13,6 +13,7 @@
 #include    "FolderDB.hh"
 #include    "RequestHttpFile.hh"
 #include    "RequestHttpDownloadFile.hh"
+#include    "FileManagement.hh"
 #include    <fstream>
 #include    <QFile>
 #include    <QFileInfo>
@@ -42,27 +43,27 @@ UserFolderManagement::~UserFolderManagement() {
 
 //! \param[in] bytes string json serialize
 //! \brief Deserialize the json send by the server
-//! \return number of byte to read or 0
+//! \return ID of the file to upload or 0
 int         UserFolderManagement::deserializeJsonAccount(QByteArray & bytes) {
     QJson::Parser parser;
     bool ok;
 
-
     QVariantMap result = parser.parse(bytes, &ok).toMap();
     if (ok && !result["success"].toString().isEmpty() && result["success"].toString() == QString("true")) {
         QString newFolder(_folderPath);
-        if (result["need_upload"].toString() == QString("true")) {
+        if (!result["needed_parts"].toList().isEmpty()) {
             std::cout << "need upload" << std::endl;
             QVariantMap fileMap = result["file"].toMap();
             return this->insertHashFileIntoDB(fileMap, newFolder);
         }
-        else if (!result["last_update"].toString().isEmpty()) {
-            if (!result["files"].toList().isEmpty()) {
-                QVariantList filelist = result["files"].toList();
+        else if (!result["folder"].toMap().isEmpty()) {
+            QVariantMap allFilesAndFolders = result["folder"].toMap();
+            if (!allFilesAndFolders["files"].toList().isEmpty()) {
+                QVariantList filelist = allFilesAndFolders["files"].toList();
                 this->deserializeJsonFileList(filelist, newFolder);
             }
-            if (!result["folders"].toList().isEmpty()) {
-                QVariantList folderlist = result["folders"].toList();
+            if (!allFilesAndFolders["folders"].toList().isEmpty()) {
+                QVariantList folderlist = allFilesAndFolders["folders"].toList();
                 this->deserializeJsonFolderList(folderlist, newFolder);
             }
         }
@@ -105,17 +106,19 @@ void        UserFolderManagement::deserializeJsonFileList(QVariantList & filelis
         QString name = mapFile["name"].toString();
         QString size = mapFile["size"].toString();
         newFile.append("/").append(name);
-        this->downloadFileIfNotExist(mapFile["id"].toInt(), name, folderName, size);
-        this->insertFileIntoDB(mapFile, folderName);
-        this->createSimpleFile(newFile);
-        std::cout << newFile.toStdString() << std::endl;
+        if (mapFile["uploaded"].toString() == QString("true")) {
+            this->downloadFileIfNotExist(mapFile["id"].toInt());
+            this->insertFileIntoDB(mapFile, folderName);
+            this->createSimpleFile(newFile);
+            std::cout << newFile.toStdString() << std::endl;
+        }
     }
 }
 
 //! \param[in] mapFile QVariantMap json serialize properties of the file
 //! \param[in] folderName QString the path of the folder who contains the file
 //! \brief send the properties hash into the db
-//! \return the size of the file in byte
+//! \return ID of the file
 int         UserFolderManagement::insertHashFileIntoDB(QVariantMap & mapFile,
                                                        QString & folderName) {
     FolderDB db;
@@ -129,7 +132,7 @@ int         UserFolderManagement::insertHashFileIntoDB(QVariantMap & mapFile,
 //! \param[in] mapFile QVariantMap json serialize properties of the file
 //! \param[in] folderName QString the path of the folder who contains the file
 //! \brief send the properties of the file to the db
-//! \return the size of the file in byte
+//! \return ID of the file
 int         UserFolderManagement::insertFileIntoDB(QVariantMap & mapFile,
                                                    QString & folderName) {
     FolderDB db;
@@ -141,20 +144,18 @@ int         UserFolderManagement::insertFileIntoDB(QVariantMap & mapFile,
     QString size = mapFile["size"].toString();
     QString partSize = mapFile["part_size"].toString();
     db.insertFile(id, name, folderName, favorite, publicness, size, partSize);
-    return mapFile["size"].toInt();
+    return mapFile["id"].toInt();
 }
 
 
 //! \param[in] id int id of the file
-//! \param[in] name QString of the name of the file with extension
-//! \param[in] idFolder QString the path of the folder who contains the file
 //! \brief download the file if it is not exist in the db
-void        UserFolderManagement::downloadFileIfNotExist(int id, QString & name,
-                                                         QString & idFolder,
-                                                         QString & size) {
+void        UserFolderManagement::downloadFileIfNotExist(int id) {
     FolderDB db;
     if (!db.checkFile(id)) {
-        RequestHttpDownloadFile::getSingletonPtr()->recoverFile(name, idFolder, size);
+        RequestHttpDownloadFile::getSingletonPtr()->recoverFile(id);
+    } else if (!db.checkFileSynchronized(id)) {
+        RequestHttpDownloadFile::getSingletonPtr()->recoverFile(id);
     }
 }
 
@@ -350,8 +351,7 @@ void        UserFolderManagement::createSimpleFile(QString & filePath) {
 //! \brief create a file with the path and the content pass as parameter
 //! \param[in] filePath QString of the file
 //! \param[in] content char * content of the file
-void        UserFolderManagement::createDownloadFile(QString & filePath,
-                                                     char * content, int size) {
+void        UserFolderManagement::deserializeJsonDownloadFile(QByteArray & bytes, QString url) {
 //    std::ofstream file(filePath.toStdString().c_str(), std::ios_base::out | std::ios_base::trunc);
 //    if (file.is_open())
 //      {
@@ -362,10 +362,53 @@ void        UserFolderManagement::createDownloadFile(QString & filePath,
     //std::cout << "size = " << size << std::endl;
     //std::cout << "content = " << content << std::endl;
 
+
+//    QJson::Parser parser;
+//    bool ok;
+    FolderDB db;
+
+    url = url.right(url.length() - (url.lastIndexOf("/", url.lastIndexOf("/") - 1) + 1));
+    int id = url.left(url.indexOf("/")).toInt();
+    int part = url.right(url.indexOf("/") - 1).toInt();
+
+    QString filePath = FileManagement::getSingletonPtr()->getFilePath(id);
+    int size = db.getFileSize(id);
+
+    std::cout << id << std::endl;
+    std::cout << part << std::endl;
+    std::cout << size << std::endl;
+    std::cout << filePath.toStdString() << std::endl;
+
     QFile file(filePath);
     file.open(QIODevice::ReadWrite | QIODevice::Truncate);
-    file.write(content, size);
+    file.write(bytes, size);
     file.close();
+    FileManagement::getSingletonPtr()->setSynchronized(id, true);
+
+
+
+//    QVariantMap result = parser.parse(bytes, &ok).toMap();
+//    if (ok && !result["success"].toString().isEmpty() && result["success"].toString() == QString("true")) {
+//        QVariantMap mapFile = result["file"].toMap();
+//        int id = mapFile["id"].toInt();
+//        QByteArray content = result["data"].toByteArray();
+//        int size = mapFile["size"].toInt();
+
+//        QString filePath = FileManagement::getSingletonPtr()->getFilePath(id);
+
+//        QFile file(filePath);
+//        file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+//        file.write(content, size);
+//        file.close();
+//        FileManagement::getSingletonPtr()->setSynchronized(id, true);
+//    }
+
+
+
+//    QFile file(filePath);
+//    file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+//    file.write(content, size);
+//    file.close();
 }
 
 

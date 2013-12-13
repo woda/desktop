@@ -58,11 +58,10 @@ void            Account::deserializeJsonAccount(QByteArray & bytes) {
     QJson::Parser parser;
     bool ok;
     QVariantMap result = parser.parse(bytes, &ok).toMap();
-    if (ok && !result["login"].toString().isEmpty()) {
-        _login = result["login"].toString();
-        _firstName = result["first_name"].toString();
-        _lastName = result["last_name"].toString();
-        _email = result["email"].toString();
+    if (ok && !result["user"].toMap().isEmpty()) {
+        QVariantMap user = result["user"].toMap();
+        _login = user["login"].toString();
+        _email = user["email"].toString();
         this->connect();
     } else if (!result["success"].toString().isEmpty()) {
         this->disconnect();

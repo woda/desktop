@@ -9,6 +9,7 @@
 # define            INCLUDE_FOLDERDB_HH__
 
 # include           <vector>
+# include           <map>
 # include           <QByteArray>
 
 //! \def FOLDER_PATH
@@ -56,6 +57,8 @@ class               FolderDB {
     void                insertFile(const QString &filePath, const QByteArray);
     void                insertFile(QString & name, QString & idFolder,
                                    QString & hash);
+    void                insertFile(int id, QString & hash);
+    void                insertFile(int id, int sync);
     void                insertFile(int id, QString & name, QString & idFolder,
                                    bool favorite, bool publicness,
                                    QString & size, QString & partSize);
@@ -63,6 +66,14 @@ class               FolderDB {
     void                deleteLineFile(const QString &filePath);
     void                deleteLineFolder(QString & folderPath);
     bool                checkFile(int id);
+    bool                checkFileSynchronized(int id);
+    int                 getIdFile(const QString & filename,
+                                  const QString & folderPath);
+    QString             getFileName(int id);
+    QString             getFileFolderPath(int id);
+    int                 getFilePartSize(int id);
+    int                 getFileSize(int id);
+    void                setSynchronized(int id, bool sync);
 
  private:
     QString             addQuotes(QString str);

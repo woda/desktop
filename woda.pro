@@ -64,11 +64,12 @@ HEADERS         +=      $$CORE/Window.hh                        \
                         $$UTILS/Singleton.hpp                   \
                         $$GUI/Preferences.hh                    \
                         $$FOLDER/FileSystemWatcher.hh           \
+                        $$FOLDER/UserFolderManagement.hh        \
+                        $$FOLDER/FileManagement.hh              \
                         $$COMMUNICATION/RequestHttpAccount.hh   \
                         $$ACCOUNT/Account.hh                    \
                         $$UTILS/Ipc.hh                          \
                         $$UTILS/Hash.hh                         \
-                        $$FOLDER/UserFolderManagement.hh        \
                         $$UTILS/WodaSemaphore.hh                \
                         $$COMMUNICATION/RequestHttpFile.hh      \
                         $$COMMUNICATION/RequestHttp.hpp         \
@@ -91,6 +92,7 @@ SOURCES         +=      $$CORE/main.cpp                         \
                         $$GUI/SignInGUI.cpp                     \
                         $$FOLDER/FileSystemWatcher.cpp          \
                         $$FOLDER/UserFolderManagement.cpp       \
+                        $$FOLDER/FileManagement.cpp             \
                         $$ACCOUNT/Account.cpp                   \
                         $$COMMUNICATION/RequestHttpAccount.cpp  \
                         $$COMMUNICATION/RequestHttpFile.cpp     \

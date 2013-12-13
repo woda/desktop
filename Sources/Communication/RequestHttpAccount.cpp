@@ -98,8 +98,7 @@ void        RequestHttpAccount::logoutToServer() {
     request.setRawHeader("User-Agent", WEBAGENTNAME);
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
 
-    QByteArray body = "";
-    _reply = _http->post(request, body);
+    _reply = _http->get(request);
     _reply->ignoreSslErrors();
 }
 
@@ -144,7 +143,7 @@ void        RequestHttpAccount::sendCreate(QString & login) {
     request.setRawHeader("User-Agent", WEBAGENTNAME);
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
 
-    QByteArray body = "first_name=Super&last_name=Patate&password=123456&email=superpatate@gmail.com";
+    QByteArray body = "password=qwerty&email=popote@yopmail.com";
 
     std::cout << request.url().toString().toStdString() << std::endl;
     QString temp(body);
@@ -160,6 +159,8 @@ void        RequestHttpAccount::sendCreate(QString & login) {
 void        RequestHttpAccount::finishedSlot(QNetworkReply* reply) {
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray bytes = reply->readAll();
+        QString str(bytes);
+        std::cout << str.toStdString() << std::endl;
         Account::getSingletonPtr()->deserializeJsonAccount(bytes);
     } else {
         Account::getSingletonPtr()->httpError();

@@ -15,7 +15,7 @@
 //! \def WEBAGENTNAME
 # define            WEBAGENTNAME    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17"
 //! \def URL
-# define            URL             "https://woda-server.com:3000" //"https://ec2-54-242-98-168.compute-1.amazonaws.com:3000"
+# define            URL             "http://kobhqlt.fr:3000" //"https://ec2-54-242-98-168.compute-1.amazonaws.com:3000"
 //! \def USER
 # define            USER            "users"
 //! \def LOGIN

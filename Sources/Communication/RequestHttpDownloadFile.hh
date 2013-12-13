@@ -17,9 +17,9 @@
 //! \def WEBAGENTNAME
 # define            WEBAGENTNAME    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17"
 //! \def URL
-# define            URL             "https://woda-server.com:3000" //"https://ec2-54-242-98-168.compute-1.amazonaws.com:3000"
+# define            URL             "http://kobhqlt.fr:3000" //"https://ec2-54-242-98-168.compute-1.amazonaws.com:3000"
 //! \def URL
-# define            URL_LIST        "https://woda-server.com:3000"
+# define            URL_LIST        "http://kobhqlt.fr:3000"
 //! \def USER
 # define            USER            "users"
 //! \def FILES
@@ -34,6 +34,8 @@
 # define            TIMER_REFRESH_DOWNLOAD   3000
 //! \def PART_SIZE
 # define            PART_SIZE       5242880
+
+# define            FILE_SEMAPHORE  "woda_file_semaphore"
 
 class               QNetworkReply;
 
@@ -51,7 +53,7 @@ class               RequestHttpDownloadFile : public QObject,
     ~RequestHttpDownloadFile();
 
  public:
-    void            recoverFile(QString & name, QString & idFolder, QString & size);
+    void            recoverFile(int id);
 
  private slots:
     void            update();
@@ -63,7 +65,6 @@ class               RequestHttpDownloadFile : public QObject,
     QTimer *                _timer;
     bool                    _recoverTree;
     QString                 _filePath;
-    QVector<QVector<QString> > * _listDownload;
 };
 
 #endif              // !INCLUDE_REQUESTHTTPDOWNLOADFILE_HH__

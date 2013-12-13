@@ -45,6 +45,7 @@ std::vector<QString>    FolderDB::folderPrimaryKey(void) {
 //! \return a vector fill with the primary keys for the file table
 std::vector<QString>    FolderDB::filePrimaryKey(void) {
     std::vector<QString> vstr(0);
+    //vstr.push_back(QString("id"));
     vstr.push_back(QString("name"));
     vstr.push_back(QString("id_folder"));
     return vstr;
@@ -126,6 +127,33 @@ void                    FolderDB::insertFile(QString & name, QString & idFolder,
     DataBase::getSingletonPtr()->insert(table, map);
 }
 
+
+void                    FolderDB::insertFile(int id, QString & hash) {
+    QString table = this->fileTable();
+    std::map<QString, QString> map;
+
+    map[QString(FILE_ID)] = QString().setNum(id);
+    map[QString(FILE_NAME)] = this->addQuotes(this->getFileName(id));
+    map[QString(FILE_ID_FOLDER)] = this->addQuotes(this->getFileFolderPath(id));
+    map[QString(FILE_HASH)] = this->addQuotes(hash);
+
+    DataBase::getSingletonPtr()->insert(table, map);
+}
+
+
+void                    FolderDB::insertFile(int id, int sync) {
+    QString table = this->fileTable();
+    std::map<QString, QString> map;
+
+    map[QString(FILE_ID)] = QString().setNum(id);
+    map[QString(FILE_NAME)] = this->addQuotes(this->getFileName(id));
+    map[QString(FILE_ID_FOLDER)] = this->addQuotes(this->getFileFolderPath(id));
+    map[QString(FILE_SYNCHRONIZED)] = QString().setNum(sync);
+
+    DataBase::getSingletonPtr()->insert(table, map);
+}
+
+
 //! \brief insert the properties of a file who is in the user directory
 //! \brief in the file table in database
 //! \param[in] id int
@@ -166,8 +194,28 @@ bool                    FolderDB::checkFile(int id) {
 
     std::map<QString, std::vector<QString> *> * map;
     map = DataBase::getSingletonPtr()->select(str);
-    if ((*((*map)[QString("id")])).size() > 0) {
+    if ((*((*map)[QString(FILE_ID)])).size() > 0) {
         return true;
+    }
+    return false;
+}
+
+
+//! \brief check if the file is synchronized with the server
+//! \param[in] id int
+//! \return true if synchro, otherwise false
+bool                    FolderDB::checkFileSynchronized(int id) {
+    QString str("SELECT ");
+    str.append(FILE_SYNCHRONIZED).append(" FROM ");
+    str.append(FolderDB::fileTable());
+    str.append(" WHERE ").append(FILE_ID).append("=");
+    str.append(QString().setNum(id));
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString(FILE_SYNCHRONIZED)])).size() > 0) {
+        if ((*((*map)[QString(FILE_SYNCHRONIZED)])).front().toInt())
+            return true;
     }
     return false;
 }
@@ -239,4 +287,108 @@ void                    FolderDB::deleteLineFile(const QString & filePath) {
     where.push_back(key2);
 
     DataBase::getSingletonPtr()->deleteLine(table, where);
+}
+
+
+//! \brief select the id of the file with the filename and the folder path
+//! \param[in] filename QString
+//! \param[in] folderPath QString
+int                     FolderDB::getIdFile(const QString & filename,
+                                            const QString & folderPath) {
+    QString table = this->fileTable();
+    std::vector<QString> select;
+    std::vector<QString> where;
+
+    // select
+    select.push_back(FILE_ID);
+
+    // where
+    QString key1(FILE_NAME);
+    key1.append(" = ").append(filename);
+    where.push_back(key1);
+
+    QString key2(FILE_ID_FOLDER);
+    key2.append(" = ").append(folderPath);
+    where.push_back(key2);
+
+
+    // result
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(table, select, where);
+    if ((*((*map)[QString(FILE_ID)])).size() > 0) {
+        return (*((*map)[QString(FILE_ID)])).front().toInt();
+    }
+    return 0;
+}
+
+
+//! \brief select the name of the file with the unique id of the file
+//! \param[in] id int unique id of the file
+QString                 FolderDB::getFileName(int id) {
+    QString str("SELECT ");
+    str.append(FILE_NAME).append(" FROM ");
+    str.append(FolderDB::fileTable());
+    str.append(" WHERE ").append(FILE_ID).append("=");
+    str.append(QString().setNum(id));
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString(FILE_NAME)])).size() > 0) {
+        return (*((*map)[QString(FILE_NAME)])).front();
+    }
+    return "";
+}
+
+
+//! \brief select the folder of the file with the unique id of the file
+//! \param[in] id int unique id of the file
+QString                 FolderDB::getFileFolderPath(int id) {
+    QString str("SELECT ");
+    str.append(FILE_ID_FOLDER).append(" FROM ");
+    str.append(FolderDB::fileTable());
+    str.append(" WHERE ").append(FILE_ID).append("=");
+    str.append(QString().setNum(id));
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString(FILE_ID_FOLDER)])).size() > 0) {
+        return (*((*map)[QString(FILE_ID_FOLDER)])).front();
+    }
+    return "";
+}
+
+
+//! \brief select the part size of the file with the unique id of the file
+//! \param[in] id int unique id of the file
+int                 FolderDB::getFilePartSize(int id) {
+    QString str("SELECT ");
+    str.append(FILE_PART_SIZE).append(" FROM ");
+    str.append(FolderDB::fileTable());
+    str.append(" WHERE ").append(FILE_ID).append("=");
+    str.append(QString().setNum(id));
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString(FILE_PART_SIZE)])).size() > 0) {
+        return (*((*map)[QString(FILE_PART_SIZE)])).front().toInt();
+    }
+    return 0;
+}
+
+
+//! \brief select the size of the file with the unique id of the file
+//! \param[in] id int unique id of the file
+int                 FolderDB::getFileSize(int id) {
+    QString str("SELECT ");
+    str.append(FILE_SIZE).append(" FROM ");
+    str.append(FolderDB::fileTable());
+    str.append(" WHERE ").append(FILE_ID).append("=");
+    str.append(QString().setNum(id));
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString(FILE_SIZE)])).size() > 0) {
+        return (*((*map)[QString(FILE_SIZE)])).front().toInt();
+    }
+    return 0;
 }

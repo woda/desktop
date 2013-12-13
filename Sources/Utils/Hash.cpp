@@ -10,6 +10,8 @@
 #include    <QString>
 #include    <QFile>
 #include    <QTime>
+#include    <fstream>
+#include    <QTextCodec>
 
 
 //! \brief Constructor
@@ -141,13 +143,13 @@ QByteArray      Hash::getContent(const QString & filePath, int size) {
 //    return fileContent;
 
 
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly))
-        return 0;
+//    QFile file(filePath);
+//    if (!file.open(QIODevice::ReadOnly))
+//        return 0;
 
-    QByteArray fileContent = file.readAll();
+//    QByteArray fileContent = file.re;
 
-    return fileContent;
+//    return fileContent;
 
 
 //    char * fileContent = new char[size];
@@ -157,4 +159,18 @@ QByteArray      Hash::getContent(const QString & filePath, int size) {
 //    QByteArray fileContentByteArray(fileContent);
 //    fileContentByteArray = fileContentByteArray.left(size);
 //    return fileContentByteArray;
+
+
+    std::ifstream in(filePath.toStdString().c_str(), std::ios::in | std::ios::binary);
+    if (!in) {
+        return 0;
+      }
+    std::string contents;
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
+    in.close();
+    QByteArray array(contents.c_str(), contents.length());
+    return array;
 }

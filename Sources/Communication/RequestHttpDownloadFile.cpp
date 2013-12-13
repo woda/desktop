@@ -8,6 +8,7 @@
 #include    "RequestHttp.hpp"
 #include    "UserFolderManagement.hh"
 #include    "Account.hh"
+#include    "WodaSemaphore.hh"
 #include    <QUrl>
 #include    <QNetworkRequest>
 #include    <QNetworkReply>
@@ -28,7 +29,6 @@ RequestHttpDownloadFile::RequestHttpDownloadFile(QObject * parent)
     connect(_http, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(finishedSlot(QNetworkReply*)));
 
-    _listDownload = new QVector<QVector<QString> >;
     if (RequestHttp::getSingletonPtr()->hasCookie() &&
         Account::getSingletonPtr()->isConnected()) {
         _http->setCookieJar(RequestHttp::getSingletonPtr()->getCookie());
@@ -45,7 +45,6 @@ RequestHttpDownloadFile::RequestHttpDownloadFile(QObject * parent)
 //! \brief delete QNetworkAccessManager
 RequestHttpDownloadFile::~RequestHttpDownloadFile() {
     delete _http;
-    delete _listDownload;
 }
 
 
@@ -56,30 +55,12 @@ void        RequestHttpDownloadFile::update() {
 
 
 //! \brief send a request get to recover the file from the server
-void        RequestHttpDownloadFile::recoverFile(QString & name, QString & idFolder, QString & size) {
+void        RequestHttpDownloadFile::recoverFile(int id) {
     QString str(URL_LIST);
-    str.append("/").append(PART_SYNC).append("/0/");
-    QString folder = "";
-    if (idFolder != UserFolderManagement::getSingletonPtr()->getCurrentDirectory()) {
-        folder = idFolder.right(idFolder.length() - UserFolderManagement::getSingletonPtr()->getCurrentDirectory().length() - 1);
-        folder.append("/");
-    }
-    folder.append(name);
-    str.append(folder);
-    QUrl param(str);
-
-    QVector<QString> vector;
-    vector.push_back(folder);
-    vector.push_back("0");
-    vector.push_back(size);
-    _listDownload->push_back(vector);
-
-    QString test(param.toEncoded());
-    std::cout << "folder and file to download : " << folder.toStdString() << std::endl;
-    std::cout << "url file to download : " << test.toStdString() << std::endl;
+    str.append("/").append(SYNC).append("/").append(QString().setNum(id)).append("/0");
 
     QNetworkRequest request;
-    request.setUrl(param);
+    request.setUrl(str);
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       "application/x-www-form-urlencoded");
     request.setRawHeader("Connection", "keep-alive");
@@ -98,23 +79,19 @@ void        RequestHttpDownloadFile::finishedSlot(QNetworkReply* reply) {
     std::cout << "REPLY FILE " << std::endl;
 
     if (reply->error() == QNetworkReply::NoError) {
-        //QByteArray bytes = reply->readAll();
-        char * data;
-        data = new char[PART_SIZE];
-        reply->read(data, PART_SIZE);
-        //QString str(bytes);
-        //std::cout << "no error : " << str.toStdString() << std::endl;
-        QVector<QString> vector = _listDownload->first();
-        QString folder = UserFolderManagement::getSingletonPtr()->getCurrentDirectory();
-        folder.append("/").append(vector.first());
-        int size = vector[2].toInt();
-        UserFolderManagement::getSingletonPtr()->createDownloadFile(folder, data, size);
-        _listDownload->pop_front();
+        QByteArray bytes = reply->readAll();
+//        char * data;
+//        data = new char[PART_SIZE];
+//        reply->read(data, PART_SIZE);
+        QString str(bytes);
+        std::cout << "no error : " << str.toStdString() << std::endl;
+        UserFolderManagement::getSingletonPtr()->deserializeJsonDownloadFile(bytes, reply->url().toString());
     } else {
         QByteArray bytes2 = reply->readAll();
         QString str2(bytes2);
         std::cout << "error : "  << str2.toStdString() << std::endl;
-        _listDownload->pop_front();
     }
+//    QString sem(FILE_SEMAPHORE);
+//    WodaSemaphore::getInstance(sem)->release();
     reply->deleteLater();
 }
