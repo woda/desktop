@@ -129,7 +129,7 @@ QString         Hash::getLength(const QString & filePath, int size) {
 //    return QString::number(fileContentByteArray.length());
 }
 
-QByteArray      Hash::getContent(const QString & filePath, int size) {
+QByteArray      Hash::getContent(const QString & filePath) {
 //    QFile file(filePath);
 //    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 //        return 0;

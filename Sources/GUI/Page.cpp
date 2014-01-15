@@ -1,4 +1,4 @@
-#include	"page.hh"
+#include	"Page.hh"
 #include    "IGUI.hh"
 
 // ajouter ici le header de la page a ajouter

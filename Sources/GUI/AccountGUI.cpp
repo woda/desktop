@@ -5,7 +5,7 @@
 //! \date 2013-07
 
 #include	"AccountGUI.hh"
-#include	"page.hh"
+#include	"Page.hh"
 #include    "Account.hh"
 #include    "UserFolderManagement.hh"
 #include    "RequestHttpAccount.hh"

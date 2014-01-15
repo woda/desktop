@@ -35,7 +35,6 @@ class       UserFolderManagement : public QObject,
     void            deserializeJsonFileList(QVariantList & filelist, QString & folderName);
     int             insertHashFileIntoDB(QVariantMap & mapFile, QString & folderName);
     int             insertFileIntoDB(QVariantMap & mapFile, QString & folderName);
-    void            downloadFileIfNotExist(int id);
     void            deserializeJsonFolderList(QVariantList & folderlist, QString & folderName);
     void            createDirectory(QString & folderPath);
     void            changeDirectory(QString & folderPath);
@@ -56,6 +55,13 @@ class       UserFolderManagement : public QObject,
     bool            removeAllContentAndFolder(const QString & folderPath);
     void            createSimpleFolder(QString & folderPath);
     void            createSimpleFile(QString & filePath);
+    void            copyBytesIntoFile(QByteArray & bytes, QString & filePath,
+                                      int size);
+    void            checkDirectoryExistAndCreateDirectory(QString & file);
+    bool            downloadFileIfNotExist(int id, int size, int part_size);
+    void            downloadAllPartFile(int id, int size, int part_size);
+    void            checkFileCompleteWithAllPart(int id, QString & filePath,
+                                                 int size, int part_size);
 
  private:
     QString         _folderPath;

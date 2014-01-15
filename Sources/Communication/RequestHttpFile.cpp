@@ -111,12 +111,11 @@ void        RequestHttpFile::UploadingAFile(int id) {
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
 
     QString filePath = FileManagement::getSingletonPtr()->getFilePath(id);
-    int part_size = FileManagement::getSingletonPtr()->getFilePartSize(id);
 
 //    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 //    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QByteArray body = "";
-    body.append(Hash::getContent(filePath, part_size));
+    body.append(Hash::getContent(filePath));
 
 //    QString test(body);
 

@@ -83,7 +83,7 @@ void                    FolderDB::insertFolder(QString & folderPath) {
     DataBase::getSingletonPtr()->insert(table, map);
 }
 
-#include <iostream>
+
 //! \brief insert the path of a file who is in the user directory
 //! \brief in the file table in database
 //! \param[in] filePath QString
@@ -200,7 +200,7 @@ bool                    FolderDB::checkFile(int id) {
     return false;
 }
 
-
+#include <iostream>
 //! \brief check if the file is synchronized with the server
 //! \param[in] id int
 //! \return true if synchro, otherwise false
@@ -213,9 +213,13 @@ bool                    FolderDB::checkFileSynchronized(int id) {
 
     std::map<QString, std::vector<QString> *> * map;
     map = DataBase::getSingletonPtr()->select(str);
+    std::cout << "0" << std::endl;
     if ((*((*map)[QString(FILE_SYNCHRONIZED)])).size() > 0) {
-        if ((*((*map)[QString(FILE_SYNCHRONIZED)])).front().toInt())
+        std::cout << "1" << std::endl;
+        if ((*((*map)[QString(FILE_SYNCHRONIZED)])).front().toInt()) {
+            std::cout << "2" << std::endl;
             return true;
+        }
     }
     return false;
 }
@@ -310,7 +314,6 @@ int                     FolderDB::getIdFile(const QString & filename,
     QString key2(FILE_ID_FOLDER);
     key2.append(" = ").append(folderPath);
     where.push_back(key2);
-
 
     // result
     std::map<QString, std::vector<QString> *> * map;

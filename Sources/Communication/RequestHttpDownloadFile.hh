@@ -51,9 +51,10 @@ class               RequestHttpDownloadFile : public QObject,
  private:
     RequestHttpDownloadFile(QObject * parent = 0);
     ~RequestHttpDownloadFile();
+    void            recoverFilePart(int id, int part);
 
  public:
-    void            recoverFile(int id);
+    void            recoverFile(int id, int size, int partSize);
 
  private slots:
     void            update();

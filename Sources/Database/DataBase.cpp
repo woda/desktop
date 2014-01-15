@@ -435,8 +435,9 @@ std::map<QString, std::vector<QString> *> * DataBase::select(QString & strQuery)
     std::map<QString, std::vector<QString> *> * mapResult;
     mapResult = new std::map<QString, std::vector<QString> *>();
     this->open();
-    if (!_connect)
+    if (!_connect) {
         return mapResult;
+    }
     QSqlQuery query(strQuery);
     QSqlRecord rec = query.record();
     for (int i = 0; i < rec.count(); ++i) {

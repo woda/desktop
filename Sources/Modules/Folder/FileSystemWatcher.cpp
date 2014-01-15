@@ -8,6 +8,8 @@
 #include    "RequestHttpFile.hh"
 #include    "FolderDB.hh"
 #include    "Hash.hh"
+#include    "FileManagement.hh"
+#include    "Account.hh"
 
 #include    <QDir>
 #include    <QFileInfo>
@@ -166,9 +168,11 @@ void        FileSystemWatcher::checkFileIntoFolder(QString dir) {
         if (!_listFile->contains(file) && !fileInfo.isDir()) {
             _fsWatcher->addPath(file);
             _listFile->push_back(file);
-            if (Hash::getLength(file) > 0) {
-                db.insertFile(file, Hash::getHash(file));
-                RequestHttpFile::getSingletonPtr()->AddingAFile(file);
+            if (Hash::getLength(file) > 0 && Account::getSingletonPtr()->isConnected()) {
+//                if (!db.checkFileSynchronized(FileManagement::getSingletonPtr()->getIdFile(file))) {
+                    db.insertFile(file, Hash::getHash(file));
+                    RequestHttpFile::getSingletonPtr()->AddingAFile(file);
+//                }
             }
         }// else if (!_listChange->contains(fileInfo.absoluteFilePath())) {
 //            db.deleteLineFile(fileInfo.absoluteFilePath());

@@ -5,7 +5,7 @@
 //! \date 2013-07
 
 #include	"SyncGUI.hh"
-#include	"page.hh"
+#include	"Page.hh"
 #include    "Account.hh"
 
 SyncGUI::SyncGUI(QStackedWidget * stack, QWidget * parent)

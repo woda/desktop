@@ -28,7 +28,6 @@ int         FileManagement::getIdFile(const QString & filePath) {
     fileName = fileName.right(fileName.lastIndexOf("/"));
     QString folderPath(filePath);
     folderPath = folderPath.left(fileName.lastIndexOf("/"));
-
     FolderDB db;
     return db.getIdFile(fileName, folderPath);
 }

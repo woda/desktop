@@ -14,6 +14,7 @@
 #include    "RequestHttpFile.hh"
 #include    "RequestHttpDownloadFile.hh"
 #include    "FileManagement.hh"
+#include    "Hash.hh"
 #include    <fstream>
 #include    <QFile>
 #include    <QFileInfo>
@@ -104,13 +105,15 @@ void        UserFolderManagement::deserializeJsonFileList(QVariantList & filelis
         QVariantMap mapFile = file.toMap();
         QString newFile(folderName);
         QString name = mapFile["name"].toString();
-        QString size = mapFile["size"].toString();
         newFile.append("/").append(name);
         if (mapFile["uploaded"].toString() == QString("true")) {
-            this->downloadFileIfNotExist(mapFile["id"].toInt());
-            this->insertFileIntoDB(mapFile, folderName);
-            this->createSimpleFile(newFile);
-            std::cout << newFile.toStdString() << std::endl;
+            if (this->downloadFileIfNotExist(mapFile["id"].toInt(),
+                                             mapFile["size"].toInt(),
+                                             mapFile["part_size"].toInt())) {
+                this->insertFileIntoDB(mapFile, folderName);
+                this->createSimpleFile(newFile);
+                std::cout << newFile.toStdString() << std::endl;
+            }
         }
     }
 }
@@ -150,13 +153,17 @@ int         UserFolderManagement::insertFileIntoDB(QVariantMap & mapFile,
 
 //! \param[in] id int id of the file
 //! \brief download the file if it is not exist in the db
-void        UserFolderManagement::downloadFileIfNotExist(int id) {
+bool        UserFolderManagement::downloadFileIfNotExist(int id, int size, int part_size) {
     FolderDB db;
     if (!db.checkFile(id)) {
-        RequestHttpDownloadFile::getSingletonPtr()->recoverFile(id);
+        RequestHttpDownloadFile::getSingletonPtr()->recoverFile(id, size, part_size);
+        return true;
     } else if (!db.checkFileSynchronized(id)) {
-        RequestHttpDownloadFile::getSingletonPtr()->recoverFile(id);
+        std::cout << "2222" << std::endl;
+        RequestHttpDownloadFile::getSingletonPtr()->recoverFile(id, size, part_size);
+        return true;
     }
+    return false;
 }
 
 
@@ -348,6 +355,53 @@ void        UserFolderManagement::createSimpleFile(QString & filePath) {
 }
 
 
+void        UserFolderManagement::checkDirectoryExistAndCreateDirectory(QString & file) {
+    QString dirTemp = file.mid(0, file.lastIndexOf('/'));
+    if (!this->checkDirectoryExist(dirTemp)) {
+        QDir dir;
+        dir.mkpath(dirTemp);
+    }
+}
+
+
+void        UserFolderManagement::checkFileCompleteWithAllPart(int id, QString & filePath,
+                                                               int size, int partSize) {
+    for (int part = 0; part <= size / partSize; ++part) {
+        QString str = _folderPathTemp;
+        str.append(filePath.mid(_folderPath.length()));
+        str.append(".").append(QString().setNum(part));
+        if (!this->checkFileExist(str))
+            return;
+    }
+    QFile file(filePath);
+    file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+    file.close();
+    for (int part = 0; part <= size / partSize; ++part) {
+        QString str = _folderPathTemp;
+        str.append(filePath.mid(_folderPath.length()));
+        str.append(".").append(QString().setNum(part));
+        QFile file(filePath);
+        file.open(QIODevice::ReadWrite | QIODevice::Append);
+        file.write(Hash::getContent(str), Hash::getLength(str).toInt());
+        file.close();
+        QFile::remove(str);
+    }
+    FileManagement::getSingletonPtr()->setSynchronized(id, true);
+}
+
+
+void        UserFolderManagement::copyBytesIntoFile(QByteArray & bytes,
+                                                    QString & filePath,
+                                                    int size) {
+    this->checkDirectoryExistAndCreateDirectory(filePath);
+    QFile file(filePath);
+    file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+    file.write(bytes, bytes.length());
+    file.close();
+    std::cout << "copy = " << filePath.toStdString() << std::endl;
+}
+
+
 //! \brief create a file with the path and the content pass as parameter
 //! \param[in] filePath QString of the file
 //! \param[in] content char * content of the file
@@ -369,21 +423,27 @@ void        UserFolderManagement::deserializeJsonDownloadFile(QByteArray & bytes
 
     url = url.right(url.length() - (url.lastIndexOf("/", url.lastIndexOf("/") - 1) + 1));
     int id = url.left(url.indexOf("/")).toInt();
-    int part = url.right(url.indexOf("/") - 1).toInt();
-
+    QString part = url.right(url.indexOf("/") - 1);
     QString filePath = FileManagement::getSingletonPtr()->getFilePath(id);
     int size = db.getFileSize(id);
 
+    ////////////////////////////////////////////////
     std::cout << id << std::endl;
-    std::cout << part << std::endl;
+    std::cout << part.toStdString() << std::endl;
     std::cout << size << std::endl;
     std::cout << filePath.toStdString() << std::endl;
+    ////////////////////////////////////////////////
 
-    QFile file(filePath);
-    file.open(QIODevice::ReadWrite | QIODevice::Truncate);
-    file.write(bytes, size);
-    file.close();
-    FileManagement::getSingletonPtr()->setSynchronized(id, true);
+    if (db.getFilePartSize(id) < size) {
+        QString str = _folderPathTemp;
+        str.append(filePath.mid(_folderPath.length()));
+        str.append(".").append(part.mid(1));
+        this->copyBytesIntoFile(bytes, str, db.getFilePartSize(id));
+        this->checkFileCompleteWithAllPart(id, filePath, size, db.getFilePartSize(id));
+    } else {
+        this->copyBytesIntoFile(bytes, filePath, size);
+        FileManagement::getSingletonPtr()->setSynchronized(id, true);
+    }
 
 
 

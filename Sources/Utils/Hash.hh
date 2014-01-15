@@ -19,7 +19,7 @@ class               Hash {
     ~Hash();
     static QByteArray      getHash(const QString & filePath, int size = 5242880);
     static QString         getLength(const QString & filePath, int size = 5242880);
-    static QByteArray      getContent(const QString & filePath, int size = 5242880);
+    static QByteArray      getContent(const QString & filePath);
     static QString         hash(QByteArray & fileContent);
 };
 

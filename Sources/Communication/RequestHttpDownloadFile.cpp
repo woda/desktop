@@ -55,9 +55,22 @@ void        RequestHttpDownloadFile::update() {
 
 
 //! \brief send a request get to recover the file from the server
-void        RequestHttpDownloadFile::recoverFile(int id) {
+void        RequestHttpDownloadFile::recoverFile(int id, int size, int partSize) {
+    if (partSize < size) {
+        for (int part = 0; part <= size / partSize; ++part) {
+            this->recoverFilePart(id, part);
+        }
+    } else {
+        this->recoverFilePart(id, 0);
+    }
+}
+
+
+//! \brief send a request get to recover the file from the server
+void        RequestHttpDownloadFile::recoverFilePart(int id, int part) {
     QString str(URL_LIST);
-    str.append("/").append(SYNC).append("/").append(QString().setNum(id)).append("/0");
+    str.append("/").append(SYNC).append("/").append(QString().setNum(id));
+    str.append("/").append(QString().setNum(part));
 
     QNetworkRequest request;
     request.setUrl(str);
