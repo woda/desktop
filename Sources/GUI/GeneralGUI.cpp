@@ -62,7 +62,7 @@ void	GeneralGUI::btnPageSync(void) {
 
 
 void	GeneralGUI::btnWebApp(void) {
-    QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
+    QDesktopServices::openUrl(QUrl("http://kobhqlt.fr/wodajs/uptodate/#/"));
 }
 
 void    GeneralGUI::notificationPosition(int index) {

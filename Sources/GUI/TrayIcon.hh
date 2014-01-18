@@ -13,9 +13,9 @@
 # include   "Preferences.hh"
 
 //! \def URL_MORE_STORAGE
-# define    URL_MORE_STORAGE    "http://current.webapp.woda-server.com/app_dev.php"
+# define    URL_MORE_STORAGE    "http://kobhqlt.fr/wodajs/uptodate/#/"
 //! \def URL_WODA_WEBPAGE
-# define    URL_WODA_WEBPAGE    "http://current.webapp.woda-server.com/app_dev.php"
+# define    URL_WODA_WEBPAGE    "http://kobhqlt.fr/wodajs/uptodate/#/"
 
 
 class		QAction;

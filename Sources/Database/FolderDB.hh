@@ -33,6 +33,8 @@
 # define            FILE_SYNCHRONIZED       "synchronized"
 //! \def FILE_HASH
 # define            FILE_HASH               "hash"
+//! \def FOLDER_SYNCHRONIZED
+# define            FOLDER_SYNCHRONIZED     "synchronized"
 
 class               QString;
 
@@ -53,7 +55,7 @@ class               FolderDB {
     static std::map<QString, std::vector<QString> *> * selectAllFolder(void);
     static std::map<QString, std::vector<QString> *> * selectAllFile(void);
 
-    void                insertFolder(QString & folderPath);
+    void                insertFolder(QString & folderPath, int sync = 1);
     void                insertFile(const QString &filePath, const QByteArray);
     void                insertFile(QString & name, QString & idFolder,
                                    QString & hash);
@@ -67,8 +69,11 @@ class               FolderDB {
     void                deleteLineFolder(QString & folderPath);
     bool                checkFile(int id);
     bool                checkFileSynchronized(int id);
+    bool                checkFolderSynchronizedWithFileSystem(QString folderPath);
+    bool                checkFolderExistInDatabase(QString & folderPath);
     int                 getIdFile(const QString & filename,
                                   const QString & folderPath);
+    QString             searchFolderPath(QString & fileName);
     QString             getFileName(int id);
     QString             getFileFolderPath(int id);
     int                 getFilePartSize(int id);

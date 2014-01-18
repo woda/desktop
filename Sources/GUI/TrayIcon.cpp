@@ -192,7 +192,7 @@ void		TrayIcon::createActions() {
   openFolderAction = new QAction(tr("&Open Woda folder"), this);
   connect(openFolderAction, SIGNAL(triggered()),
           this, SLOT(openDirectory()));
-  goWebsiteAction = new QAction(tr("&Open Woda-server.com"), this);
+  goWebsiteAction = new QAction(tr("&Open Woda webapp"), this);
   connect(goWebsiteAction, SIGNAL(triggered()),
           this, SLOT(openBrowserWoda()));
   //recentFilesAction = new QAction(tr("&Recent files"), this);
@@ -245,5 +245,5 @@ void		TrayIcon::createTrayIcon() {
 
 //! \brief If click on the logo call this method
 void		TrayIcon::clickLogo() {
-  QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
+  QDesktopServices::openUrl(QUrl("http://kobhqlt.fr/wodajs/uptodate/#/"));
 }

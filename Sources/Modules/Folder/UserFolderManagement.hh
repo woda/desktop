@@ -62,6 +62,7 @@ class       UserFolderManagement : public QObject,
     void            downloadAllPartFile(int id, int size, int part_size);
     void            checkFileCompleteWithAllPart(int id, QString & filePath,
                                                  int size, int part_size);
+    QString         searchFolderPath(QString name);
 
  private:
     QString         _folderPath;

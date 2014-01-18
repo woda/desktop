@@ -33,8 +33,10 @@ class       FileSystemWatcher : public QObject,
 
  private:
     void    deleteDirectory(void);
+    void    fillFolderInDatabase(QString & pathFolder);
     void    fillListChange(void);
     void    checkFileIntoFolder(QString dir);
+    void    removeFolderChild(QString & str);
 
  private slots:
     void    eventFile(const QString & path);

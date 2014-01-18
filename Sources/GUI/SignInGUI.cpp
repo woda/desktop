@@ -51,7 +51,7 @@ void	SignInGUI::closePreference(void) {
 
 
 void	SignInGUI::btnWebApp(void) {
-    QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
+    QDesktopServices::openUrl(QUrl("http://kobhqlt.fr/wodajs/uptodate/#/"));
 }
 
 //! \brief Button to click to connect to the server

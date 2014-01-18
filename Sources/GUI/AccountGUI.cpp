@@ -31,9 +31,6 @@ void	AccountGUI::update() {
         _stack->setCurrentIndex(Page::SIGNIN_PAGE);
         return;
     }
-    QString username("");
-    username.append(userAccount->firstName()).append(" ").append(userAccount->lastName());
-    this->labelUsername->setText(username);
     this->labelMailAdress->setText(userAccount->email());
 
     _timer->start(TIMER_REFRESH_DISCONNECT);
@@ -63,7 +60,7 @@ void	AccountGUI::btnPageSync(void) {
 }
 
 void	AccountGUI::btnWebApp(void) {
-    QDesktopServices::openUrl(QUrl("http://webapp.woda-server.com/app_dev.php"));
+    QDesktopServices::openUrl(QUrl("http://kobhqlt.fr/wodajs/uptodate/#/"));
 }
 
 //! \brief Button to click to disconnect to the server

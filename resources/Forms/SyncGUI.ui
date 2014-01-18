@@ -294,7 +294,7 @@
 color: rgb(64, 64, 64);</string>
    </property>
    <property name="text">
-    <string>Only checked folders and files will be sync to this computer</string>
+    <string>Only checked folders will be sync to this computer</string>
    </property>
   </widget>
   <widget class="QTreeWidget" name="treeWidget">
@@ -306,29 +306,27 @@ color: rgb(64, 64, 64);</string>
      <height>181</height>
     </rect>
    </property>
+   <property name="indentation">
+    <number>25</number>
+   </property>
+   <property name="sortingEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="animated">
+    <bool>true</bool>
+   </property>
+   <property name="headerHidden">
+    <bool>true</bool>
+   </property>
+   <property name="columnCount">
+    <number>1</number>
+   </property>
+   <attribute name="headerVisible">
+    <bool>false</bool>
+   </attribute>
    <column>
     <property name="text">
      <string>1</string>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>2</string>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>3</string>
     </property>
     <property name="font">
      <font>
@@ -423,5 +421,6 @@ color: rgb(64, 64, 64);</string>
   <slot>btnPageGeneral()</slot>
   <slot>btnPageAccount()</slot>
   <slot>btnWebApp()</slot>
+  <slot>mousePressEventTreeWidget(QModelIndex*)</slot>
  </slots>
 </ui>

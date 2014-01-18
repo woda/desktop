@@ -52,6 +52,7 @@ void        FileSystemWatcher::addDirectory(QString & dir) {
         }
         _path = dir;
         _fsWatcher->addPath(_path);
+        this->fillFolderInDatabase(_path);
 
 
         // TO DO
@@ -103,6 +104,7 @@ void        FileSystemWatcher::eventFile(const QString & path) {
     }
 
     _prevCountFile = _listChange->count();
+    this->fillFolderInDatabase(_path);
 }
 
 
@@ -126,6 +128,52 @@ void        FileSystemWatcher::eventFolder(const QString & path) {
     }
 
     _prevCountFile = _listChange->count();
+    this->fillFolderInDatabase(_path);
+}
+
+
+//! \brief push into database all directories contents in the main folder
+void        FileSystemWatcher::fillFolderInDatabase(QString & pathFolder) {
+    FolderDB db;
+    QDir directory(pathFolder);
+
+    if (directory.exists(pathFolder)) {
+        Q_FOREACH(QFileInfo info, directory.entryInfoList(QDir::NoDotAndDotDot  | QDir::AllDirs)) {
+            if (info.isDir()) {
+                QString str = info.absoluteFilePath();
+                if (!db.checkFolderExistInDatabase(str)) {
+                    db.insertFolder(str);
+                }
+                if (db.checkFolderSynchronizedWithFileSystem(str)) {
+                    _fsWatcher->addPath(str);
+                    this->fillFolderInDatabase(str);
+                } else {
+                    _fsWatcher->removePath(str);
+                    this->removeFolderChild(str);
+                }
+            }
+        }
+    }
+}
+
+
+//! \brief remove in file system watcher all child for a folder and sync off in database
+void        FileSystemWatcher::removeFolderChild(QString & pathFolder) {
+    FolderDB db;
+    QDir directory(pathFolder);
+
+    if (directory.exists(pathFolder)) {
+        Q_FOREACH(QFileInfo info, directory.entryInfoList(QDir::NoDotAndDotDot  | QDir::AllDirs)) {
+            if (info.isDir()) {
+                QString str = info.absoluteFilePath();
+                _fsWatcher->removePath(str);
+                if (db.checkFolderSynchronizedWithFileSystem(str)) {
+                    db.insertFolder(str, 0);
+                }
+                this->removeFolderChild(str);
+            }
+        }
+    }
 }
 
 
@@ -136,13 +184,15 @@ void        FileSystemWatcher::fillListChange(void) {
 
     // push into listChange all directories
     QStringList directoryList = _fsWatcher->directories();
-    foreach (QString directory, directoryList)
+    foreach (QString directory, directoryList) {
         _listChange->push_back(directory);
+    }
 
     // push into listChange all files
     QStringList fileList = _fsWatcher->files();
-    foreach (QString file, fileList)
+    foreach (QString file, fileList) {
         _listChange->push_back(file);
+    }
 
     // if new elem, call checkFileIntoFolder
     //if (_listChange->count() != _listFile->count()) {
@@ -169,10 +219,11 @@ void        FileSystemWatcher::checkFileIntoFolder(QString dir) {
             _fsWatcher->addPath(file);
             _listFile->push_back(file);
             if (Hash::getLength(file) > 0 && Account::getSingletonPtr()->isConnected()) {
-//                if (!db.checkFileSynchronized(FileManagement::getSingletonPtr()->getIdFile(file))) {
+                QString path = file.left(file.lastIndexOf("/"));
+                if (path == _path || db.checkFolderSynchronizedWithFileSystem(path)) {
                     db.insertFile(file, Hash::getHash(file));
                     RequestHttpFile::getSingletonPtr()->AddingAFile(file);
-//                }
+                }
             }
         }// else if (!_listChange->contains(fileInfo.absoluteFilePath())) {
 //            db.deleteLineFile(fileInfo.absoluteFilePath());

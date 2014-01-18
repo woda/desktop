@@ -25,7 +25,7 @@ FolderDB::~FolderDB() {
 //! \return a vector fill with querry for create account tables
 std::vector<QString>    FolderDB::createTable(void) {
     std::vector<QString> vstr(0);
-    vstr.push_back(QString("CREATE TABLE folder (path text)"));
+    vstr.push_back(QString("CREATE TABLE folder (path text, synchronized int)"));
     vstr.push_back(QString("CREATE TABLE file (id integer, name text, "
                            "id_folder text, favorite integer, "
                            "publicness integer, size text, part_size text, "
@@ -74,11 +74,14 @@ QString                 FolderDB::addQuotes(QString str) {
 
 //! \brief insert the path of a folder who is in the user directory
 //! \brief in the folder table in database
+//! \brief change the synchronized boolean for synchronized or not a folder into file system
 //! \param[in] folderPath QString
-void                    FolderDB::insertFolder(QString & folderPath) {
+//! \param[in] sync int 1 for sync, otherwise 0, 1 bye default
+void                    FolderDB::insertFolder(QString & folderPath, int sync) {
     QString table = this->folderTable();
     std::map<QString, QString> map;
     map[QString(FOLDER_PATH)] = this->addQuotes(folderPath);
+    map[QString(FOLDER_SYNCHRONIZED)] = QString().setNum(sync);
 
     DataBase::getSingletonPtr()->insert(table, map);
 }
@@ -108,13 +111,9 @@ void                    FolderDB::insertFile(const QString & filePath, const QBy
 
 //! \brief insert the properties of a file who is in the user directory
 //! \brief in the file table in database
-//! \param[in] id int
 //! \param[in] name QString &
 //! \param[in] idFolder QString &
-//! \param[in] favorite bool
-//! \param[in] publicness bool
-//! \param[in] size QString &
-//! \param[in] partSize QString &
+//! \param[in] hash QString & hash of the content file
 void                    FolderDB::insertFile(QString & name, QString & idFolder,
                                              QString & hash) {
     QString table = this->fileTable();
@@ -128,6 +127,10 @@ void                    FolderDB::insertFile(QString & name, QString & idFolder,
 }
 
 
+//! \brief insert the properties of a file who is in the user directory
+//! \brief in the file table in database
+//! \param[in] id int id of the content file
+//! \param[in] hash QString & hash of the content file
 void                    FolderDB::insertFile(int id, QString & hash) {
     QString table = this->fileTable();
     std::map<QString, QString> map;
@@ -141,6 +144,10 @@ void                    FolderDB::insertFile(int id, QString & hash) {
 }
 
 
+//! \brief insert the properties of a file who is in the user directory
+//! \brief in the file table in database
+//! \param[in] id int id of the content file
+//! \param[in] sync int 1 if synchro with the server, otherwise 0
 void                    FolderDB::insertFile(int id, int sync) {
     QString table = this->fileTable();
     std::map<QString, QString> map;
@@ -156,7 +163,7 @@ void                    FolderDB::insertFile(int id, int sync) {
 
 //! \brief insert the properties of a file who is in the user directory
 //! \brief in the file table in database
-//! \param[in] id int
+//! \param[in] id int id of the content file
 //! \param[in] name QString &
 //! \param[in] idFolder QString &
 //! \param[in] favorite bool
@@ -213,15 +220,72 @@ bool                    FolderDB::checkFileSynchronized(int id) {
 
     std::map<QString, std::vector<QString> *> * map;
     map = DataBase::getSingletonPtr()->select(str);
-    std::cout << "0" << std::endl;
     if ((*((*map)[QString(FILE_SYNCHRONIZED)])).size() > 0) {
-        std::cout << "1" << std::endl;
         if ((*((*map)[QString(FILE_SYNCHRONIZED)])).front().toInt()) {
-            std::cout << "2" << std::endl;
             return true;
         }
     }
     return false;
+}
+
+
+//! \brief check if the folder is synchronized with the file system
+//! \param[in] folderPath QString of the path
+//! \return true if synchro with the file system, otherwise false
+bool                    FolderDB::checkFolderSynchronizedWithFileSystem(QString folderPath) {
+    QString str("SELECT ");
+    str.append(FOLDER_SYNCHRONIZED).append(" FROM ");
+    str.append(FolderDB::folderTable());
+    str.append(" WHERE ");
+    str.append(FOLDER_PATH).append("=").append(this->addQuotes(folderPath));
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString(FOLDER_SYNCHRONIZED)])).size() > 0) {
+        if ((*((*map)[QString(FOLDER_SYNCHRONIZED)])).front().toInt()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+//! \brief check if the folder is in database
+//! \param[in] folderPath QString of the path
+//! \return true if exist in database, otherwise false
+bool                    FolderDB::checkFolderExistInDatabase(QString & folderPath) {
+    QString str("SELECT ");
+    str.append(FOLDER_PATH).append(" FROM ");
+    str.append(FolderDB::folderTable());
+    str.append(" WHERE ");
+    str.append(FOLDER_PATH).append("=").append(this->addQuotes(folderPath));
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString(FOLDER_PATH)])).size() > 0) {
+        return true;
+    }
+    return false;
+}
+
+
+//! \brief search the folder path for the filename who is not synchro
+//! \param[in] fileName QString
+//! \return QString of the folderPath or ""
+QString                 FolderDB::searchFolderPath(QString & fileName) {
+    QString str("SELECT ");
+    str.append(FILE_ID_FOLDER).append(" FROM ");
+    str.append(FolderDB::fileTable());
+    str.append(" WHERE ");
+    str.append(FILE_NAME).append("=").append(this->addQuotes(fileName));
+    str.append(" AND ").append(FILE_SYNCHRONIZED).append("=0");
+
+    std::map<QString, std::vector<QString> *> * map;
+    map = DataBase::getSingletonPtr()->select(str);
+    if ((*((*map)[QString(FILE_ID_FOLDER)])).size() > 0) {
+        return (*((*map)[QString(FILE_ID_FOLDER)])).front();
+    }
+    return QString("");
 }
 
 

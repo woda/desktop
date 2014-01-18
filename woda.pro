@@ -59,6 +59,7 @@ HEADERS         +=      $$CORE/Window.hh                        \
                         $$GUI/GeneralGUI.hh                     \
                         $$GUI/AccountGUI.hh                     \
                         $$GUI/SyncGUI.hh                        \
+                        $$GUI/SyncTreeWidgetGUI.hh              \
                         $$GUI/SignInGUI.hh                      \
                         $$UTILS/ConfFile.hh                     \
                         $$UTILS/Singleton.hpp                   \
@@ -89,6 +90,7 @@ SOURCES         +=      $$CORE/main.cpp                         \
                         $$GUI/GeneralGUI.cpp                    \
                         $$GUI/AccountGUI.cpp                    \
                         $$GUI/SyncGUI.cpp                       \
+                        $$GUI/SyncTreeWidgetGUI.cpp             \
                         $$GUI/SignInGUI.cpp                     \
                         $$FOLDER/FileSystemWatcher.cpp          \
                         $$FOLDER/UserFolderManagement.cpp       \

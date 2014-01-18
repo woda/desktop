@@ -22,17 +22,25 @@ class				SyncGUI : public QWidget,
 
  private:
   QStackedWidget *		_stack;
+  QVector<QTreeWidgetItem *> * _vectorTreeWidgetItem;
 
  public:
   SyncGUI(QStackedWidget * stack, QWidget * parent = 0);
-  virtual ~SyncGUI();
-  void	update();
+  virtual   ~SyncGUI();
+  void      update();
+
+// private:
+//  void      fillTreeWidgetWithFolder(QString strPath,
+//                                     QTreeWidget * parentWidget);
+//  void      fillTreeWidgetWithFolder(QString strPath,
+//                                     QTreeWidgetItem * parentWidget);
 
  public slots:
-  void	closePreference(void);
-  void	btnPageGeneral(void);
-  void	btnPageAccount(void);
-  void	btnWebApp(void);
+//  void      mousePressEvent(QMouseEvent *event);
+  void      closePreference(void);
+  void      btnPageGeneral(void);
+  void      btnPageAccount(void);
+  void      btnWebApp(void);
 };
 
 #endif				// !GUI_SYNCGUI_HH__

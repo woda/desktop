@@ -274,55 +274,6 @@
     </size>
    </property>
   </widget>
-  <widget class="QLabel" name="labelSpacer1">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>100</y>
-     <width>16</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelNameUsername">
-   <property name="geometry">
-    <rect>
-     <x>107</x>
-     <y>100</y>
-     <width>71</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Username</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelUsername">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>100</y>
-     <width>301</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>John Doe</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="labelSpacer2">
    <property name="geometry">
     <rect>
@@ -427,9 +378,6 @@
   <zorder>pushButtonAccount</zorder>
   <zorder>pushButtonSync</zorder>
   <zorder>pushButtonWebApp</zorder>
-  <zorder>labelSpacer1</zorder>
-  <zorder>labelNameUsername</zorder>
-  <zorder>labelUsername</zorder>
   <zorder>labelSpacer2</zorder>
   <zorder>labelNameMailAdress</zorder>
   <zorder>labelMailAdress</zorder>

@@ -84,6 +84,8 @@ void        RequestHttpFile::AddingAFile(const QString & filename) {
     body.append("&");
     body.append("size=").append(Hash::getLength(filename));
 
+    std::cout << Hash::getLength(filename).toInt() << std::endl;
+
     QString test(body);
     std::cout << test.toStdString() << std::endl;
 
@@ -116,7 +118,9 @@ void        RequestHttpFile::UploadingAFile(int id) {
 //    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QByteArray body = "";
     body.append(Hash::getContent(filePath));
-
+    std::cout << "size part to upload 1 = " << Hash::getContent(filePath).length() << std::endl;
+    std::cout << "size part to upload 2 = " << Hash::getLength(filePath).toInt() << std::endl;
+    std::cout << "filePath = " << filePath.toStdString() << std::endl;
 //    QString test(body);
 
 

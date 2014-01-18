@@ -55,7 +55,8 @@ int         UserFolderManagement::deserializeJsonAccount(QByteArray & bytes) {
         if (!result["needed_parts"].toList().isEmpty()) {
             std::cout << "need upload" << std::endl;
             QVariantMap fileMap = result["file"].toMap();
-            return this->insertHashFileIntoDB(fileMap, newFolder);
+            QString path = this->searchFolderPath(fileMap["name"].toString());
+            return this->insertHashFileIntoDB(fileMap, path);
         }
         else if (!result["folder"].toMap().isEmpty()) {
             QVariantMap allFilesAndFolders = result["folder"].toMap();
@@ -117,6 +118,20 @@ void        UserFolderManagement::deserializeJsonFileList(QVariantList & filelis
         }
     }
 }
+
+
+//! \param[in] fileName QString
+//! \brief search the folder path for the filename who is not synchro
+//! \return QString of the folderPath
+QString     UserFolderManagement::searchFolderPath(QString fileName) {
+    FolderDB db;
+    QString path = db.searchFolderPath(fileName);
+    if (path == QString("")) {
+        return _folderPath;
+    }
+    return path;
+}
+
 
 //! \param[in] mapFile QVariantMap json serialize properties of the file
 //! \param[in] folderName QString the path of the folder who contains the file
