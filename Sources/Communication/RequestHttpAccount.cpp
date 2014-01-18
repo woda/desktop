@@ -165,6 +165,7 @@ void        RequestHttpAccount::finishedSlot(QNetworkReply* reply) {
     } else {
         Account::getSingletonPtr()->httpError();
         QByteArray bytes2 = reply->readAll();
+        Account::getSingletonPtr()->deserializeJsonAccount(bytes2);
         QString str(bytes2);
         std::cout << str.toStdString() << std::endl;
     }

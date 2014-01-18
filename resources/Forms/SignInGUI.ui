@@ -278,7 +278,7 @@
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>140</y>
+     <y>145</y>
      <width>16</width>
      <height>21</height>
     </rect>
@@ -291,7 +291,7 @@
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>140</y>
+     <y>145</y>
      <width>71</width>
      <height>21</height>
     </rect>
@@ -386,7 +386,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>140</y>
+     <y>145</y>
      <width>221</width>
      <height>20</height>
     </rect>
@@ -521,6 +521,32 @@ color: rgb(64, 64, 64);</string>
     <string>Simple sharing...</string>
    </property>
   </widget>
+  <widget class="QLabel" name="labelTextError">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>120</y>
+     <width>311</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <italic>true</italic>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">qproperty-alignment: AlignCenter;
+color: rgb(170, 0, 0);</string>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; color:#aa0000;&quot;&gt;Bad username or password&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
   <zorder>labelSync</zorder>
   <zorder>labelGeneral</zorder>
   <zorder>labelAccount</zorder>
@@ -543,6 +569,7 @@ color: rgb(64, 64, 64);</string>
   <zorder>imgLogo</zorder>
   <zorder>labelText1</zorder>
   <zorder>labelText2</zorder>
+  <zorder>labelTextError</zorder>
  </widget>
  <resources>
   <include location="../woda.qrc"/>

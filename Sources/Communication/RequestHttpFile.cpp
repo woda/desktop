@@ -34,6 +34,10 @@ RequestHttpFile::RequestHttpFile(QObject * parent)
     _timer->setInterval(TIMER_REFRESH_FILE);
     connect(_timer, SIGNAL(timeout()), this, SLOT(update()));
     _timer->start(TIMER_REFRESH_FILE);
+    _timerFileList = new QTimer(this);
+    _timerFileList->setInterval(TIMER_REFRESH_FILE_LIST);
+    connect(_timerFileList, SIGNAL(timeout()), this, SLOT(updateFileList()));
+    _timerFileList->start(TIMER_REFRESH_FILE_LIST);
 }
 
 
@@ -44,7 +48,7 @@ RequestHttpFile::~RequestHttpFile() {
 }
 
 
-//! \brief update RequestHttpFile
+//! \brief update RequestHttpFile for recup the first file list from the server
 void        RequestHttpFile::update() {
     if (!_recoverTree) {
         if (RequestHttp::getSingletonPtr()->hasCookie() &&
@@ -55,6 +59,15 @@ void        RequestHttpFile::update() {
         }
     } else if (!RequestHttp::getSingletonPtr()->hasCookie()) {
         _recoverTree = false;
+    }
+}
+
+
+//! \brief update RequestHttpFile for recup the first file list from the server
+void        RequestHttpFile::updateFileList() {
+    if (_recoverTree && RequestHttp::getSingletonPtr()->hasCookie() &&
+        Account::getSingletonPtr()->isConnected()) {
+        this->recoverFilesList();
     }
 }
 
@@ -156,6 +169,28 @@ void        RequestHttpFile::ConfirmingUpload(QString & filename) {
     _reply = _http->post(request, body);
     _reply->ignoreSslErrors();
 }
+
+
+//! \brief send a request delete for delete a file to the server
+void        RequestHttpFile::deleteFile(int id) {
+    QString str(URL);
+    str.append("/").append(SYNC).append("/").append(QString().setNum(id));
+    QUrl param(str);
+
+    std::cout << "url delete : " << str.toStdString() << std::endl;
+
+    QNetworkRequest request;
+    request.setUrl(param);
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      "application/x-www-form-urlencoded");
+    request.setRawHeader("Connection", "keep-alive");
+    request.setRawHeader("User-Agent", WEBAGENTNAME);
+    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+
+    _reply = _http->deleteResource(request);
+    _reply->ignoreSslErrors();
+}
+
 
 ////! \brief send a request post to confirming that a file is upload to the server
 //void        RequestHttpFile::changeAFile(QString & filename) {

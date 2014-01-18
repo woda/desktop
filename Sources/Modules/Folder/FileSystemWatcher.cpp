@@ -176,7 +176,7 @@ void        FileSystemWatcher::removeFolderChild(QString & pathFolder) {
     }
 }
 
-
+#include <iostream>
 //! \brief push into a list all directories and files contents in the main folder
 void        FileSystemWatcher::fillListChange(void) {
     delete _listChange;
@@ -194,12 +194,34 @@ void        FileSystemWatcher::fillListChange(void) {
         _listChange->push_back(file);
     }
 
+
+//    QListIterator<QString> it(&_listFile); // iterator for employee list
+//    for ( ; it.current(); ++it ) {
+//        if (!_listChange->contains(it.current()))
+//            std::cout << it.current().toStdString() << std::endl;
+//    }
+    QList<QString>::iterator it = _listFile->begin();
+    for (; it != _listFile->end(); ++it ) {
+        if (!_listChange->contains(*it)) {
+            std::cout << (*it).toStdString() << std::endl;
+            std::cout << FileManagement::getSingletonPtr()->getIdFile(*it) << std::endl;
+            RequestHttpFile::getSingletonPtr()->deleteFile(FileManagement::getSingletonPtr()->getIdFile(*it));
+            std::cout << "2" << std::endl;
+            FolderDB db;
+            db.deleteLineFile(*it);
+            std::cout << "3" << std::endl;
+            _listFile->erase(it);
+        }
+    }
+
     // if new elem, call checkFileIntoFolder
     //if (_listChange->count() != _listFile->count()) {
         this->checkFileIntoFolder(_path);
     //} else {
         //_listFile = _listChange;
     //}
+
+
 }
 
 
@@ -225,10 +247,11 @@ void        FileSystemWatcher::checkFileIntoFolder(QString dir) {
                     RequestHttpFile::getSingletonPtr()->AddingAFile(file);
                 }
             }
-        }// else if (!_listChange->contains(fileInfo.absoluteFilePath())) {
+        } else if (!_listChange->contains(fileInfo.absoluteFilePath())) {
+            std::cout << fileInfo.absoluteFilePath().toStdString() << std::endl;
 //            db.deleteLineFile(fileInfo.absoluteFilePath());
 ////            RequestHttpFile::getSingletonPtr()->deleteAFile(fileInfo.absoluteFilePath());
-//        }
+        }
         // recursive
         if (fileInfo.isDir()) {
             this->checkFileIntoFolder(file);

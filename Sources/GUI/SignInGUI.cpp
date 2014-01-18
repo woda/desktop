@@ -14,11 +14,11 @@
 
 SignInGUI::SignInGUI(QStackedWidget * stack, QWidget * parent)
     : QWidget(parent), _stack(stack) {
-  setupUi(this);
-
-  _timer = new QTimer(this);
-  _timer->setInterval(TIMER_REFRESH);
-  connect(_timer, SIGNAL(timeout()), this, SLOT(updateUserAccount()));
+    setupUi(this);
+    this->labelTextError->hide();
+    _timer = new QTimer(this);
+    _timer->setInterval(TIMER_REFRESH);
+    connect(_timer, SIGNAL(timeout()), this, SLOT(updateUserAccount()));
 }
 
 
@@ -33,15 +33,20 @@ void	SignInGUI::update() {
     _timer->start(TIMER_REFRESH);
 }
 
-
+#include <iostream>
 void	SignInGUI::updateUserAccount(void) {
     if (Account::getSingletonPtr()->isConnected()) {
         _timer->stop();
+        this->labelTextError->hide();
         if (UserFolderManagement::getSingletonPtr()->getCurrentDirectory().isEmpty()) {
             this->setUserFolder();
         }
         _stack->setCurrentIndex(Page::GENERAL_PAGE);
+    } else if (Account::getSingletonPtr()->isServerError()) {
+        this->labelTextError->setText(Account::getSingletonPtr()->textServerError());
+        this->labelTextError->show();
     }
+    std::cout << Account::getSingletonPtr()->textServerError().toStdString() << std::endl;
 }
 
 

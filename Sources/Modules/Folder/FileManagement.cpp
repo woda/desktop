@@ -19,15 +19,16 @@ FileManagement::FileManagement(QObject * parent)
 FileManagement::~FileManagement() {
 }
 
-
+#include <iostream>
 //! \brief get the id of the file with the folder and the file name
 //! \param[in] filePath QString of the folder append with the file name
 //! \return the id of the file
 int         FileManagement::getIdFile(const QString & filePath) {
     QString fileName(filePath);
-    fileName = fileName.right(fileName.lastIndexOf("/"));
+    fileName = fileName.right(filePath.length() - filePath.lastIndexOf("/") - 1);
     QString folderPath(filePath);
-    folderPath = folderPath.left(fileName.lastIndexOf("/"));
+    folderPath = folderPath.left(filePath.lastIndexOf("/"));
+
     FolderDB db;
     return db.getIdFile(fileName, folderPath);
 }

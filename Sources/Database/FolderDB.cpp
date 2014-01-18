@@ -364,24 +364,15 @@ void                    FolderDB::deleteLineFile(const QString & filePath) {
 int                     FolderDB::getIdFile(const QString & filename,
                                             const QString & folderPath) {
     QString table = this->fileTable();
-    std::vector<QString> select;
-    std::vector<QString> where;
-
-    // select
-    select.push_back(FILE_ID);
-
-    // where
-    QString key1(FILE_NAME);
-    key1.append(" = ").append(filename);
-    where.push_back(key1);
-
-    QString key2(FILE_ID_FOLDER);
-    key2.append(" = ").append(folderPath);
-    where.push_back(key2);
+    QString query("SELECT ");
+    query.append(FILE_ID);
+    query.append(" FROM ").append(table).append(" WHERE ");
+    query.append(FILE_NAME).append("=").append(this->addQuotes(filename));
+    query.append(" AND ").append(FILE_ID_FOLDER).append("=").append(this->addQuotes(folderPath));
 
     // result
     std::map<QString, std::vector<QString> *> * map;
-    map = DataBase::getSingletonPtr()->select(table, select, where);
+    map = DataBase::getSingletonPtr()->select(query);
     if ((*((*map)[QString(FILE_ID)])).size() > 0) {
         return (*((*map)[QString(FILE_ID)])).front().toInt();
     }

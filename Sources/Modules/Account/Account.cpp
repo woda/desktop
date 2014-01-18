@@ -65,6 +65,9 @@ void            Account::deserializeJsonAccount(QByteArray & bytes) {
         this->connect();
     } else if (!result["success"].toString().isEmpty()) {
         this->disconnect();
+    } else if (!result["error"].toString().isEmpty()) {
+        QString error(result["message"].toString());
+        this->serverError(error);
     }
     QString str(bytes);
     std::cout << str.toStdString() << std::endl;

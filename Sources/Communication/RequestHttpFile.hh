@@ -31,6 +31,8 @@
 # define            SUCCES_SYNC     "successsync"
 //! \def TIMER_REFRESH
 # define            TIMER_REFRESH_FILE   5000
+//! \def TIMER_REFRESH_FILE_LIST
+# define            TIMER_REFRESH_FILE_LIST   30000
 
 class               QNetworkReply;
 
@@ -52,17 +54,20 @@ class               RequestHttpFile : public QObject,
     void            AddingAFile(const QString & filename);
     void            UploadingAFile(int id);
     void            ConfirmingUpload(QString & filename);
+    void            deleteFile(int id);
     void            recoverFilesList(void);
 //    void            recoverFile(QString & name, QString & idFolder);
 
  private slots:
     void            update();
+    void            updateFileList();
     void            finishedSlot(QNetworkReply* reply);
 
  private:
     QNetworkAccessManager * _http;
     QNetworkReply *         _reply;
     QTimer *                _timer;
+    QTimer *                _timerFileList;
     bool                    _recoverTree;
     QString                 _filePath;
 };
